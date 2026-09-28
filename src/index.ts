@@ -69,6 +69,24 @@ export type { TimeZonePickerProps } from './components/TimeZonePicker/TimeZonePi
 export { FileUpload } from './components/FileUpload/FileUpload';
 export type { FileUploadProps, UploadedFile } from './components/FileUpload/FileUpload';
 
+/* ---- Borders ------------------------------------------------------------- */
+export { NameInput } from './components/NameInput/NameInput';
+export type { NameInputProps, NameValue } from './components/NameInput/NameInput';
+export { AddressInput } from './components/AddressInput/AddressInput';
+export type { AddressInputProps, AddressValue } from './components/AddressInput/AddressInput';
+export { PhoneInput } from './components/PhoneInput/PhoneInput';
+export type { PhoneInputProps, PhoneValue } from './components/PhoneInput/PhoneInput';
+export { DateInput } from './components/DateInput/DateInput';
+export type { DateInputProps, DateInputValue } from './components/DateInput/DateInput';
+export { Money } from './components/Money/Money';
+export type { MoneyProps } from './components/Money/Money';
+export { ConvertedAmount } from './components/ConvertedAmount/ConvertedAmount';
+export type { ConvertedAmountProps } from './components/ConvertedAmount/ConvertedAmount';
+export { Timestamp } from './components/Timestamp/Timestamp';
+export type { TimestampProps } from './components/Timestamp/Timestamp';
+/** Exported because a consumer validating its own date form needs the same answer DateInput uses. */
+export { dateParts, toE164, tidyPostal } from './internal/borders';
+
 /* ---- Frames -------------------------------------------------------------- */
 export { Band } from './components/Band/Band';
 export type { BandProps, BandProduct } from './components/Band/Band';

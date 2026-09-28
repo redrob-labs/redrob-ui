@@ -236,6 +236,34 @@ export type { CheckInProps, CheckInOption } from './components/CheckIn/CheckIn';
 export { RUN_LABEL, SCOPE_MODE, describeSchedule, nextScheduledRun } from './internal/harness';
 export type { ScheduleValue } from './internal/harness';
 
+/* ---- Evidence ------------------------------------------------------------ */
+export { SourceSet } from './components/SourceSet/SourceSet';
+export type { SourceSetProps, SourceItem } from './components/SourceSet/SourceSet';
+export { Evidence } from './components/Evidence/Evidence';
+export type { EvidenceProps } from './components/Evidence/Evidence';
+export { Criteria } from './components/Criteria/Criteria';
+export type { CriteriaProps, CriteriaItem } from './components/Criteria/Criteria';
+export { MatchBreakdown } from './components/MatchBreakdown/MatchBreakdown';
+export type { MatchBreakdownProps, MatchItem } from './components/MatchBreakdown/MatchBreakdown';
+export { ReviewGrid } from './components/ReviewGrid/ReviewGrid';
+export type {
+  ReviewGridProps,
+  ReviewColumn,
+  ReviewRow,
+  ReviewCellValue,
+} from './components/ReviewGrid/ReviewGrid';
+export { Finding } from './components/Finding/Finding';
+export type { FindingProps } from './components/Finding/Finding';
+export { Redline } from './components/Redline/Redline';
+export type { RedlineProps, RedlinePart } from './components/Redline/Redline';
+export { Playbook } from './components/Playbook/Playbook';
+export type { PlaybookProps, PlaybookRunStep } from './components/Playbook/Playbook';
+export { Shortlist } from './components/Shortlist/Shortlist';
+export type { ShortlistProps, ShortlistItem } from './components/Shortlist/Shortlist';
+export { DecisionNotice } from './components/DecisionNotice/DecisionNotice';
+export type { DecisionNoticeProps } from './components/DecisionNotice/DecisionNotice';
+export { MET_LABEL, WEIGHT_LABEL, SEV_LABEL, SRC_STATE } from './internal/evidence';
+
 /* ---- Frames -------------------------------------------------------------- */
 export { AppShell } from './components/AppShell/AppShell';
 export type { AppShellProps, AppShellNavItem } from './components/AppShell/AppShell';

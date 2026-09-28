@@ -14,12 +14,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mckinley-and-rice/redrob-ui"
+    "url": "https://github.com/redrob-labs/redrob-ui"
   },
   "bugs": {
-    "url": "https://github.com/mckinley-and-rice/redrob-ui/issues"
+    "url": "https://github.com/redrob-labs/redrob-ui/issues"
   },
-  "homepage": "https://github.com/mckinley-and-rice/redrob-ui#readme",
+  "homepage": "https://github.com/redrob-labs/redrob-ui#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public",

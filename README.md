@@ -86,7 +86,7 @@ Two things this harness has caught that review would not:
 Node.js 20.x. Yarn 1.x (`yarn.lock` is v1 and CI installs with `--frozen-lockfile`).
 
 ```bash
-git clone https://github.com/mckinley-and-rice/redrob-ui.git
+git clone https://github.com/redrob-labs/redrob-ui.git
 cd redrob-ui
 yarn install
 yarn build && yarn test
@@ -120,9 +120,9 @@ is cut. Branching follows the organization's
 
 ## Support
 
-- Bugs and feature requests: [issues](https://github.com/mckinley-and-rice/redrob-ui/issues).
+- Bugs and feature requests: [issues](https://github.com/redrob-labs/redrob-ui/issues).
 - Security vulnerabilities: never in an issue. See the organization's
-  [security policy](https://github.com/mckinley-and-rice/.github/blob/main/SECURITY.md).
+  [security policy](https://github.com/redrob-labs/.github/blob/main/SECURITY.md).
 
 ## License
 

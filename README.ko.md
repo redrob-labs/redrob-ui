@@ -83,7 +83,7 @@ yarn test:self   # 원본을 원본과 비교. 하네스가 아직 실제로 비
 Node.js 20.x, Yarn 1.x (`yarn.lock`이 v1이고 CI는 `--frozen-lockfile`로 설치합니다).
 
 ```bash
-git clone https://github.com/mckinley-and-rice/redrob-ui.git
+git clone https://github.com/redrob-labs/redrob-ui.git
 cd redrob-ui
 yarn install
 yarn build && yarn test
@@ -116,9 +116,9 @@ Storybook은 없습니다. 배포물의 `preview.html` 케이스 148개가 이�
 
 ## 지원
 
-- 버그와 기능 요청: [issues](https://github.com/mckinley-and-rice/redrob-ui/issues).
+- 버그와 기능 요청: [issues](https://github.com/redrob-labs/redrob-ui/issues).
 - 보안 취약점: 이슈에 쓰지 마세요. 조직의
-  [보안 정책](https://github.com/mckinley-and-rice/.github/blob/main/SECURITY.md)을 따릅니다.
+  [보안 정책](https://github.com/redrob-labs/.github/blob/main/SECURITY.md)을 따릅니다.
 
 ## 라이선스
 

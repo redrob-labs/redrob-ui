@@ -3,7 +3,7 @@
 한국어: [CONTRIBUTING.ko.md](./CONTRIBUTING.ko.md)
 
 The organization-wide rules live in
-[mckinley-and-rice/.github](https://github.com/mckinley-and-rice/.github). This file says what
+[redrob-labs/.github](https://github.com/redrob-labs/.github). This file says what
 is true of **this** repository, which is the part a document cannot inherit.
 
 ## Setup
@@ -121,4 +121,4 @@ skipped here:
 ## Reporting a vulnerability
 
 Not in an issue. See the organization's
-[security policy](https://github.com/mckinley-and-rice/.github/blob/main/SECURITY.md).
+[security policy](https://github.com/redrob-labs/.github/blob/main/SECURITY.md).

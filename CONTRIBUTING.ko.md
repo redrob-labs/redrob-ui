@@ -3,7 +3,7 @@
 English: [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 조직 전체 규칙은
-[mckinley-and-rice/.github](https://github.com/mckinley-and-rice/.github)에 있습니다. 이
+[redrob-labs/.github](https://github.com/redrob-labs/.github)에 있습니다. 이
 문서는 **이 저장소**에만 해당하는 것, 즉 상속으로 대신할 수 없는 부분을 적습니다.
 
 ## 준비
@@ -118,4 +118,4 @@ CI가 `yarn icons:check`로 검사합니다.
 ## 취약점 신고
 
 이슈에 쓰지 않습니다. 조직
-[보안 정책](https://github.com/mckinley-and-rice/.github/blob/main/SECURITY.md)을 봅니다.
+[보안 정책](https://github.com/redrob-labs/.github/blob/main/SECURITY.md)을 봅니다.

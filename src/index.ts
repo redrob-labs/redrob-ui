@@ -101,6 +101,30 @@ export type { AccordionProps, AccordionItem } from './components/Accordion/Accor
 export { Scroller } from './components/Scroller/Scroller';
 export type { ScrollerProps } from './components/Scroller/Scroller';
 
+/* ---- Feedback ------------------------------------------------------------ */
+export { Alert } from './components/Alert/Alert';
+export type { AlertProps } from './components/Alert/Alert';
+export { Toast } from './components/Toast/Toast';
+export type { ToastProps } from './components/Toast/Toast';
+export { Modal } from './components/Modal/Modal';
+export type { ModalProps } from './components/Modal/Modal';
+export { Drawer } from './components/Drawer/Drawer';
+export type { DrawerProps } from './components/Drawer/Drawer';
+export { Tooltip } from './components/Tooltip/Tooltip';
+export type { TooltipProps } from './components/Tooltip/Tooltip';
+export { Progress } from './components/Progress/Progress';
+export type { ProgressProps } from './components/Progress/Progress';
+export { Loader } from './components/Loader/Loader';
+export type { LoaderProps } from './components/Loader/Loader';
+export { Skeleton } from './components/Skeleton/Skeleton';
+export type { SkeletonProps } from './components/Skeleton/Skeleton';
+export { EmptyState } from './components/EmptyState/EmptyState';
+export type { EmptyStateProps } from './components/EmptyState/EmptyState';
+
+/* ---- Data display -------------------------------------------------------- */
+export { Badge } from './components/Badge/Badge';
+export type { BadgeProps } from './components/Badge/Badge';
+
 /* ---- Frames -------------------------------------------------------------- */
 export { Band } from './components/Band/Band';
 export type { BandProps, BandProduct } from './components/Band/Band';

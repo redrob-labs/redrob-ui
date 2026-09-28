@@ -32,9 +32,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # `tsc` has no `noEmitOnError`, so it writes output even when it reports errors. A later step
-      # reading that output would pass on a broken build, which has already happened twice in this
-      # port. This job therefore treats the build's own exit code as the gate.
+      # `noEmitOnError` is on and `build` deletes `dist/` first, so a failing build cannot leave a
+      # stale-but-valid tree for a later step to read as a pass. That happened three times during
+      # this port before both guards were in place, so the build's exit code is the gate here.
       - name: Build the package
         run: yarn build
 
@@ -84,3 +84,24 @@ jobs:
       # without it, a harness that silently compares nothing would look like 123 passes.
       - name: Harness self-check
         run: yarn test:self
+
+  docs:
+    name: docs are up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # `llms.txt` and `llms-full.txt` are generated from the types and the JSDoc, and are committed
+      # so an agent reading the repository sees the same reference as one reading the site. A stale
+      # committed copy is worse than a missing one: it states props the code no longer has, and
+      # nothing else in the pipeline would notice. This regenerates them and fails on any difference.
+      - name: Assert the committed agent reference matches the code
+        run: yarn docs:check

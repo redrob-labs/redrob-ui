@@ -188,6 +188,24 @@ export type { AgentTimelineProps, AgentTimelineStep } from './components/AgentTi
 export { ApprovalStep } from './components/ApprovalStep/ApprovalStep';
 export type { ApprovalStepProps } from './components/ApprovalStep/ApprovalStep';
 
+/* ---- Safeguards ---------------------------------------------------------- */
+export { StatusCard } from './components/StatusCard/StatusCard';
+export type { StatusCardProps } from './components/StatusCard/StatusCard';
+export { PrivacyProtection } from './components/PrivacyProtection/PrivacyProtection';
+export type { PrivacyProtectionProps } from './components/PrivacyProtection/PrivacyProtection';
+export { MemoryScope } from './components/MemoryScope/MemoryScope';
+export type { MemoryScopeProps, MemoryScopeOption } from './components/MemoryScope/MemoryScope';
+export { SecondOpinionSetting } from './components/SecondOpinionSetting/SecondOpinionSetting';
+export type {
+  SecondOpinionSettingProps,
+  OpinionMode,
+} from './components/SecondOpinionSetting/SecondOpinionSetting';
+export { MemoryList } from './components/MemoryList/MemoryList';
+export type { MemoryListProps, MemoryItem } from './components/MemoryList/MemoryList';
+export { OpinionGrid } from './components/OpinionGrid/OpinionGrid';
+export type { OpinionGridProps, OpinionColumn, OpinionRow } from './components/OpinionGrid/OpinionGrid';
+export { PRIVACY_LEVELS, OPINION_MODES, OPINION_VERDICTS } from './internal/safeguards';
+
 /* ---- Frames -------------------------------------------------------------- */
 export { AppShell } from './components/AppShell/AppShell';
 export type { AppShellProps, AppShellNavItem } from './components/AppShell/AppShell';

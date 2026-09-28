@@ -155,7 +155,8 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
   function modeSwitch(): React.ReactElement {
     return React.createElement(
       'div',
-      { className: 'rr-guide__mode', role: 'radiogroup', 'aria-label': props.modeLabel || 'View' },
+      // Returned into a children array, so it carries its own key.
+      { key: 'mode', className: 'rr-guide__mode', role: 'radiogroup', 'aria-label': props.modeLabel || 'View' },
       (
         [
           ['simple', props.simpleLabel || 'Simple'],
@@ -278,7 +279,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
         ),
       ]),
     );
-    return React.createElement('div', { className: 'rr-guide__calc' }, [
+    return React.createElement('div', { key: 'calc', className: 'rr-guide__calc' }, [
       React.createElement(
         'p',
         { key: 'h', className: 'rr-guide__label' },
@@ -335,7 +336,8 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
   function detail(k: GuidePick | undefined, i: number): React.ReactElement | null {
     if (!k) return null;
     const sample = k.sample || {};
-    return React.createElement('div', { className: 'rr-guide__detail', 'aria-live': 'polite' }, [
+    // Returned into the grid's children array beside the list, so it needs a key of its own.
+    return React.createElement('div', { key: 'detail', className: 'rr-guide__detail', 'aria-live': 'polite' }, [
       React.createElement('div', { key: 'h', className: 'rr-guide__dhead' }, [
         React.createElement('div', { key: 'a' }, [
           React.createElement('p', { key: 'r', className: 'rr-guide__rank' }, [

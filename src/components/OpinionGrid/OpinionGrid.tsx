@@ -53,7 +53,8 @@ export function OpinionGrid(props: OpinionGridProps): React.ReactElement {
 
   function verdict(v: string): React.ReactElement {
     const d = V[v] || V.quiet;
-    return React.createElement('span', { className: `rr-opgrid__v rr-opgrid__v--${v}` }, [
+    // Returned into a `<td>` children array beside an optional note, so it needs a key of its own.
+    return React.createElement('span', { key: 'v', className: `rr-opgrid__v rr-opgrid__v--${v}` }, [
       d.icon
         ? React.createElement(
             'span',

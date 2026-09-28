@@ -51,6 +51,11 @@ export function guidePrice(
   const small = shown === base && amt < 1;
   amt = step ? Math.max(step, Math.round(amt / step) * step) : small ? amt : Math.round(amt);
   return React.createElement(Money, {
+    // Every caller drops this into a children ARRAY beside a unit label, so the element needs a key
+    // of its own: without one React warns in the consumer's console and cannot match the amount
+    // across renders, which is how a re-render loses the node instead of updating it. The key is
+    // fixed rather than derived because there is only ever one of these per array.
+    key: 'amount',
     amount: amt,
     currency: shown,
     locale,

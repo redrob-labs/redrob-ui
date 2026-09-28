@@ -1,0 +1,53 @@
+/** tailwind */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/** root, html, body */
+:root {
+  --lk-bg: #fff;
+  --color-primary: #217bbb;
+  --color-secondary: #ccf88e;
+  --color-banner: #123a68;
+  --color-text: #ffffff;
+}
+
+html,
+body {
+  background-color: #f5f8fb !important;
+  color: #0c151d;
+}
+
+pre {
+  white-space: pre-wrap; /* 줄 바꿈을 통해 텍스트가 컨테이너를 넘지 않도록 함 */
+  word-break: break-word; /* 단어가 길 경우 줄 바꿈 */
+}
+
+/** body - modal open */
+body.modal-open {
+  overflow: hidden;
+}
+
+body.modal-open #question-cart-btn {
+  margin-right: 14px;
+}
+
+/** webkit */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2) !important;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4) !important;
+}
+::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.9) !important;
+}

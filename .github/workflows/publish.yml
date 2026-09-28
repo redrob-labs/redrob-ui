@@ -1,0 +1,127 @@
+name: publish
+
+# Releases are cut from a tag on `main`, never from a push.
+#
+# The previous version of this file published on every push to `main`. That is the order the gitflow
+# standard warns about: it ships whatever `main` happens to hold at that moment under whatever version
+# `package.json` happens to say, with nothing asserting the two agree. A promotion pull request landing
+# a version bump and a code change together published twice, and a promotion that landed before the bump
+# published the new code under the old version.
+#
+# Order now: promote `develop` -> `main` through a reviewed pull request, tag `main`, publish from the tag.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to publish from, e.g. v1.0.12"
+        required: true
+      dry_run:
+        description: "Build and pack, publish nothing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve the tag to publish
+        id: ref
+        env:
+          EVENT: ${{ github.event_name }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = "release" ]; then tag="$RELEASE_TAG"; else tag="$INPUT_TAG"; fi
+          [ -n "$tag" ] || { echo "::error::no tag to publish from"; exit 1; }
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.ref.outputs.tag }}
+          fetch-depth: 0
+
+      # A tag that is not on `main` is not a release. Catching it here is cheap; catching it after
+      # the package is public is not possible at all, because a published version is immutable.
+      - name: Assert the tag is on main
+        env:
+          TAG: ${{ steps.ref.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$TAG" origin/main; then
+            echo "::error::$TAG is not an ancestor of main. Promote develop into main first, then tag main."
+            exit 1
+          fi
+          echo "$TAG is on main"
+
+      # The tag and package.json are two separate claims about the same version and nothing keeps them
+      # in step. Read both and compare, rather than trusting either.
+      - name: Assert package.json version matches the tag
+        env:
+          TAG: ${{ steps.ref.outputs.tag }}
+        run: |
+          set -euo pipefail
+          pkg="$(node -p "require('./package.json').version")"
+          want="${TAG#v}"
+          if [ "$pkg" != "$want" ]; then
+            echo "::error::tag $TAG says $want, package.json says $pkg. Bump package.json in the promotion, then retag."
+            exit 1
+          fi
+          echo "version $pkg matches $TAG"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@mckinley-and-rice"
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Assert the published surface exists
+        run: |
+          set -euo pipefail
+          for f in dist/index.js dist/index.d.ts; do
+            [ -s "$f" ] || { echo "::error::$f is missing or empty; refusing to publish an empty package"; exit 1; }
+          done
+          for d in dist/style dist/assets; do
+            [ -d "$d" ] && [ -n "$(ls -A "$d")" ] || { echo "::error::$d is missing or empty"; exit 1; }
+          done
+
+      # Already-published versions are immutable, so a retry of a partially-succeeded run must not fail
+      # the whole job on the one step that cannot be repeated.
+      - name: Publish to GitHub Packages
+        if: ${{ github.event_name == 'release' || inputs.dry_run == false }}
+        env:
+          # GITHUB_TOKEN with packages:write publishes this organization's own scope. No separate
+          # NPM_TOKEN secret is needed, and one fewer credential is one fewer thing to leak or rotate.
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.ref.outputs.tag }}
+        run: |
+          set -euo pipefail
+          version="${TAG#v}"
+          name="$(node -p "require('./package.json').name")"
+          if npm view "$name@$version" version --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
+            echo "::notice::$name@$version is already published; nothing to do"
+            exit 0
+          fi
+          npm publish
+
+      - name: Pack only (dry run)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}
+        run: |
+          set -euo pipefail
+          npm pack --dry-run
+          echo "::notice::dry run: built and packed, published nothing"

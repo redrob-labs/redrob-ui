@@ -1,0 +1,72 @@
+name: ci
+
+# Runs on every pull request so branch protection has a check that actually reports.
+# A required check must be one that runs on a pull request: requiring a `workflow_dispatch`-only
+# workflow leaves every pull request waiting forever.
+
+on:
+  pull_request:
+  push:
+    branches: [develop, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: typecheck and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build the package
+        run: yarn build
+
+      # The build is `tsc` plus two asset copies, so an empty `dist` is a silent pass. Assert the
+      # entry point, the types and both asset trees actually landed.
+      - name: Assert the published surface exists
+        run: |
+          set -euo pipefail
+          for f in dist/index.js dist/index.d.ts; do
+            [ -s "$f" ] || { echo "::error::$f is missing or empty after build"; exit 1; }
+          done
+          for d in dist/style dist/assets; do
+            [ -d "$d" ] && [ -n "$(ls -A "$d")" ] || { echo "::error::$d is missing or empty after build"; exit 1; }
+          done
+          echo "dist entry, types and assets present"
+
+  storybook:
+    name: storybook builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build Storybook
+        run: yarn build-storybook
+
+      - name: Assert the static site was produced
+        run: |
+          set -euo pipefail
+          [ -s storybook-static/index.html ] || { echo "::error::storybook-static/index.html is missing"; exit 1; }
+          echo "storybook static site present"

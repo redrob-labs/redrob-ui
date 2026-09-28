@@ -25,7 +25,9 @@ on:
 
 permissions:
   contents: read
-  packages: write
+  # Provenance signs the published tarball against this workflow run, so a consumer can check that
+  # the package on the registry was built here and not uploaded from someone's laptop.
+  id-token: write
 
 jobs:
   publish:
@@ -80,8 +82,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@mckinley-and-rice"
+          registry-url: "https://registry.npmjs.org"
+          scope: "@redrob-labs"
           cache: yarn
 
       - name: Install dependencies
@@ -96,28 +98,39 @@ jobs:
           for f in dist/index.js dist/index.d.ts; do
             [ -s "$f" ] || { echo "::error::$f is missing or empty; refusing to publish an empty package"; exit 1; }
           done
-          for d in dist/style dist/assets; do
+          for d in dist/styles dist/fonts; do
             [ -d "$d" ] && [ -n "$(ls -A "$d")" ] || { echo "::error::$d is missing or empty"; exit 1; }
           done
 
       # Already-published versions are immutable, so a retry of a partially-succeeded run must not fail
       # the whole job on the one step that cannot be repeated.
-      - name: Publish to GitHub Packages
+      # The public registry needs a real npm token; GITHUB_TOKEN cannot publish there. Fail with the
+      # reason rather than letting `npm publish` report a bare 401 nobody can act on.
+      - name: Assert the npm token is configured
         if: ${{ github.event_name == 'release' || inputs.dry_run == false }}
         env:
-          # GITHUB_TOKEN with packages:write publishes this organization's own scope. No separate
-          # NPM_TOKEN secret is needed, and one fewer credential is one fewer thing to leak or rotate.
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          [ -n "$NPM_TOKEN" ] || {
+            echo "::error::NPM_TOKEN is not set. Add a repository secret with publish rights on the @redrob-labs scope."
+            exit 1
+          }
+
+      - name: Publish to npm
+        if: ${{ github.event_name == 'release' || inputs.dry_run == false }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           TAG: ${{ steps.ref.outputs.tag }}
         run: |
           set -euo pipefail
           version="${TAG#v}"
           name="$(node -p "require('./package.json').name")"
-          if npm view "$name@$version" version --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
+          if npm view "$name@$version" version >/dev/null 2>&1; then
             echo "::notice::$name@$version is already published; nothing to do"
             exit 0
           fi
-          npm publish
+          npm publish --provenance --access public
 
       - name: Pack only (dry run)
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}

@@ -1,0 +1,46 @@
+<!-- @dsCard group="Marketing" height=2021 width=1180 -->
+<div id="root" style="font-family: var(--font-sans); color: var(--ink-primary);"></div>
+<script>
+  const h = React.createElement;
+  const R = window.Redrob;
+  /* Real renders of ScreenDeskPlaybook, ScreenDeskConnectors and ScreenOfficeRenewals, not wireframes. See assets/Screens. */
+  const SHOTS = ['/_blob/eef156a181855d008b52a2a0800f17d5', '/_blob/1f2023dde5dd02d67bf4cbd4570e018b', '/_blob/c2716493fcd4b3abc2fa760f1688374b'];
+  const SHOT = (i) => SHOTS[i % SHOTS.length];
+
+  function Demo() {
+    return h('div', null, [
+      /* This row bleeds, and it is the only one that does. It is the system's own
+         answer to a column of rows reading as a table - and to a page reading like
+         every other B2B site, where each section is a screenshot in a neat box,
+         alternating sides. One per page: two is a pattern. */
+      h(R.Band, { key:1 }, h(R.FeatureRow, { index:0, bleed:true,
+        title:'Redrob Desk does the same work the same way, every time',
+        points:['Save a way of working as a playbook, step by step',
+                'Run it once, on a schedule, or when a file arrives',
+                'Every step that sends, signs or pays waits for you'],
+        action: h(R.Button,{size:'sm',variant:'secondary'},'See the thirty examples'),
+        media: h(R.Figure,{ src: SHOT(0), alt:'A Redrob Desk playbook: the contract renewal sweep with its figure, its steps, when it runs and the apps it may reach.', ratio:'8 / 5',
+          caption:'The renewal sweep runs every Monday at 08:00 Seoul time, and stops twice for a person.', credit:'Redrob Desk, as designed' }) }, 'A playbook is work your team already does, written down once. Desk follows the steps in order, in any project, and stops wherever you said a person should check.')),
+      h(R.Band, { key:3, ground:'sunken' }, h(R.FeatureRow, { index:1,
+        title:'It reaches only the apps you add',
+        points:['Twenty of the most used work apps, from Gmail to Jira',
+                'Each one can read, or read and write, nothing in between',
+                'Sending is a step, and that step always asks'],
+        action: h(R.Button,{size:'sm',variant:'secondary'},'See the connectors'),
+        media: h(R.Figure,{ src: SHOT(1), alt:'The Connectors page in Redrob Desk: six connected apps, each with what Desk does there.', ratio:'8 / 5',
+          caption:'Six apps connected. A playbook reaches the ones added to it, and no others.', credit:'Redrob Desk, as designed' }) }, 'Connect the apps you already work in. Then each playbook says which of them it may read, and which it may change.')),
+      h(R.Band, { key:2 }, h(R.FeatureRow, { index:2,
+        /* The copy matches the screen beside it. There is no Browser screen yet, so there
+           is no Browser row: a marketing page that describes a product it cannot show is
+           the thing 50-not-generated.md rules out, one level up from the layout. */
+        title:'Redrob Office keeps the record, not just the document',
+        points:['A number opens at the sentence it came from',
+                'What could not be read is named, not dropped',
+                'Korean, Hindi and English in one list, each set its own way'],
+        action: h(R.Button,{size:'sm',variant:'secondary'},'See how a figure is traced'),
+        media: h(R.Figure,{ src: SHOT(2), alt:'The renewals console: a table of contracts with their renewal dates, notice periods and annual value.', ratio:'8 / 5',
+          caption:'Nine of thirty-nine renew on their own inside sixty days. Two files could not be read and say so.', credit:'Redrob Office, as designed' }) }, 'Every figure in the list came out of a file somebody wrote. Open one and it says which file, which clause, and when it was last read. The two it could not read are named at the top rather than left out of the count.'))
+    ]);
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Demo));
+</script>

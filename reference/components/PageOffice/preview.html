@@ -1,0 +1,343 @@
+<!-- @dsCard group="Pages" height=6560 width=1280 page -->
+<style>
+/* Screen-only composition. The parts are bundle components; this is how a page arranges them. */
+.ox-product { display: inline-flex; align-items: center; gap: 12px; font-size: 17px; line-height: 24px; font-weight: 700; letter-spacing: -.01em; color: var(--ink-primary); }
+.ox-product img { width: 40px; height: 40px; display: block; }
+.ox-split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 64px; align-items: start; }
+.ox-side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 24px; }
+.ox-h2 { margin: 0; font-size: 40px; line-height: 46px; font-weight: 700; letter-spacing: -.025em; color: var(--ink-primary); text-wrap: balance; }
+.ox-intro { margin: 0; font-size: 16px; line-height: 26px; color: var(--ink-secondary); max-width: 34ch; }
+/* the product render in the hero */
+.ox-app { position: relative; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; background: var(--surface-base); border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-lg); font-size: 13px; line-height: 18px; color: var(--ink-primary); }
+.ox-app__bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); background: var(--surface-raised); }
+.ox-app__bar img { width: 20px; height: 20px; }
+.ox-app__bar b { font-size: 13px; font-weight: 600; }
+.ox-app__bar span { margin-left: auto; font-size: 12px; color: var(--ink-secondary); }
+.ox-app__body { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 16px; min-height: 0; }
+.ox-fact { padding: 14px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--surface-raised); }
+.ox-fact small { display: block; font-size: 12px; color: var(--ink-secondary); }
+.ox-fact__row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.ox-fact__name { font-size: 14px; font-weight: 600; }
+.ox-old { color: var(--ink-muted); text-decoration: line-through; font-variant-numeric: tabular-nums; }
+.ox-new { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.ox-fact__src { margin-top: 8px; font-size: 12px; color: var(--ink-secondary); }
+.ox-fig .rr-figure__frame { aspect-ratio: auto !important; overflow: visible; }
+.ox-deps__h { display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--ink-secondary); }
+.ox-deps { list-style: none; margin: 6px 0 0; padding: 0; border-top: 1px solid var(--border-subtle); }
+.ox-deps li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 10px 0; border-bottom: 1px solid var(--border-subtle); }
+.ox-deps b { font-weight: 600; }
+.ox-deps em { font-style: normal; color: var(--ink-secondary); }
+.ox-deps .ox-st { font-size: 12px; font-weight: 600; white-space: nowrap; color: var(--status-success, #0f7b3f); }
+.ox-deps .ox-st--wait { color: var(--ink-brand); }
+.ox-deps .ox-src { grid-column: 1 / -1; font-size: 12px; color: var(--ink-secondary); }
+/* how it works */
+.ox-steps { list-style: none; margin: 0; padding: 0; counter-reset: st; border-top: 1px solid var(--border-strong); }
+.ox-steps li { counter-increment: st; display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 8px; padding: 28px 0; border-bottom: 1px solid var(--border-subtle); }
+.ox-steps li::before { content: "0" counter(st); font-size: 28px; line-height: 32px; font-weight: 700; color: var(--ink-brand); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.ox-steps b { display: block; font-size: 22px; line-height: 30px; font-weight: 700; letter-spacing: -.015em; margin-bottom: 8px; }
+.ox-steps span { display: block; font-size: 16px; line-height: 26px; color: var(--ink-secondary); max-width: 58ch; }
+/* the three capabilities, each with room of its own */
+.ox-cap { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 64px; align-items: center; }
+.ox-cap--flip > :first-child { order: 2; }
+.ox-cap__body { display: flex; flex-direction: column; gap: 20px; }
+.ox-cap__h { margin: 0; font-size: 44px; line-height: 50px; font-weight: 700; letter-spacing: -.028em; color: var(--ink-primary); text-wrap: balance; max-width: 16ch; }
+.ox-cap__p { margin: 0; font-size: 17px; line-height: 28px; color: var(--ink-secondary); max-width: 50ch; }
+.ox-cap__p b { color: var(--ink-primary); }
+.ox-cap__pts { list-style: none; margin: 8px 0 0; padding: 0; border-top: 1px solid var(--border-subtle); max-width: 52ch; }
+.ox-cap__pts li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border-subtle); font-size: 15px; line-height: 24px; color: var(--ink-primary); }
+.ox-cap__pts svg { margin-top: 4px; color: var(--ink-brand); }
+.ox-cap__in { font-size: 13px; font-weight: 600; color: var(--ink-secondary); margin: 8px 0 -8px; }
+.ox-rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border-subtle); }
+.ox-rows li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--border-subtle); }
+.ox-rows b { font-weight: 600; }
+.ox-rows em { grid-column: 1 / -1; font-style: normal; font-size: 12px; color: var(--ink-secondary); }
+.ox-chip { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; color: var(--ink-secondary); background: var(--surface-base); white-space: nowrap; }
+.ox-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-secondary); }
+.ox-v { font-size: 12px; font-weight: 600; white-space: nowrap; }
+.ox-v--ok { color: var(--status-success, #0f7b3f); }
+.ox-v--no { color: var(--status-danger, #c0282d); }
+.ox-v--gap { color: var(--status-warning, #9a5b00); }
+.ox-v--held { color: var(--ink-primary); }
+.ox-sum { display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 12px 14px; border-radius: 10px; background: var(--surface-raised); border: 1px solid var(--border-subtle); font-size: 13px; }
+.ox-sum b { font-size: 18px; font-weight: 700; margin-right: 4px; font-variant-numeric: tabular-nums; }
+@media (max-width: 860px) {
+  .ox-cap { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .ox-cap--flip > :first-child { order: 0; }
+  .ox-cap__h { font-size: 32px; line-height: 38px; }
+}
+/* files */
+.ox-files { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--border-strong); }
+.ox-files li { padding: 20px 24px 20px 0; border-bottom: 1px solid var(--border-subtle); }
+.ox-files b { display: block; font-size: 17px; line-height: 24px; font-weight: 600; }
+.ox-files span { display: block; font-size: 14px; line-height: 22px; color: var(--ink-secondary); margin-top: 2px; }
+/* stories */
+.ox-head { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 48px; }
+.ox-stories { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 64px; align-items: start; }
+.ox-stories__more { display: flex; flex-direction: column; gap: 40px; }
+.ox-stories__more > * + * { padding-top: 40px; border-top: 1px solid var(--border-subtle); }
+/* close */
+.ox-close { display: flex; flex-direction: column; align-items: flex-start; gap: 32px; max-width: 58%; color: #fff; }
+.ox-close h2 { margin: 0; font-size: 64px; line-height: 68px; font-weight: 700; letter-spacing: -.035em; color: #fff; text-wrap: balance; }
+.ox-close__row { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
+.ox-close__link { color: #fff; font-size: 15px; font-weight: 600; text-decoration: none; }
+.ox-close__link:hover { text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 860px) {
+  .ox-split, .ox-stories { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .ox-side { position: static; }
+  .ox-h2 { font-size: 30px; line-height: 36px; }
+  .ox-files { grid-template-columns: minmax(0, 1fr); }
+  .ox-steps li { grid-template-columns: 48px minmax(0, 1fr); }
+  .ox-steps li::before { font-size: 20px; }
+  .ox-close { max-width: 78%; }
+  .ox-close h2 { font-size: 40px; line-height: 44px; }
+}
+</style>
+<div id="root" style="font-family: var(--font-sans); color: var(--ink-primary);"></div>
+<script>
+  const h = React.createElement;
+  const R = window.Redrob;
+  /* The site's one navigation (90-web.md, One navigation): the same on every page. */
+  const NAV = [
+    { label:'Products', items:[
+      { label:'Redrob Router',  href:'#', detail:'Sends each prompt to the model and harness that do it best' },
+      { label:'Redrob Chat',    href:'#', detail:'A conversation, with each question sent to the model that answers it best' },
+      { label:'Redrob Code',    href:'#', detail:'Writing and fixing code, with the model and harness that do it best' },
+      { label:'Redrob Desk',    href:'#', detail:'The agent that works in your own files, in place' },
+      { label:'Redrob Office',  href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
+      { label:'Redrob Browser', href:'#', detail:'A browser that finishes the task you give it' },
+      { label:'Redrob Design',  href:'#', detail:'Designs the whole product as one system, in the file' } ] },
+    { label:'Solutions', items:['For founders','For small teams','For engineers','For designers','For product managers','For marketers','For sales teams','For recruiters','For HR teams','For lawyers','For accountants','For consultants'].map(l => ({ label:l, href:'#' })) },
+    { label:'Research', href:'#' },
+    { label:'News', href:'#' },
+    { label:'Blog', href:'#' },
+    { label:'Company', href:'#' }
+  ];
+  /* English, Korean and Hindi first (the three markets), then the world's most spoken
+     languages. Native names; Arabic sets right to left. A language with no version of this
+     page renders as unavailable, never as a link home (LangSwitch). */
+  const LANGS = [
+    {code:'en',label:'English',href:'#'}, {code:'ko',label:'\ud55c\uad6d\uc5b4',href:'#'}, {code:'hi',label:'\u0939\u093f\u0928\u094d\u0926\u0940',href:'#'},
+    {code:'zh-Hans',label:'\u7b80\u4f53\u4e2d\u6587',href:'#'}, {code:'es',label:'Espa\u00f1ol',href:'#'}, {code:'fr',label:'Fran\u00e7ais',href:'#'},
+    {code:'ar',label:'\u0627\u0644\u0639\u0631\u0628\u064a\u0629',href:'#'}, {code:'bn',label:'\u09ac\u09be\u0982\u09b2\u09be',href:'#'},
+    {code:'pt',label:'Portugu\u00eas',href:'#'}, {code:'ja',label:'\u65e5\u672c\u8a9e',href:'#'} ];
+  const LANG = h(R.LangSwitch, { current:'en', langs: LANGS });
+  /* System, Light, Dark: in the bar on every page, in the drawer on a phone. */
+  const THEME = h(R.ThemeSwitch);
+  const MARK_L = '/_blob/4acde94cf2db0da7cc2c123d4cafbb66';
+  const MARK_D = '/_blob/9d0341656bedf8aaacf9584371167cb2';
+  const mark = (px) => h('span', { className:'rr-mark' }, [
+    h('img', { key:'l', className:'rr-mark__light', src:MARK_L, alt:'Redrob', style:{ height:px+'px' } }),
+    h('img', { key:'d', className:'rr-mark__dark',  src:MARK_D, alt:'',       style:{ height:px+'px' } })
+  ]);
+  const HEADER = h(R.SiteHeader, { key:'hd', mark: mark(24), homeLabel:'Redrob',
+    sections: NAV, lang: LANG, theme: THEME,
+    action: h(R.Button, { size:'sm', shape:'pill' }, 'Start free') });
+  const FOOTER = h(R.SiteFooter, { key:'ft', mark: mark(24),
+    line: "The last mile of AI: the world's best models, across every border of language, place, background and technical skill.",
+    columns: [
+      { title:'Products', items:[
+        {label:'Redrob Router',href:'#'},{label:'Redrob Chat',href:'#'},{label:'Redrob Code',href:'#'},{label:'Redrob Desk',href:'#'},
+        {label:'Redrob Office',href:'#'},{label:'Redrob Browser',href:'#'},{label:'Redrob Design',href:'#'},
+        {label:'Luma, by Redrob',href:'#',divider:true,external:true},{label:'Signal, by Redrob',href:'#',external:true},{label:'Kaabil, by Redrob',href:'#',external:true}] },
+      { title:'Solutions', items:[{label:'For founders',href:'#'},{label:'For small teams',href:'#'},{label:'For engineers',href:'#'},{label:'For designers',href:'#'},{label:'For product managers',href:'#'},{label:'For marketers',href:'#'},{label:'For sales teams',href:'#'},{label:'For recruiters',href:'#'},{label:'For HR teams',href:'#'},{label:'For lawyers',href:'#'},{label:'For accountants',href:'#'},{label:'For consultants',href:'#'}] },
+      { title:'Company', items:[{label:'About Redrob',href:'#'},{label:'Research',href:'#'},{label:'News',href:'#'},{label:'Blog',href:'#'}] }
+    ],
+    copyright: '© 2026 Redrob Inc.',
+    legal: [ {label:'Privacy',href:'#'}, {label:'Terms',href:'#'}, {label:'Cookies',onClick:()=>{}}, {label:'Accessibility',href:'#'}, {label:'Company details',href:'#'} ] });
+
+  const OFFICE_ICON = '/_blob/1c5e12194b27c0fe69016d6aa902ea82';
+  const OFFICE_ICON_32 = '/_blob/2b5903b291096ecf13d413014abd0363';
+
+  /* The product render in the hero: one edited forecast and the four places that used it.
+     Built as designed, in the system's own components' tokens, until the software ships. */
+  const DEPS = [
+    ['Q3 board deck.pptx', 'Slide 4, revenue chart and headline', 'Updated', 'Source: forecast.xlsx, Summary!C4'],
+    ['Q3 model.xlsx', 'Forecast, C14:C19', 'Recalculated 6 cells', 'Source: forecast.xlsx, Summary!C4'],
+    ['Investor memo.docx', 'Paragraph 3', 'Rewrote one sentence', 'Source: forecast.xlsx, Summary!C4'],
+    ['Budget 2027.xlsx', 'Summary, F8', 'Waiting for you', 'Source: forecast.xlsx, Summary!C4']
+  ];
+  const RENDER = h('div', { className:'ox-app', role:'img', 'aria-label':'Redrob Office after one forecast was edited: four files that used it, three updated and one waiting for review.' }, [
+    h('div', { key:'b', className:'ox-app__bar' }, [h('img', { key:'i', src: OFFICE_ICON_32, alt:'' }), h('b', { key:'t' }, 'Q3 board pack'), h('span', { key:'s' }, '38 files')]),
+    h('div', { key:'m', className:'ox-app__body' }, [
+      h('div', { key:'f', className:'ox-fact' }, [
+        h('small', { key:'s' }, 'You changed one fact'),
+        h('div', { key:'r', className:'ox-fact__row' }, [
+          h('span', { key:'n', className:'ox-fact__name' }, 'FY2026 revenue forecast'),
+          h('span', { key:'o', className:'ox-old' }, '₩41.2bn'),
+          h('span', { key:'a', 'aria-hidden':'true' }, '→'),
+          h('span', { key:'v', className:'ox-new' }, '₩43.8bn')
+        ]),
+        h('div', { key:'c', className:'ox-fact__src' }, 'Edited by Minji Park at 10:42, from the CFO’s email of 14 October')
+      ]),
+      h('div', { key:'d' }, [
+        h('div', { key:'h', className:'ox-deps__h' }, [h('span', { key:'a' }, 'Office found 4 places that used it'), h('span', { key:'b' }, '3 updated, 1 to review')]),
+        h('ul', { key:'l', className:'ox-deps' }, DEPS.map(d => h('li', { key:d[0] }, [
+          h('span', { key:'a' }, [h('b', { key:'f' }, d[0]), ' ', h('em', { key:'w' }, d[1])]),
+          h('span', { key:'s', className: 'ox-st' + (d[2] === 'Waiting for you' ? ' ox-st--wait' : '') }, d[2]),
+          h('span', { key:'c', className:'ox-src' }, d[3])
+        ])))
+      ])
+    ])
+  ]);
+
+  /* 90-web.md, The headline features: the headline verbatim, its copy in three steps. */
+  const STEPS = [
+    ['Finds everything that depends on it', 'Edit a fact, a decision or an assumption once. Office finds every document, sheet and deck that used it, including the ones nobody remembered.'],
+    ['Recalculates, rewrites and updates', 'The figures are recalculated, the sentences rewritten and the slides redrawn. You see every change before it is kept.'],
+    ['Every figure keeps its source.', 'Open any number and see the cell, sentence or email it came from, and when it last changed.']
+  ];
+  /* 05-mission.md, verbatim; Expert Match is Router's. Each capability has a section of its
+     own here, so each keeps its beat. The "In Office" lines and the renders are this page's. */
+  const TICK = () => h(R.icons.check, { width: 16, height: 16 });
+  const app = (title, meta, kids, label) => h('div', { className:'ox-app', role:'img', 'aria-label': label }, [
+    h('div', { key:'b', className:'ox-app__bar' }, [h('img', { key:'i', src: OFFICE_ICON_32, alt:'' }), h('b', { key:'t' }, title), h('span', { key:'s' }, meta)]),
+    h('div', { key:'m', className:'ox-app__body' }, kids)
+  ]);
+  const MEMORY_RENDER = app('Q4 board deck', 'New', [
+    h('div', { key:'f', className:'ox-fact' }, [
+      h('small', { key:'s' }, 'Started from what Office already knows'),
+      h('div', { key:'r', className:'ox-fact__row' }, [h('span', { key:'n', className:'ox-fact__name' }, '4 things carried in from earlier work')])
+    ]),
+    h('ul', { key:'l', className:'ox-rows' }, [
+      ['Revenue is recognized on delivery, not invoice', 'Defined in the Q3 memo, 30 September'],
+      ['FY2026 forecast: ₩43.8bn', 'From forecast.xlsx, Summary!C4, edited 14 October'],
+      ['The board reads margins before revenue', 'From your notes on the Q3 deck'],
+      ['Charts in won, with dollars beside them', 'From the Q3 deck template']
+    ].map(r => h('li', { key:r[0] }, [h('b', { key:'a' }, r[0]), h('span', { key:'v', className:'ox-v ox-v--ok' }, 'Carried'), h('em', { key:'e' }, r[1])]))),
+    h('div', { key:'c', className:'ox-chips' }, [h('span', { key:'l' }, 'Drafted with'), h('span', { key:'a', className:'ox-chip' }, 'Claude Opus 5.5'),
+      h('span', { key:'t' }, 'then checked with'), h('span', { key:'b', className:'ox-chip' }, 'GPT-6 Sol'), h('span', { key:'x' }, 'on the same context')])
+  ], 'A new Q4 board deck in Redrob Office, starting from four remembered facts and definitions, drafted and checked by two models on the same context.');
+  const CROSSCHECK_RENDER = app('Q3 board pack', 'Before sending', [
+    h('div', { key:'s', className:'ox-sum' }, [
+      h('span', { key:'a' }, [h('b', { key:'n' }, '41'), 'figures checked']),
+      h('span', { key:'b' }, [h('b', { key:'n' }, '38'), 'agree']),
+      h('span', { key:'c' }, [h('b', { key:'n' }, '2'), 'disagree']),
+      h('span', { key:'d' }, [h('b', { key:'n' }, '1'), 'missing evidence'])
+    ]),
+    h('ul', { key:'l', className:'ox-rows' }, [
+      ['Gross margin, slide 6: 38.2%', 'Three models agree with the source, Q3 model.xlsx, Margin!D9', 'Agree', 'ok'],
+      ['Headcount, memo paragraph 2: 212', 'Two read 212; one read 208 from the older HR export', 'Disagree', 'no'],
+      ['Seorin renewal, slide 9: ₩2.1bn', 'No signed contract in the folder yet', 'No evidence', 'gap'],
+      ['Cash runway, slide 3: 26 months', 'Three models agree with forecast.xlsx, Cash!F14', 'Agree', 'ok']
+    ].map(r => h('li', { key:r[0] }, [h('b', { key:'a' }, r[0]), h('span', { key:'v', className:'ox-v ox-v--' + r[3] }, r[2]), h('em', { key:'e' }, r[1])])))
+  ], 'A Crosscheck of a Q3 board pack in Redrob Office: 41 figures checked by three models, 38 agree, 2 disagree and 1 has no evidence.');
+  const FIREWALL_RENDER = app('Salary review 2027.xlsx', 'Asked: summarize the budget impact', [
+    h('div', { key:'s', className:'ox-sum' }, [
+      h('span', { key:'a' }, [h('b', { key:'n' }, '3 of 11'), 'columns sent']),
+      h('span', { key:'b' }, [h('b', { key:'n' }, '0'), 'names or account numbers left the company'])
+    ]),
+    h('ul', { key:'l', className:'ox-rows' }, [
+      ['Employee name', 'Replaced with a role before sending', 'Held back', 'held'],
+      ['Bank account', 'Your policy: never leaves', 'Held back', 'held'],
+      ['Current salary', 'Sent as totals by team, not by person', 'Summed', 'gap'],
+      ['Team, grade, proposed raise %', 'Needed for the task', 'Sent', 'ok']
+    ].map(r => h('li', { key:r[0] }, [h('b', { key:'a' }, r[0]), h('span', { key:'v', className:'ox-v ox-v--' + r[3] }, r[2]), h('em', { key:'e' }, r[1])])))
+  ], 'The AI Firewall in Redrob Office on a salary sheet: names and account numbers held back, salaries summed by team, three of eleven columns sent.');
+  const CAPS = [
+    { key:'memory', name:'Multi-Model Memory', head:'Your work, remembered across every AI.',
+      copy:'Every AI you switch to starts from zero. Memory carries one professional context across Claude, GPT, Gemini and specialized models, and across your projects, files and conversations.', beat:'Switch models, not context.',
+      points:['A new deck starts from last quarter’s definitions and assumptions, not a blank page.',
+              'Switch models halfway through a document and it keeps the same figures and terms.',
+              'Everything it carries in is listed beside the work, where you can see it.'],
+      render: MEMORY_RENDER, caption:'A new board deck, starting from four things Office already knew.' },
+    { key:'crosscheck', name:'Multi-Model Crosscheck', head:"Don't rely on one AI for important work.",
+      copy:'One model is a single point of failure. Crosscheck runs the work past several models independently and shows you where they agree, where they disagree, what one of them missed and what evidence is still missing.', beat:'The second opinion, and the third.',
+      points:['Before a board pack goes out, several models check every figure against its source.',
+              'Where they disagree, you see both readings and the cell each one used.',
+              'A figure with nothing behind it is listed as missing, not guessed.'],
+      render: CROSSCHECK_RENDER, caption:'A board pack checked before sending: two figures in dispute, one with no evidence.' },
+    { key:'firewall', name:'AI Firewall', head:'Protect your work before AI sees it.',
+      copy:'Whatever reaches a model can leave your company. The Firewall finds sensitive information, applies your policies, sends only the context the task needs and controls what reaches an outside model.', beat:'Before, not after.',
+      points:['Names, salaries and account numbers in a sheet are found before any outside model sees it.',
+              'Only the columns the task needs are sent. The rest stay on your side.',
+              'Your policies decide what leaves, and you decide where the Firewall runs.'],
+      render: FIREWALL_RENDER, caption:'A salary sheet summarized without a single name or account number leaving.' }
+  ];
+  const FILES = [
+    ['Word', '.docx documents, with styles and tracked changes kept'],
+    ['Excel', '.xlsx workbooks, formulas and all'],
+    ['PowerPoint', '.pptx decks, on your own template'],
+    ['Google Docs', 'Edited in place in your Drive'],
+    ['Google Sheets', 'Edited in place in your Drive'],
+    ['Google Slides', 'Edited in place in your Drive']
+  ];
+  const side = (title, intro) => h('div', { className:'ox-side' }, [
+    h('h2', { key:'h', className:'ox-h2' }, title), intro ? h('p', { key:'p', className:'ox-intro' }, intro) : null ]);
+
+  /* The Redrob Office landing page. Its own grounds top to bottom: the hero on Office's
+     light ground, the close on its brand ground, section ticks in its mark (20-color.md).
+     One argument: the headline shown working, how it works, Memory, Crosscheck and the Firewall a section each, the files
+     it opens, what changed for the people using it, the close. Customer stories are
+     sample content: fictional companies and people, to be replaced before launch. */
+  function Screen() {
+    return h('div', null, [
+      HEADER,
+
+      h(R.Band, { key:'hero', product:'office', threshold:true }, h(R.Hero, {
+        mark: h('span', { className:'ox-product' }, [h('img', { key:'i', src: OFFICE_ICON, alt:'' }), h('span', { key:'n' }, 'Redrob Office')]),
+        lede: 'Change one number and every document, sheet and deck that used it is out of date. Edit a fact, a decision or an assumption, and Office finds everything that depends on it, recalculates the figures, rewrites the documents and updates the decks.',
+        action: h(R.Button, { size:'lg', shape:'pill', emphasis:true }, 'Try Office free'),
+        secondary: 'See how it works', secondaryHref: '#how',
+        foot: 'Free to start. Works on the Word, Excel, PowerPoint and Google files you already have.',
+        media: h(R.Figure, { className:'ox-fig', caption:'One edited forecast, and the four places Office found that used it.', credit:'Redrob Office, as designed' }, RENDER)
+      }, h(R.Display, { level:2, as:'h1', lang:'en' }, 'Your work updates itself.'))),
+
+      h(R.Band, { key:'how', id:'how', ground:'sunken', product:'office' }, h('div', { className:'ox-split' }, [
+        side('Change it once.', 'Office keeps track of where every fact is used, so one edit reaches all of them.'),
+        h('ol', { key:'l', className:'ox-steps' }, STEPS.map(s => h('li', { key:s[0] }, h('div', null, [h('b', { key:'t' }, s[0]), h('span', { key:'d' }, s[1])]))))
+      ])),
+
+      /* The three capabilities, a band each: copy and a render of it working on Office's work. */
+      ...CAPS.map((c, i) => h(R.Band, { key: c.key, product:'office', ground: i % 2 ? 'sunken' : 'base' },
+        h('div', { className: 'ox-cap' + (i % 2 ? ' ox-cap--flip' : '') }, [
+          h('div', { key:'b', className:'ox-cap__body' }, [
+            h(R.SectionMark, { key:'m', label: [c.name, 'Under every Redrob product'] }),
+            h('h2', { key:'h', className:'ox-cap__h' }, c.head),
+            h('p', { key:'p', className:'ox-cap__p' }, [c.copy + ' ', h('b', { key:'b' }, c.beat)]),
+            h('p', { key:'i', className:'ox-cap__in' }, 'In Office'),
+            h('ul', { key:'l', className:'ox-cap__pts' }, c.points.map(pt => h('li', { key:pt }, [h('span', { key:'i' }, TICK()), h('span', { key:'t' }, pt)])))
+          ]),
+          h(R.Figure, { key:'f', className:'ox-fig', caption: c.caption, credit:'Redrob Office, as designed' }, c.render)
+        ]))),
+
+      h(R.Band, { key:'files', ground:'sunken', product:'office' }, h('div', { className:'ox-split' }, [
+        side('Opens the files you already have', 'No import and no new format. Office edits each file in place, in its own format.'),
+        h('ul', { key:'l', className:'ox-files' }, FILES.map(f => h('li', { key:f[0] }, [h('b', { key:'n' }, f[0]), h('span', { key:'d' }, f[1])])))
+      ])),
+
+      h(R.Band, { key:'stories', product:'office' }, [
+        h(R.SectionMark, { key:'m', label:'Customer stories' }),
+        h('div', { key:'h', className:'ox-head', style:{ marginTop:'24px' } }, h('h2', { className:'ox-h2' }, 'What changes when the work updates itself')),
+        h('div', { key:'g', className:'ox-stories' }, [
+          h(R.CustomerStory, { key:'a', customer:'Tidewell Freight', sector:'Logistics, Busan',
+          figure:'2 hours', figureLabel:'to reissue the quarterly pack after a forecast changed, across 38 files',
+          period:'Measured over the second quarter of 2026, against 3 days for the same work in 2025.',
+          quote: h(R.Quote, { cite:'Jiwon Seo', role:'Head of Finance, Tidewell Freight' },
+            'We changed the fuel assumption at four and the board had a correct pack by six.'),
+          href:'#' }, h('p', null, 'One forecast feeds thirty-eight sheets, memos and decks. When fuel prices moved, Office found every file that used the old figure and had each one redone for review the same afternoon.')),
+          h('div', { key:'m', className:'ox-stories__more' }, [
+          h(R.CustomerStory, { key:'b', customer:'Orrin & Vale', sector:'Accounting, Noida',
+            figure:'0', figureLabel:'stale figures found in client reports at year-end review, from 14 the year before',
+            period:'Year-end close 2025, across 212 client reports.', href:'#' },
+            h('p', null, 'Rates and thresholds changed twice during the close. Each change reached every report that used it, with the source on every number.')),
+          h(R.CustomerStory, { key:'c', customer:'Kestrelmark Capital', sector:'Investment, New York',
+            figure:'11 decks', figureLabel:'brought up to date from one change to a valuation model',
+            period:'Measured on one fund update in August 2026, against five days of checking by hand for the same update in March.', href:'#' },
+            h('p', null, 'A revised discount rate used to mean a week of checking decks by hand. Office listed the eleven that used it and redrew the charts in each.'))
+          ])
+        ])
+      ]),
+
+      h(R.Band, { key:'close', ground:'brand', product:'office' }, h('div', { className:'ox-close' }, [
+        h('h2', { key:'h' }, 'Stop updating the same number twice.'),
+        h('div', { key:'r', className:'ox-close__row' }, [
+          h(R.Button, { key:'b', size:'lg', shape:'pill', emphasis:true }, 'Try Office free'),
+          h('a', { key:'a', className:'ox-close__link', href:'#' }, 'See pricing →')
+        ])
+      ])),
+
+      FOOTER
+    ]);
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));
+</script>

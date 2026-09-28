@@ -1,0 +1,24 @@
+<!-- @dsCard group="Data display" height=115 -->
+<div id="root" style="padding: 24px; font-family: var(--font-sans); color: var(--ink-primary);"></div>
+<script>
+  const h = React.createElement;
+  const R = window.Redrob;
+  const row = (kids, extra) => h('div', { style: Object.assign({ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }, extra) }, kids);
+  const col = (kids, extra) => h('div', { style: Object.assign({ display: 'flex', flexDirection: 'column', gap: '16px' }, extra) }, kids);
+
+  function Demo() {
+    return row([
+      h(R.Avatar, { key: 1, name: 'Felix Kim', size: 'xs' }),
+      h(R.Avatar, { key: 2, name: 'Felix Kim', size: 'sm' }),
+      h(R.Avatar, { key: 3, name: 'Felix Kim', size: 'md', status: 'online' }),
+      h(R.Avatar, { key: 4, name: 'Swati Chauhan', size: 'lg', status: 'busy' }),
+      h(R.Avatar, { key: 5, name: 'Redrob Labs', size: 'md', shape: 'square' }),
+      h('span', { key: 6, className: 'rr-avatar-group' }, [
+        h(R.Avatar, { key: 1, name: 'Felix Kim' }),
+        h(R.Avatar, { key: 2, name: 'Swati Chauhan' }),
+        h(R.Avatar, { key: 3, name: 'Jae Gardner' }),
+      ]),
+    ]);
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Demo));
+</script>

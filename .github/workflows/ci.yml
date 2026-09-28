@@ -32,24 +32,30 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # `tsc` has no `noEmitOnError`, so it writes output even when it reports errors. A later step
+      # reading that output would pass on a broken build, which has already happened twice in this
+      # port. This job therefore treats the build's own exit code as the gate.
       - name: Build the package
         run: yarn build
 
-      # The build is `tsc` plus two asset copies, so an empty `dist` is a silent pass. Assert the
-      # entry point, the types and both asset trees actually landed.
       - name: Assert the published surface exists
         run: |
           set -euo pipefail
-          for f in dist/index.js dist/index.d.ts; do
+          for f in dist/index.js dist/index.d.ts dist/icons/index.js; do
             [ -s "$f" ] || { echo "::error::$f is missing or empty after build"; exit 1; }
           done
-          for d in dist/style dist/assets; do
+          for d in dist/styles dist/fonts; do
             [ -d "$d" ] && [ -n "$(ls -A "$d")" ] || { echo "::error::$d is missing or empty after build"; exit 1; }
           done
-          echo "dist entry, types and assets present"
+          echo "dist entry, types, styles and fonts present"
 
-  storybook:
-    name: storybook builds
+      # The icon module is generated from the delivery's own table. A hand-edit would be silently
+      # overwritten by the next `yarn icons`, so the checked-in file must match the generator.
+      - name: Assert the generated icons are up to date
+        run: yarn icons:check
+
+  parity:
+    name: parity against the reference bundle
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,11 +68,19 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build Storybook
-        run: yarn build-storybook
+      - name: Build the package
+        run: yarn build
 
-      - name: Assert the static site was produced
-        run: |
-          set -euo pipefail
-          [ -s storybook-static/index.html ] || { echo "::error::storybook-static/index.html is missing"; exit 1; }
-          echo "storybook static site present"
+      # Renders every component twice against the delivery's own preview case - once from the
+      # reference bundle, once from our `dist` - and compares the markup. The test cases belong to
+      # the design system delivery, so they cannot drift toward the implementation they check.
+      #
+      # `reference/` is a vendored 2 MB slice of the delivery, committed so this job runs at all. A
+      # parity job that skips for want of the reference reports green for having checked nothing.
+      - name: Run the parity harness
+        run: yarn test
+
+      # Renders the reference against itself. If this fails the harness is broken, not the port -
+      # without it, a harness that silently compares nothing would look like 123 passes.
+      - name: Harness self-check
+        run: yarn test:self

@@ -141,5 +141,21 @@ export type { AvatarMarkProps } from './components/AvatarMark/AvatarMark';
 export { seriesColor, niceMax, SERIES_LIGHT, SERIES_DARK } from './internal/chart';
 
 /* ---- Frames -------------------------------------------------------------- */
+export { AppShell } from './components/AppShell/AppShell';
+export type { AppShellProps, AppShellNavItem } from './components/AppShell/AppShell';
+export { PageShell } from './components/PageShell/PageShell';
+export type { PageShellProps } from './components/PageShell/PageShell';
+export { SiteHeader } from './components/SiteHeader/SiteHeader';
+export type { SiteHeaderProps, SiteHeaderSection, SiteHeaderItem } from './components/SiteHeader/SiteHeader';
+export { SiteFooter } from './components/SiteFooter/SiteFooter';
+export type { SiteFooterProps, SiteFooterColumn, SiteFooterLink } from './components/SiteFooter/SiteFooter';
 export { Band } from './components/Band/Band';
 export type { BandProps, BandProduct } from './components/Band/Band';
+export { LangSwitch } from './components/LangSwitch/LangSwitch';
+export type { LangSwitchProps, LangOption } from './components/LangSwitch/LangSwitch';
+export { ThemeSwitch } from './components/ThemeSwitch/ThemeSwitch';
+export type { ThemeSwitchProps } from './components/ThemeSwitch/ThemeSwitch';
+export { ConsentBar } from './components/ConsentBar/ConsentBar';
+export type { ConsentBarProps, ConsentCategory } from './components/ConsentBar/ConsentBar';
+export { applyTheme, themeTarget } from './internal/theme';
+export type { ThemeMode } from './internal/theme';

@@ -12,10 +12,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "files": [
-    "dist",
-    "dist/assets",
-    "dist/style",
-    "tailwind.config.js"
+    "dist"
   ],
   "version": "1.0.12",
   "description": "React component library built with TypeScript and Tailwind CSS",
@@ -61,8 +58,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"No test suite in this repository. See CONTRIBUTING.md for how a change is verified.\" && exit 1",
-    "build": "tsc && mkdir -p dist/style dist/assets && cp -r src/style/. dist/style/ && cp -r src/assets/. dist/assets/",
+    "test": "node tools/parity/run.js --quiet",
+    "test:self": "node tools/parity/run.js --self --quiet",
+    "icons": "node tools/generate/icons.js",
+    "icons:check": "node tools/generate/icons.js --check",
+    "build": "tsc && mkdir -p dist/styles dist/fonts && cp src/styles/*.css dist/styles/ && cp src/fonts/*.woff2 dist/fonts/",
     "prepublishOnly": "npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

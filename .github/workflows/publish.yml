@@ -25,7 +25,9 @@ on:
 
 permissions:
   contents: read
-  packages: write
+  # Provenance: npm signs the published tarball against this workflow run, so a consumer can verify
+  # the package was built from this repository at this commit. It needs an OIDC token, nothing else.
+  id-token: write
 
 jobs:
   publish:
@@ -80,8 +82,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@mckinley-and-rice"
+          registry-url: "https://registry.npmjs.org"
+          scope: "@redrob-labs"
           cache: yarn
 
       - name: Install dependencies
@@ -102,18 +104,19 @@ jobs:
 
       # Already-published versions are immutable, so a retry of a partially-succeeded run must not fail
       # the whole job on the one step that cannot be repeated.
-      - name: Publish to GitHub Packages
+      - name: Publish to npm
         if: ${{ github.event_name == 'release' || inputs.dry_run == false }}
         env:
-          # GITHUB_TOKEN with packages:write publishes this organization's own scope. No separate
-          # NPM_TOKEN secret is needed, and one fewer credential is one fewer thing to leak or rotate.
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # A GITHUB_TOKEN cannot publish to registry.npmjs.org. NPM_TOKEN is a granular access token
+          # with write on the @redrob-labs scope, held as a repository secret.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           TAG: ${{ steps.ref.outputs.tag }}
         run: |
           set -euo pipefail
+          [ -n "${NODE_AUTH_TOKEN:-}" ] || { echo "::error::NPM_TOKEN is not set; add it in Settings > Secrets > Actions"; exit 1; }
           version="${TAG#v}"
           name="$(node -p "require('./package.json').name")"
-          if npm view "$name@$version" version --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
+          if npm view "$name@$version" version >/dev/null 2>&1; then
             echo "::notice::$name@$version is already published; nothing to do"
             exit 0
           fi

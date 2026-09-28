@@ -5,22 +5,17 @@
 A React component library: 67 components, written in TypeScript, styled with Tailwind CSS,
 documented in Storybook.
 
-`@mckinley-and-rice/redrob-ui`
+`@redrob-labs/ui`
 
 ## Install
 
-The package is published to **GitHub Packages**, which requires an authenticated request even
-when the package itself is public. Consumers need a token with `read:packages` in `.npmrc`:
-
-```
-@mckinley-and-rice:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
-```
+The package is published to the **public npm registry**. No authentication and no `.npmrc` entry
+is needed to install it.
 
 ```bash
-yarn add @mckinley-and-rice/redrob-ui
+yarn add @redrob-labs/ui
 # or
-npm install @mckinley-and-rice/redrob-ui
+npm install @redrob-labs/ui
 ```
 
 `react` and `react-dom` (`^18.2.0`) are peer dependencies. Your project provides them.
@@ -32,19 +27,19 @@ so its classes are not purged:
 
 ```javascript
 // tailwind.config.js
-const packageTailwindConfig = require('@mckinley-and-rice/redrob-ui/tailwind.config.js');
+const packageTailwindConfig = require('@redrob-labs/ui/tailwind.config.js');
 
 module.exports = {
   presets: [packageTailwindConfig],
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
-    './node_modules/@mckinley-and-rice/redrob-ui/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@redrob-labs/ui/**/*.{js,ts,jsx,tsx}',
   ],
 };
 ```
 
 ```jsx
-import { Button, Dialog } from '@mckinley-and-rice/redrob-ui';
+import { Button, Dialog } from '@redrob-labs/ui';
 
 function App() {
   return (

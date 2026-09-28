@@ -1523,7 +1523,7 @@ const Foundation: FC<FoundationProps> = () => {
             content: (
               <>
                 <label className='text-label-semibold pb-10 block'>
-                  @mckinley-and-rice/redrob-ui/dist/assets/
+                  @redrob-labs/ui/dist/assets/
                 </label>
                 <div className='grid grid-cols-4 gap-4'>
                   <div className='text-center'>

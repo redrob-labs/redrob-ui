@@ -5,22 +5,17 @@ English: [README.md](./README.md)
 React 컴포넌트 라이브러리입니다. 컴포넌트 67개, TypeScript로 작성하고 Tailwind CSS로
 스타일링하며 Storybook으로 문서화합니다.
 
-`@mckinley-and-rice/redrob-ui`
+`@redrob-labs/ui`
 
 ## 설치
 
-패키지는 **GitHub Packages**에 발행됩니다. 패키지가 공개돼 있어도 인증된 요청이
-필요하므로, 사용하는 쪽에 `read:packages` 권한 토큰이 `.npmrc`에 있어야 합니다.
-
-```
-@mckinley-and-rice:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
-```
+패키지는 **공개 npm 레지스트리**에 발행됩니다. 설치할 때 인증이나 `.npmrc` 설정이
+따로 필요하지 않습니다.
 
 ```bash
-yarn add @mckinley-and-rice/redrob-ui
+yarn add @redrob-labs/ui
 # 또는
-npm install @mckinley-and-rice/redrob-ui
+npm install @redrob-labs/ui
 ```
 
 `react`와 `react-dom`(`^18.2.0`)은 peer dependency입니다. 쓰는 프로젝트가 제공합니다.
@@ -32,19 +27,19 @@ npm install @mckinley-and-rice/redrob-ui
 
 ```javascript
 // tailwind.config.js
-const packageTailwindConfig = require('@mckinley-and-rice/redrob-ui/tailwind.config.js');
+const packageTailwindConfig = require('@redrob-labs/ui/tailwind.config.js');
 
 module.exports = {
   presets: [packageTailwindConfig],
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
-    './node_modules/@mckinley-and-rice/redrob-ui/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@redrob-labs/ui/**/*.{js,ts,jsx,tsx}',
   ],
 };
 ```
 
 ```jsx
-import { Button, Dialog } from '@mckinley-and-rice/redrob-ui';
+import { Button, Dialog } from '@redrob-labs/ui';
 
 function App() {
   return (

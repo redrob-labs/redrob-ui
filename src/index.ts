@@ -206,6 +206,36 @@ export { OpinionGrid } from './components/OpinionGrid/OpinionGrid';
 export type { OpinionGridProps, OpinionColumn, OpinionRow } from './components/OpinionGrid/OpinionGrid';
 export { PRIVACY_LEVELS, OPINION_MODES, OPINION_VERDICTS } from './internal/safeguards';
 
+/* ---- Agent harness ------------------------------------------------------- */
+export { TaskStatus } from './components/TaskStatus/TaskStatus';
+export type { TaskStatusProps } from './components/TaskStatus/TaskStatus';
+export { AgentRoster } from './components/AgentRoster/AgentRoster';
+export type { AgentRosterProps, RosterAgent } from './components/AgentRoster/AgentRoster';
+export { AgentHandoff } from './components/AgentHandoff/AgentHandoff';
+export type { AgentHandoffProps } from './components/AgentHandoff/AgentHandoff';
+export { ScopeBadge } from './components/ScopeBadge/ScopeBadge';
+export type { ScopeBadgeProps, Scope } from './components/ScopeBadge/ScopeBadge';
+export { Changes } from './components/Changes/Changes';
+export type { ChangesProps, ChangeItem } from './components/Changes/Changes';
+export { CostMeter } from './components/CostMeter/CostMeter';
+export type { CostMeterProps, CostBreakdown } from './components/CostMeter/CostMeter';
+export { MemoryMeter } from './components/MemoryMeter/MemoryMeter';
+export type { MemoryMeterProps, MemorySegment } from './components/MemoryMeter/MemoryMeter';
+export { Schedule } from './components/Schedule/Schedule';
+export type { ScheduleProps, ScheduleLastRun } from './components/Schedule/Schedule';
+export { SchedulePicker } from './components/SchedulePicker/SchedulePicker';
+export type { SchedulePickerProps } from './components/SchedulePicker/SchedulePicker';
+export { PlaybookRow } from './components/PlaybookRow/PlaybookRow';
+export type { PlaybookRowProps, PlaybookStep } from './components/PlaybookRow/PlaybookRow';
+export { AppAccess } from './components/AppAccess/AppAccess';
+export type { AppAccessProps, AccessApp, AccessGrant } from './components/AppAccess/AppAccess';
+export { ConnectorCard } from './components/ConnectorCard/ConnectorCard';
+export type { ConnectorCardProps } from './components/ConnectorCard/ConnectorCard';
+export { CheckIn } from './components/CheckIn/CheckIn';
+export type { CheckInProps, CheckInOption } from './components/CheckIn/CheckIn';
+export { RUN_LABEL, SCOPE_MODE, describeSchedule, nextScheduledRun } from './internal/harness';
+export type { ScheduleValue } from './internal/harness';
+
 /* ---- Frames -------------------------------------------------------------- */
 export { AppShell } from './components/AppShell/AppShell';
 export type { AppShellProps, AppShellNavItem } from './components/AppShell/AppShell';

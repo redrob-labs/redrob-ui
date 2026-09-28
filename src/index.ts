@@ -87,6 +87,20 @@ export type { TimestampProps } from './components/Timestamp/Timestamp';
 /** Exported because a consumer validating its own date form needs the same answer DateInput uses. */
 export { dateParts, toE164, tidyPostal } from './internal/borders';
 
+/* ---- Navigation ---------------------------------------------------------- */
+export { Tabs } from './components/Tabs/Tabs';
+export type { TabsProps, TabItem } from './components/Tabs/Tabs';
+export { Breadcrumb } from './components/Breadcrumb/Breadcrumb';
+export type { BreadcrumbProps, BreadcrumbItem } from './components/Breadcrumb/Breadcrumb';
+export { Pagination, pageList } from './components/Pagination/Pagination';
+export type { PaginationProps } from './components/Pagination/Pagination';
+export { Stepper } from './components/Stepper/Stepper';
+export type { StepperProps, StepperStep } from './components/Stepper/Stepper';
+export { Accordion } from './components/Accordion/Accordion';
+export type { AccordionProps, AccordionItem } from './components/Accordion/Accordion';
+export { Scroller } from './components/Scroller/Scroller';
+export type { ScrollerProps } from './components/Scroller/Scroller';
+
 /* ---- Frames -------------------------------------------------------------- */
 export { Band } from './components/Band/Band';
 export type { BandProps, BandProduct } from './components/Band/Band';

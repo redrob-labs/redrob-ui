@@ -307,3 +307,19 @@ export { ConsentBar } from './components/ConsentBar/ConsentBar';
 export type { ConsentBarProps, ConsentCategory } from './components/ConsentBar/ConsentBar';
 export { applyTheme, themeTarget } from './internal/theme';
 export type { ThemeMode } from './internal/theme';
+
+/* ---- Publishing ---------------------------------------------------------- */
+export { IndexHeader } from './components/IndexHeader/IndexHeader';
+export type { IndexHeaderProps, IndexTopic } from './components/IndexHeader/IndexHeader';
+export { PostList } from './components/PostList/PostList';
+export type { PostListProps } from './components/PostList/PostList';
+export { ArticleLayout } from './components/ArticleLayout/ArticleLayout';
+export type {
+  ArticleLayoutProps,
+  ArticleTocEntry,
+  ArticleTag,
+} from './components/ArticleLayout/ArticleLayout';
+export { LegalDoc } from './components/LegalDoc/LegalDoc';
+export type { LegalDocProps, LegalSection, LegalRevision } from './components/LegalDoc/LegalDoc';
+export { PubItem, pubAuthors, pubYear } from './internal/publishing';
+export type { PubStory, PubAuthor, PubFinding, PubPaper, PubItemProps } from './internal/publishing';

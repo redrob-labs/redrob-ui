@@ -8,12 +8,12 @@
 
   function Demo() {
     return col([
-      h(R.Message, { key: 1, role: 'user', author: 'Felix Kim' }, 'Which of the Noida backend candidates have payments experience?'),
+      h(R.Message, { key: 1, role: 'user', author: 'John Doe' }, 'Which of the Noida backend candidates have payments experience?'),
       h(R.Message, { key: 2, role: 'assistant', footer: [
-        h(R.Citation, { key: 1, index: 1, source: 'Aarav Sharma - CV', href: '/records/aarav-sharma-cv' }),
+        h(R.Citation, { key: 1, index: 1, source: 'Richard Doe - CV', href: '/records/aarav-sharma-cv' }),
         h(R.Citation, { key: 2, index: 2, source: 'Screening call notes', href: '/records/screening-call-notes' }),
         h(R.Confidence, { key: 3, level: 'high', note: 'both sources are first-hand' }),
-      ] }, 'Three of the twelve. Aarav Sharma led a payments platform team for four years, Meera Nair worked on settlement reconciliation, and Rohit Verma spent two years on a UPI integration.'),
+      ] }, 'Three of the twelve. Richard Doe led a payments platform team for four years, Mary Doe worked on settlement reconciliation, and John Miles spent two years on a UPI integration.'),
     ], { gap: '20px' });
   }
   ReactDOM.createRoot(document.getElementById('root')).render(h(Demo));

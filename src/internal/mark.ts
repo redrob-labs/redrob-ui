@@ -39,7 +39,7 @@ export function markHash(v: unknown): number {
 /**
  * Initials from a name.
  *
- * A Hangul name is one family syllable, not two letters: 김정우 is 김. Taking two gave 김정, which reads
+ * A Hangul name is one family syllable, not two letters: 김철수 is 김. Taking two gave 김철, which reads
  * as a different name - it borrows half the given name and presents it as the family one.
  */
 export function initials(name?: string): string {

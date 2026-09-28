@@ -8,15 +8,15 @@
 
   function Demo() {
     return row([
-      h(R.Avatar, { key: 1, name: 'Felix Kim', size: 'xs' }),
-      h(R.Avatar, { key: 2, name: 'Felix Kim', size: 'sm' }),
-      h(R.Avatar, { key: 3, name: 'Felix Kim', size: 'md', status: 'online' }),
-      h(R.Avatar, { key: 4, name: 'Swati Chauhan', size: 'lg', status: 'busy' }),
+      h(R.Avatar, { key: 1, name: 'John Doe', size: 'xs' }),
+      h(R.Avatar, { key: 2, name: 'John Doe', size: 'sm' }),
+      h(R.Avatar, { key: 3, name: 'John Doe', size: 'md', status: 'online' }),
+      h(R.Avatar, { key: 4, name: 'John Stiles', size: 'lg', status: 'busy' }),
       h(R.Avatar, { key: 5, name: 'Redrob Labs', size: 'md', shape: 'square' }),
       h('span', { key: 6, className: 'rr-avatar-group' }, [
-        h(R.Avatar, { key: 1, name: 'Felix Kim' }),
-        h(R.Avatar, { key: 2, name: 'Swati Chauhan' }),
-        h(R.Avatar, { key: 3, name: 'Jae Gardner' }),
+        h(R.Avatar, { key: 1, name: 'John Doe' }),
+        h(R.Avatar, { key: 2, name: 'John Stiles' }),
+        h(R.Avatar, { key: 3, name: 'Mary Major' }),
       ]),
     ]);
   }

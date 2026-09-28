@@ -76,7 +76,7 @@
         children: h(R.ApprovalStep, {
           title: 'Send the summary to three people',
           description: 'This leaves the building, so it waits for you.',
-          detail: 'To 박현진, Swati Chauhan and Jae Gardner. Subject "9 contracts inside the 60 day window". One PDF attached, 3 pages. Nothing else is sent.',
+          detail: 'To 박영수, John Stiles and Mary Major. Subject "9 contracts inside the 60 day window". One PDF attached, 3 pages. Nothing else is sent.',
           approveLabel: 'Send it', rejectLabel: 'Not yet', alwaysLabel: 'Always send this one'
         }) }
     ];
@@ -85,7 +85,7 @@
 
   function Conversation() {
     return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '18px' } }, [
-      h(R.Message, { key: 'u', role: 'user', author: 'Felix' },
+      h(R.Message, { key: 'u', role: 'user', author: 'John' },
         'Go through the 2024 supplier contracts and tell me which ones renew on their own inside 60 days.'),
       h(R.Message, { key: 'a', role: 'assistant', author: 'Desk',
         footer: h('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' } }, [
@@ -101,7 +101,7 @@
 
   function Conversation() {
     return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '18px' } }, [
-      h(R.Message, { key: 'u', role: 'user', author: 'Felix' },
+      h(R.Message, { key: 'u', role: 'user', author: 'John' },
         'Go through the 2024 supplier contracts and tell me which ones renew on their own inside 60 days.'),
       h(R.Message, { key: 'a', role: 'assistant', author: 'Desk',
         footer: h('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' } }, [

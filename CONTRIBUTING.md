@@ -92,6 +92,10 @@ Styling is plain CSS on tokens. The class names come from the delivery's stylesh
 with `yarn icons:check`.
 
 Use `example.com` in placeholder data. Never a real person, and never an internal domain.
+People in fixtures are placeholders from a fixed set - `John Doe`, `Jane Doe`, `Richard Roe`,
+`Mary Major`, `John Stiles`, `Richard Miles`, and the Hangul `홍길동`, `김철수`, `이영희`, `박영수`.
+Keep the script: a Hangul name exercises one-syllable initials and CJK wrapping, so replacing it
+with a Latin one silently drops that coverage.
 
 ## Releasing
 

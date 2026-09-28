@@ -16,7 +16,7 @@
     ];
     return row([
       h(R.Combobox, { key: 1, label: 'Role', options: roles, defaultOpen: true, defaultValue: 'fe', placeholder: 'Search roles', style: { width: '300px' } }),
-      h(R.Combobox, { key: 2, label: 'Reviewer', options: ['Felix Kim', 'Swati Chauhan', 'Jae Gardner'], hint: 'Type to filter, Enter to pick.', style: { width: '260px' } }),
+      h(R.Combobox, { key: 2, label: 'Reviewer', options: ['John Doe', 'John Stiles', 'Mary Major'], hint: 'Type to filter, Enter to pick.', style: { width: '260px' } }),
     ], { alignItems: 'flex-start' });
   }
   ReactDOM.createRoot(document.getElementById('root')).render(h(Demo));

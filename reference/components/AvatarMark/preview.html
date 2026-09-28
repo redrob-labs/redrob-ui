@@ -4,9 +4,9 @@
   const h = React.createElement;
   const R = window.Redrob;
 
-  const PEOPLE = ['Felix Kim', '김정우', 'Aarti Sundaram', 'Jae Gardner', 'Kartikey Handa',
-                  'Swati Chauhan', '이장훈', 'Meera Nair', 'Rohit Verma', 'Ngozi Okafor',
-                  'Budi Santoso', 'Priya Raman'];
+  const PEOPLE = ['John Doe', '김철수', 'Richard Miles', 'Mary Major', 'Jane Roe',
+                  'John Stiles', '홍길동', 'Mary Doe', 'John Miles', 'Jane Miles',
+                  'Peter Poe', 'Alice Poe'];
   const cap = (t) => h('div', { style: { fontSize: '11px', color: 'var(--ink-muted)', marginTop: '12px' } }, t);
 
   function Demo() {
@@ -20,7 +20,7 @@
       h('div', { key: 'b' }, [
         h(R.SectionMark, { label: ['At every size'] }),
         h('div', { style: { display: 'flex', gap: '14px', alignItems: 'center', marginTop: '14px' } },
-          ['xs', 'sm', 'md', 'lg'].map((s) => h(R.Avatar, { key: s, name: 'Aarti Sundaram', size: s }))),
+          ['xs', 'sm', 'md', 'lg'].map((s) => h(R.Avatar, { key: s, name: 'Richard Miles', size: s }))),
         cap('xs 24, sm 32, md 40, lg 56 - one SVG, no raster at any size'),
       ]),
       h('div', { key: 'c', style: { display: 'flex', gap: '40px', flexWrap: 'wrap' } }, [
@@ -41,8 +41,8 @@
         h('div', { key: 3 }, [
           h(R.SectionMark, { label: ['A photo wins'] }),
           h('div', { style: { display: 'flex', gap: '10px', marginTop: '14px' } }, [
-            h(R.Avatar, { key: 1, name: 'Felix Kim', size: 'lg' }),
-            h(R.Avatar, { key: 2, name: 'Felix Kim', size: 'lg', art: false }),
+            h(R.Avatar, { key: 1, name: 'John Doe', size: 'lg' }),
+            h(R.Avatar, { key: 2, name: 'John Doe', size: 'lg', art: false }),
           ]),
           cap('generated, and art: false for the flat fallback'),
         ]),

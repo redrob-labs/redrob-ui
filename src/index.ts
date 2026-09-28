@@ -264,6 +264,30 @@ export { DecisionNotice } from './components/DecisionNotice/DecisionNotice';
 export type { DecisionNoticeProps } from './components/DecisionNotice/DecisionNotice';
 export { MET_LABEL, WEIGHT_LABEL, SEV_LABEL, SRC_STATE } from './internal/evidence';
 
+/* ---- Marketing ----------------------------------------------------------- */
+export { Hero } from './components/Hero/Hero';
+export type { HeroProps, HeroFilmSpec } from './components/Hero/Hero';
+export { LogoRow } from './components/LogoRow/LogoRow';
+export type { LogoRowProps, LogoRowLogo } from './components/LogoRow/LogoRow';
+export { FeatureRow } from './components/FeatureRow/FeatureRow';
+export type { FeatureRowProps } from './components/FeatureRow/FeatureRow';
+export { Figure } from './components/Figure/Figure';
+export type { FigureProps } from './components/Figure/Figure';
+export { CustomerStory } from './components/CustomerStory/CustomerStory';
+export type { CustomerStoryProps } from './components/CustomerStory/CustomerStory';
+export { StoryHeader } from './components/StoryHeader/StoryHeader';
+export type { StoryHeaderProps, StoryFact } from './components/StoryHeader/StoryHeader';
+export { PriceTable } from './components/PriceTable/PriceTable';
+export type { PriceTableProps, PricePlan, PriceRow } from './components/PriceTable/PriceTable';
+export { NewsSection } from './components/NewsSection/NewsSection';
+export type { NewsSectionProps, NewsItem } from './components/NewsSection/NewsSection';
+export { Milestones } from './components/Milestones/Milestones';
+export type { MilestonesProps, Milestone } from './components/Milestones/Milestones';
+export { PeopleList } from './components/PeopleList/PeopleList';
+export type { PeopleListProps, Person } from './components/PeopleList/PeopleList';
+export { pubPicture } from './internal/pubPicture';
+export type { PubImage, PubPictureOptions } from './internal/pubPicture';
+
 /* ---- Frames -------------------------------------------------------------- */
 export { AppShell } from './components/AppShell/AppShell';
 export type { AppShellProps, AppShellNavItem } from './components/AppShell/AppShell';

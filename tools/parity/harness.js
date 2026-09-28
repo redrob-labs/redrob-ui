@@ -20,7 +20,18 @@ const NODE_MODULES = path.join(__dirname, '..', '..', 'node_modules');
 const React = require(path.join(NODE_MODULES, 'react'));
 const { renderToStaticMarkup } = require(path.join(NODE_MODULES, 'react-dom/server'));
 
-const SYSTEM = process.env.REDROB_DS_DIR || '/home/ubuntu/workplace/redrob-design-system';
+/**
+ * Where the reference lives. `reference/` is a vendored copy of the delivery's `bundle.js`, its
+ * stylesheet, its prop contract and every `preview.html` case - about 2 MB of the 141 MB delivery.
+ *
+ * It is vendored rather than referenced from a sibling checkout so this gate runs in CI. A parity
+ * job that skips because it could not find the reference is worse than no job: it reports green for
+ * having checked nothing.
+ *
+ * `REDROB_DS_DIR` points at a full delivery instead, which is how the vendored copy is refreshed
+ * and how a newer delivery is tried before it is committed.
+ */
+const SYSTEM = process.env.REDROB_DS_DIR || path.join(__dirname, '..', '..', 'reference');
 const COMPONENTS_DIR = path.join(SYSTEM, 'components');
 const REFERENCE_BUNDLE = path.join(COMPONENTS_DIR, 'bundle.js');
 

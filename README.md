@@ -2,60 +2,84 @@
 
 한국어: [README.ko.md](./README.ko.md)
 
-A React component library: 67 components, written in TypeScript, styled with Tailwind CSS,
-documented in Storybook.
+The **Redrob Group Design System 2026**, as typed React components: 123 components and 252 icons,
+written in TypeScript, styled with plain CSS on design tokens.
 
-`@mckinley-and-rice/redrob-ui`
+`@redrob-labs/ui`
 
 ## Install
 
-The package is published to **GitHub Packages**, which requires an authenticated request even
-when the package itself is public. Consumers need a token with `read:packages` in `.npmrc`:
-
-```
-@mckinley-and-rice:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
-```
-
 ```bash
-yarn add @mckinley-and-rice/redrob-ui
+yarn add @redrob-labs/ui
 # or
-npm install @mckinley-and-rice/redrob-ui
+npm install @redrob-labs/ui
 ```
 
-`react` and `react-dom` (`^18.2.0`) are peer dependencies. Your project provides them.
+Published to the public npm registry. No authentication, no `.npmrc` entry, nothing to configure —
+the previous release went to GitHub Packages, which required every consumer to hold a token just to
+install a public package.
+
+`react` and `react-dom` are peer dependencies (`^18.2.0 || ^19.0.0`). Your project provides them.
 
 ## Use
 
-Extend your Tailwind config with the one the package ships, and add the package to `content`
-so its classes are not purged:
+Import the stylesheet once, at your application's entry point. There is no Tailwind config, no
+PostCSS step and no build plugin: the system is plain CSS on custom properties.
 
 ```javascript
-// tailwind.config.js
-const packageTailwindConfig = require('@mckinley-and-rice/redrob-ui/tailwind.config.js');
-
-module.exports = {
-  presets: [packageTailwindConfig],
-  content: [
-    './src/**/*.{js,ts,jsx,tsx}',
-    './node_modules/@mckinley-and-rice/redrob-ui/**/*.{js,ts,jsx,tsx}',
-  ],
-};
+import '@redrob-labs/ui/dist/styles/tokens.css';
+import '@redrob-labs/ui/dist/styles/system.css';
 ```
 
 ```jsx
-import { Button, Dialog } from '@mckinley-and-rice/redrob-ui';
+import { Button, Hero, Display } from '@redrob-labs/ui';
 
-function App() {
+function Landing() {
   return (
-    <div>
-      <Button variant="primary">Submit</Button>
-    </div>
+    <Hero
+      lede="Every claim on this page says what it is measured over."
+      action={<Button tone="primary">Read the method</Button>}
+      secondary="See the data"
+      secondaryHref="/data"
+    >
+      <Display>Hiring decisions you can check.</Display>
+    </Hero>
   );
 }
 ```
 
-`src/index.ts` is the single entry point. Every export is listed there.
+`src/index.ts` is the single entry point. Every export is listed there, grouped by system group,
+with its prop types.
+
+The 18 font faces ship in `dist/fonts/` and `system.css` references them relatively, so they
+resolve wherever the package is served from.
+
+## The parity harness
+
+This library is a transcription of the design system's own reference bundle, so "does it look
+right" is not the standard. The gate is exact markup equality:
+
+```bash
+yarn test        # every component vs the reference bundle
+yarn test:self   # the reference vs itself, to prove the harness still compares anything
+```
+
+`node tools/parity/run.js [Names]` renders each component twice — once from the delivery's
+reference bundle, once from our built `dist` — against the delivery's **own** `preview.html` case,
+and compares the normalised markup. The cases are the delivery's, not ours, so they cannot drift
+toward the implementation they are meant to check.
+
+`reference/` holds a vendored 2 MB slice of the 141 MB delivery: `bundle.js`, its stylesheet, the
+prop contract, and all 148 preview cases. It is committed so the gate runs in CI. Point
+`REDROB_DS_DIR` at a full delivery to refresh it or to try a newer one.
+
+Two things this harness has caught that review would not:
+
+- A circle whose inline style emitted `width;height` where the reference emits `height;width`.
+  Invisible on screen, and a real difference in the DOM.
+- `tsc` has no `noEmitOnError`, so it writes output **even when it reports errors**. A component
+  with a real type error still rendered, and parity passed on the broken output. **Parity green with
+  a red build is not a pass** — read the build's exit code separately.
 
 ## Develop
 
@@ -65,19 +89,27 @@ Node.js 20.x. Yarn 1.x (`yarn.lock` is v1 and CI installs with `--frozen-lockfil
 git clone https://github.com/mckinley-and-rice/redrob-ui.git
 cd redrob-ui
 yarn install
-yarn storybook        # http://localhost:6006
+yarn build && yarn test
 ```
 
 | Command | What it does |
 |---|---|
-| `yarn storybook` | Storybook dev server on port 6006. |
-| `yarn build` | `tsc` to `dist/`, then copies `src/style` and `src/assets`. |
-| `yarn build-storybook` | Static Storybook into `storybook-static/`. |
+| `yarn build` | `tsc` to `dist/`, then copies `src/styles/*.css` and `src/fonts/*.woff2`. |
+| `yarn test` | Parity against the reference bundle. The gate. |
+| `yarn test:self` | Renders the reference against itself. Proves the harness works. |
+| `yarn icons` | Regenerates `src/icons/index.tsx` from the delivery's icon table. |
+| `yarn icons:check` | Fails if the checked-in icon module is out of date. |
 
-**There is no test suite.** `yarn test` exits non-zero on purpose, so nothing reports a pass
-that never ran. Changes are verified by building and looking at the component in Storybook.
-Because there is no test suite, no test job can be a required check; `ci` builds the package
-and Storybook instead, and asserts both produced real output.
+`src/icons/index.tsx` is **generated**. Edit the generator, not the file — a hand-edit is
+overwritten by the next `yarn icons` without warning, which is why CI checks it.
+
+Components are written with `React.createElement` rather than JSX. That is deliberate: the port
+transcribes the reference's `h()` calls, and the gate compares markup exactly, so keeping the call
+shape identical makes a difference in the output easy to find.
+
+There is no Storybook. The delivery's 148 `preview.html` cases are the gallery, and the parity
+harness already renders every component against all of them — hand-written stories would be a
+third copy of the same cases, free to drift from both.
 
 ## Contributing
 
@@ -85,10 +117,6 @@ and Storybook instead, and asserts both produced real output.
 is cut. Branching follows the organization's
 [gitflow standard](https://github.com/mckinley-and-rice/.github/blob/main/docs/GITFLOW.md):
 `develop` is the default branch, `main` is the released state.
-
-## Documentation
-
-Storybook is the documentation and it is not hosted. Run `yarn storybook` and read it locally.
 
 ## Support
 

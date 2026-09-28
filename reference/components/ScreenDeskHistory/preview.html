@@ -1,0 +1,106 @@
+<!-- @dsCard group="Product screens" height=920 width=1320 page -->
+<div id="root" style="font-family: var(--font-sans); color: var(--ink-primary);"></div>
+<style>
+  #root, .rr-shell { min-height: 100vh; }
+  .wk-page { display: flex; flex-direction: column; gap: 48px; padding: 8px 0 64px; }
+  .wk-page > .wk-back + * { margin-top: -28px; }
+  .wk-lede { margin: -4px 0 0; font-size: 14px; line-height: 22px; color: var(--ink-secondary); max-width: 640px; }
+  .wk-lede--top { margin: 0; font-size: 15px; line-height: 24px; }
+  .wk-tabscroll { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; min-width: 0; }
+  .wk-tabscroll .rr-tab { white-space: nowrap; }
+  .wk-log { list-style: none; margin: -24px 0 0; padding: 0; border-top: 1px solid var(--border-subtle); }
+  .wk-log > li { border-bottom: 1px solid var(--border-subtle); }
+  .wk-log__i { width: 100%; display: grid; grid-template-columns: 128px 28px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 14px 8px;
+    border: 0; border-radius: var(--radius-md); background: transparent; font: inherit; color: var(--ink-primary); cursor: pointer; text-align: left; }
+  .wk-log__i:hover { background: var(--surface-sunken); }
+  .wk-log__i[aria-pressed="true"] { background: var(--surface-brand-subtle); }
+  .wk-log__when { font-size: 13px; line-height: 19px; color: var(--ink-secondary); font-variant-numeric: tabular-nums; }
+  .wk-log__icon { display: inline-flex; color: var(--ink-secondary); }
+  .wk-log__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .wk-log__main b { font-size: 14px; line-height: 21px; font-weight: 500; }
+  .wk-log__main span { font-size: 13px; line-height: 19px; color: var(--ink-secondary); }
+  .wk-rail { display: flex; flex-direction: column; gap: 28px; }
+  .wk-railh { font-size: 12px; line-height: 16px; font-weight: 600; color: var(--ink-muted); margin-bottom: 10px; }
+  .wk-railt { display: block; font-size: 15px; line-height: 22px; font-weight: 600; margin-top: -4px; }
+  .wk-railnote { margin: 8px 0 0; font-size: 13px; line-height: 19px; color: var(--ink-secondary); }
+  .wk-dl { margin: 0; display: flex; flex-direction: column; }
+  .wk-dl > div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border-subtle); font-size: 13px; }
+  .wk-dl dt { color: var(--ink-secondary); } .wk-dl dd { margin: 0; font-weight: 500; }
+  @media (max-width: 720px) {
+    .wk-page { gap: 36px; }
+    .wk-starts, .wk-feats, .wk-scheds { grid-template-columns: minmax(0, 1fr); }
+    .wk-attn__i { flex-wrap: wrap; align-items: flex-start; }
+    .wk-attn__t { flex: 1 1 calc(100% - 52px); }
+    .wk-attn__i > .rr-btn { margin-left: 52px; }
+    .wk-row { grid-template-columns: 36px minmax(0, 1fr) auto; }
+    .wk-row > .wk-row__fig, .wk-row > .wk-people { display: none; }
+    .wk-log__i { grid-template-columns: 20px minmax(0, 1fr); }
+    .wk-log__when { grid-column: 2; order: 3; }
+    .wk-log__icon { order: 0; } .wk-log__main { order: 1; } .wk-log__i > .rr-task { grid-column: 2; order: 2; }
+  }
+  .wk-narrowset { max-width: 420px; padding: 8px 0 64px; } /* wk-rail */
+</style>
+<script>
+  /* Desk, History: everything Desk did and who approved it, with a run's steps beside it. Sample data: a Seoul law firm on Mon 28 Sep 2026. */
+
+  const h = React.createElement;
+  const R = window.Redrob;
+  const I = R.icons;
+  const ic = (n, s, p) => h(I[n], Object.assign({ width: s || 15, height: s || 15, 'aria-hidden': true }, p));
+  const MARK_L = '/_blob/4acde94cf2db0da7cc2c123d4cafbb66';
+  const MARK_D = '/_blob/9d0341656bedf8aaacf9584371167cb2';
+  const SYMBOL = '/_blob/a35853f38695b112ff00dae9ab62fdce';
+  const NOW = new Date(2026, 8, 28, 10, 0); /* Mon 28 Sep 2026, 10:00 Seoul */
+  const RECENT = [{"id":"indemnity","label":"Seorin indemnity cap","meta":"2h"},{"id":"notice","label":"Notice by email - valid?","meta":"Mon"},{"id":"hanbit-exh","label":"Hanbit exhibit list","meta":"Fri"}];
+  /* The Desk sidebar: five places, recent chats, then how Desk works for you, each with its state. */
+  function nav(current, apps) {
+    const it = (id, label, icon, meta) => ({ id, label, icon: ic(icon), meta, href: '#' + id, current: current === id });
+    return [it('chat', 'Chat', 'message'), it('projects', 'Projects', 'folder'), it('playbooks', 'Playbooks', 'checklist'), it('scheduled', 'Scheduled', 'calendarClock', '2'), it('history', 'History', 'history'),
+      { heading: 'Recent' }].concat(RECENT.map(c => ({ id: 'r-' + c.id, label: c.label, meta: c.meta, href: '#chat' })), [
+      { heading: 'How Desk works for you' },
+      it('guide', 'Model Guide', 'chart', 'Auto'), it('connectors', 'Connectors', 'plug', String(apps || 6)),
+      it('privacy', 'Privacy protection', 'shieldCheck', 'High'), it('memory', 'Memory', 'bookOpen', 'On'), it('opinion', 'Second opinion', 'compare', 'On')]);
+  }
+  function shell(current, p, body, apps) {
+    return h(R.AppShell, Object.assign({ product: 'Desk', mark: MARK_L, markDark: MARK_D, symbol: SYMBOL, collapsible: true, defaultCollapsed: false,
+      theme: h(R.ThemeSwitch, { size: 'sm' }), nav: nav(current, apps), navLabel: 'Desk' }, p), body);
+  }
+  const ME = 'Han Jiwoo';
+  const PROJECTS = [{"id":"seorin","name":"Seorin MSA","about":"Master services agreement with Seorin Bio","files":18,"chats":6,"playbooks":["first-review"],"active":"2h ago","people":["Han Jiwoo","Lee Dohyun","Kim Minjun"]},{"id":"supplier","name":"Q3 supplier contracts","about":"Every supplier contract up for renewal this year","files":41,"chats":3,"playbooks":["renewal-sweep"],"active":"Mon","people":["Han Jiwoo","Choi Yuna"]},{"id":"hanbit","name":"Hanbit v. Daeil","about":"Seoul Central District Court, damages claim","files":126,"chats":11,"playbooks":["deadline-tracker"],"active":"Today","people":["Han Jiwoo","Lee Dohyun","Park Sera","Jung Hoon"]},{"id":"nara","name":"Nara Series B diligence","about":"Acting for the lead investor","files":212,"chats":4,"playbooks":[],"active":"18 Sep","people":["Han Jiwoo","Kim Minjun"]},{"id":"clauses","name":"Our clause library","about":"The positions the firm has agreed, clause by clause","files":64,"chats":2,"playbooks":[],"active":"9 Sep","people":["Everyone at the firm"]}];
+  const PJ = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
+  const HISTORY = [{"id":"h3","when":"Today 08:14","kind":"run","what":"Renewal sweep read 41 contracts, found 9","project":"supplier","state":"blocked","label":"Waiting for you","by":"-","took":"4m 12s","out":false,"files":0},{"id":"h1","when":"Today 07:40","kind":"run","what":"Court deadline tracker read 1 new order","project":"hanbit","state":"blocked","label":"Waiting for you","by":"-","took":"2m 10s","out":false,"files":0},{"id":"h2","when":"Today 07:12","kind":"chat","what":"Answered: is the Seorin indemnity cap market?","project":"seorin","state":"done","label":"Answered","by":"-","took":"48s","out":false,"files":0},{"id":"h4","when":"Fri 25 Sep 16:02","kind":"approval","what":"Sent the review note to Kim Minjun at Seorin","project":"seorin","state":"done","label":"Sent","by":"Han Jiwoo","took":"-","out":true,"files":0},{"id":"h5","when":"Fri 25 Sep 15:31","kind":"run","what":"First-pass review of Seorin draft v3","project":"seorin","state":"done","label":"4 departures","by":"-","took":"3m 05s","out":false,"files":1},{"id":"h6","when":"Thu 24 Sep 11:20","kind":"approval","what":"Added 3 deadlines to the team calendar","project":"hanbit","state":"done","label":"Added","by":"Lee Dohyun","took":"-","out":false,"files":0},{"id":"h7","when":"Wed 23 Sep 09:05","kind":"change","what":"Updated the exhibit index, 12 rows","project":"hanbit","state":"done","label":"Kept","by":"Han Jiwoo","took":"1m 40s","out":false,"files":1},{"id":"h8","when":"Mon 21 Sep 08:13","kind":"approval","what":"Declined to send 1 notice letter","project":"supplier","state":"stopped","label":"You said no","by":"Han Jiwoo","took":"-","out":false,"files":0}];
+  const HISTORY_STEPS = {"h3":[{"label":"Read every contract in the folder","state":"done","meta":"41 of 41"},{"label":"Found the ones that renew on their own in the next 60 days","state":"done","meta":"9 found"},{"label":"Worked out the last day to give notice for each","state":"done","meta":"Earliest 3 Oct"},{"label":"Compared each against what we have signed with that party","state":"done","meta":"2 differ"},{"label":"Draft a notice letter for each one to end","state":"active","meta":"Waiting for you"},{"label":"Send the letters from your email","state":"todo"}],"h5":[{"label":"Read the draft against our standard positions","state":"done","meta":"38 clauses"},{"label":"Marked every clause that departs from our standard","state":"done","meta":"4 found"},{"label":"Suggested wording from clauses already agreed","state":"done","meta":"3 of 4"},{"label":"Rated each departure","state":"done","meta":"1 must change"},{"label":"Wrote a short note for the client","state":"done","meta":"You sent it at 16:02"}]};
+  function HistoryView({ sel, setSel }) {
+    const [f, setF] = React.useState('all');
+    const rows = HISTORY.filter(r => f === 'all' || (f === 'out' ? r.out : f === 'files' ? r.files : r.kind === f));
+    const kindIcon = { run: 'repeat', chat: 'message', approval: 'userCheck', change: 'edit' };
+    return h('div', { className: 'wk-page' }, [
+      h('p', { key: 'l', className: 'wk-lede wk-lede--top' }, 'Everything Desk did, in order: every run, every change to a file, everything sent outside, and who approved it. Kept for as long as your admin sets, and they can export it.'),
+      h('div', { key: 't', className: 'wk-tabscroll' }, h(R.Tabs, { label: 'Show', value: f, onChange: setF, items: [
+        { id: 'all', label: 'Everything', count: HISTORY.length }, { id: 'run', label: 'Runs', count: HISTORY.filter(r => r.kind === 'run').length },
+        { id: 'approval', label: 'Approvals', count: HISTORY.filter(r => r.kind === 'approval').length }, { id: 'out', label: 'Sent outside', count: HISTORY.filter(r => r.out).length },
+        { id: 'files', label: 'Files changed', count: HISTORY.filter(r => r.files).length }] })),
+      h('ol', { key: 'r', className: 'wk-log' }, rows.map(r => h('li', { key: r.id }, h('button', { type: 'button', className: 'wk-log__i', 'aria-pressed': sel === r.id, onClick: () => setSel(r.id) }, [
+        h('span', { key: 'w', className: 'wk-log__when' }, r.when),
+        h('span', { key: 'i', className: 'wk-log__icon' }, ic(kindIcon[r.kind], 14)),
+        h('span', { key: 'm', className: 'wk-log__main' }, [h('b', { key: 'b' }, r.what), h('span', { key: 's' }, [PJ[r.project].name, r.by !== '-' ? ' - approved by ' + r.by : '', r.out ? ' - sent outside' : ''])]),
+        h(R.TaskStatus, { key: 's', state: r.state, label: r.label })
+      ]))))
+    ]);
+  }
+  function HistoryRail({ sel }) {
+    const r = HISTORY.find(x => x.id === sel) || HISTORY[2];
+    const steps = HISTORY_STEPS[r.id];
+    return h('div', { className: 'wk-rail' }, [
+      h('div', { key: 'h' }, [h('div', { key: 'h', className: 'wk-railh' }, r.when), h('b', { key: 'b', className: 'wk-railt' }, r.what)]),
+      steps ? h(R.AgentTimeline, { key: 't', label: 'Steps', steps }) : h('dl', { key: 'd', className: 'wk-dl' }, [
+        ['Project', PJ[r.project].name], ['Approved by', r.by === '-' ? 'Nobody needed to' : r.by], ['Took', r.took], ['Sent outside', r.out ? 'Yes, to Seorin' : 'No']
+      ].map(([k, v]) => h('div', { key: k }, [h('dt', { key: 'k' }, k), h('dd', { key: 'v' }, v)]))),
+      h('p', { key: 'n', className: 'wk-railnote' }, 'Each step keeps what it read and which AI did it, so the run can be checked later.')
+    ]);
+  }
+
+
+  ReactDOM.createRoot(document.getElementById('root')).render(h(function Root() { const [sel, setSel] = React.useState('h3');
+      return shell('history', { title: 'History', meta: 'The last 30 days, for you and your team', rail: h(HistoryRail, { sel }), actions: h(R.Button, { size: 'sm', variant: 'ghost', iconLeft: ic('download', 14) }, 'Export') }, h(HistoryView, { sel, setSel })); }));
+</script>

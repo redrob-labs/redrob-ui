@@ -12,7 +12,7 @@ Node.js 20.x, Yarn 1.x입니다.
 
 ```bash
 yarn install
-yarn storybook
+yarn build && yarn test
 ```
 
 ## 브랜치
@@ -53,31 +53,42 @@ rebase 머지는 쓰지 않습니다. 승격을 squash하면 두 브랜치의 �
 
 ## 변경 검증
 
-**테스트 스위트가 없습니다.** `yarn test`는 의도적으로 실패합니다. 돌지도 않은 검사가
-통과로 보이지 않게 하려는 것입니다. 그래서 부담이 작성자와 리뷰어에게 있습니다.
+`yarn test`가 게이트입니다. 모든 컴포넌트를 디자인 시스템 배포물의 `preview.html` 케이스로
+두 번 렌더합니다. 한 번은 원본 번들로, 한 번은 우리가 빌드한 `dist`로. 그리고 마크업을 비교합니다.
 
 ```bash
-yarn build            # tsc 후 style·assets 복사
-yarn build-storybook  # 스토리 전체가 컴파일돼야 한다
-yarn storybook        # 그 다음 바꾼 컴포넌트를 눈으로 본다
+yarn build       # tsc 후 styles·fonts 복사
+yarn test        # 모든 컴포넌트를 원본 번들과 비교
+yarn test:self   # 원본을 원본과 비교. 깨진 하네스가 통과로 보이지 않게
 ```
 
-빌드가 초록인 것은 사용자가 보는 어떤 것도 검증하지 않습니다. 스토리를 열고 컴포넌트를
-조작한 뒤, 무엇을 봤고 어떻게 동작했는지 풀 리퀘스트에 적습니다.
+빌드의 종료 코드를 따로 보세요. `tsc`에 `noEmitOnError`가 없어서 **오류를 보고하면서도 출력을
+씁니다.** 패리티 러너는 그 깨진 출력을 읽고 태연히 통과합니다. 이 레포에서 두 번 일어났습니다.
+**빌드가 빨간데 패리티가 초록이면 통과가 아닙니다.**
 
-테스트 잡이 없으므로 그것을 필수 검사로 걸 수 없습니다. 필수 검사는 `ci`입니다. 패키지와
-Storybook을 빌드하고 두 산출물이 실제로 생겼는지 단정합니다. 빌드가 `tsc`와 `cp` 두 개라
-비어 있는 `dist/`도 그냥 통과해버리기 때문입니다.
+무언가를 통과시키려고 하네스를 약화시키거나 건너뛰거나 예외를 두지 마세요. 원본과 우리 구현이
+정말로 달라야 한다면, 이유를 풀 리퀘스트에 적으세요. 조용히 만든 예외 하나가 그 뒤의 모든
+컴포넌트에 대해 게이트를 무의미하게 만듭니다.
 
 ## 컴포넌트 추가
 
-1. `src/components/<Name>.tsx`.
-2. `src/index.ts`에서 내보냅니다. 이 파일이 공개 표면 전부이며, 여기서 내보내지 않은
-   컴포넌트는 사용자에게 존재하지 않습니다.
-3. `src/stories/<Name>.stories.tsx`. Storybook이 문서이므로 스토리가 없는 컴포넌트는
-   문서가 없는 것입니다.
-4. Tailwind 클래스로 스타일링합니다. 패키지의 `tailwind.config.js`가 모르는 것은 사용자
-   빌드의 `content` purge에 걸려 전달되지 않습니다.
+1. 원본을 먼저 읽습니다. `sed -n '/^  function <Name>(/,/^  }$/p' reference/components/bundle.js`,
+   프롭 계약은 `reference/components/index.d.ts`. 동작을 옮겨 적고, 개선하지 않습니다.
+   게이트가 마크업을 비교하기 때문입니다.
+2. `src/components/<Name>/<Name>.tsx`. 원본의 호출 모양을 유지하려고 JSX 대신
+   `React.createElement`로 씁니다.
+3. 타입이 붙은 props 인터페이스와, **왜**를 말하는 문서 주석. 무엇에 쓰는 것인지, 무엇에 쓰지
+   말아야 하는지, 그 프롭이 무엇을 막는지. 코드를 다시 말하는 주석은 쓰지 않습니다.
+4. `src/index.ts`의 그룹 제목 아래에서 타입까지 내보냅니다. 이 파일이 공개 표면 전부이며,
+   여기서 내보내지 않은 컴포넌트는 사용자에게 존재하지 않습니다.
+5. `yarn build && yarn test <Name>`이 통과할 때까지 돌리고, 그 다음 `yarn test`로 전체를 돌려
+   앞선 것이 퇴행하지 않았는지 확인합니다.
+
+스타일은 토큰 위의 순수 CSS입니다. 클래스 이름은 배포물 스타일시트(`src/styles/system.css`)에서
+옵니다. Tailwind도, 추가할 유틸리티 클래스도 없습니다.
+
+`src/icons/index.tsx`는 생성된 파일입니다. 파일이 아니라 `tools/generate/icons.js`를 고치세요.
+CI가 `yarn icons:check`로 검사합니다.
 
 예시 데이터에는 `example.com`을 씁니다. 실제 사람과 내부 도메인은 쓰지 않습니다.
 

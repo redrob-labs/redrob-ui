@@ -1,0 +1,13 @@
+<!-- @dsCard group="Agent chat" height=250 -->
+<div id="root" style="padding: 32px; font-family: var(--font-sans); color: var(--ink-primary);"></div>
+<script>
+  const h = React.createElement;
+  const R = window.Redrob;
+  const I = R.icons;
+  const ic = (n, s) => h(I[n], { width: s || 15, height: s || 15 });
+
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { maxWidth: '760px' } }, h(R.Message, { role: 'assistant', author: 'Desk' }, h('div', null, [
+    h('p', { key: 1, style: { margin: 0 } }, 'Three clauses move risk onto you: 8.2, 11.4 and 14.1.'),
+    h(R.OpinionAdded, { key: 2, by: 'Gemini 3.1 Pro' }, h('p', null, 'Clause 6.3 renews the agreement for another 12 months unless you cancel 90 days ahead. Your usual is 60.'))
+  ]))));
+</script>

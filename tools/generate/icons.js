@@ -16,7 +16,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const SYSTEM = process.env.REDROB_DS_DIR || '/home/ubuntu/workplace/redrob-design-system';
+/** Same vendored reference the parity harness uses. `REDROB_DS_DIR` overrides it with a full delivery. */
+const SYSTEM = process.env.REDROB_DS_DIR || path.join(__dirname, '..', '..', 'reference');
 const BUNDLE = path.join(SYSTEM, 'components', 'bundle.js');
 const OUT = path.join(__dirname, '..', '..', 'src', 'icons', 'index.tsx');
 

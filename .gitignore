@@ -13,7 +13,7 @@ node_modules
 
 # build output
 /dist
-/storybook-static
+
 # next.js
 /.next/
 /out/
@@ -41,4 +41,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-*storybook.log
+

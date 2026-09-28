@@ -1,0 +1,128 @@
+<!-- @dsCard group="Product screens" height=1260 width=1320 page -->
+<div id="root" style="font-family: var(--font-sans); color: var(--ink-primary);"></div>
+<style>
+  #root, .rr-shell { min-height: 100vh; }
+  .wk-page { display: flex; flex-direction: column; gap: 48px; padding: 8px 0 64px; }
+  .wk-page > .wk-back + * { margin-top: -28px; }
+  .wk-sec { display: flex; flex-direction: column; gap: 16px; }
+  .wk-sec__body { min-width: 0; }
+  .wk-lede { margin: -4px 0 0; font-size: 14px; line-height: 22px; color: var(--ink-secondary); max-width: 640px; }
+  .wk-back { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; font-size: 13px; font-weight: 600; color: var(--ink-secondary); text-decoration: none; }
+  .wk-back:hover { color: var(--ink-primary); }
+  .wk-pbv { gap: 32px; }
+  .wk-worth { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 32px; padding: 24px 0; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); }
+  .wk-worth__v b { display: block; font-size: 36px; line-height: 42px; font-weight: 600; letter-spacing: -0.015em; }
+  .wk-worth__v span { font-size: 14px; line-height: 20px; color: var(--ink-secondary); }
+  .wk-worth__s { flex: 1; min-width: 240px; margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-size: 15px; line-height: 23px; }
+  .wk-rail { display: flex; flex-direction: column; gap: 28px; }
+  @media (max-width: 720px) {
+    .wk-page { gap: 36px; }
+    .wk-starts, .wk-feats, .wk-scheds { grid-template-columns: minmax(0, 1fr); }
+    .wk-attn__i { flex-wrap: wrap; align-items: flex-start; }
+    .wk-attn__t { flex: 1 1 calc(100% - 52px); }
+    .wk-attn__i > .rr-btn { margin-left: 52px; }
+    .wk-row { grid-template-columns: 36px minmax(0, 1fr) auto; }
+    .wk-row > .wk-row__fig, .wk-row > .wk-people { display: none; }
+    .wk-log__i { grid-template-columns: 20px minmax(0, 1fr); }
+    .wk-log__when { grid-column: 2; order: 3; }
+    .wk-log__icon { order: 0; } .wk-log__main { order: 1; } .wk-log__i > .rr-task { grid-column: 2; order: 2; }
+  }
+  .wk-explain { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .wk-explain h3 { margin: 0 0 6px; font-size: 14px; line-height: 20px; font-weight: 600; }
+  .wk-explain p { margin: 0; font-size: 14px; line-height: 22px; color: var(--ink-secondary); }
+  @media (max-width: 720px) { .wk-explain { grid-template-columns: minmax(0, 1fr); } .wk-new__line { font-size: 28px; line-height: 36px; } .wk-new { min-height: 0; } }
+  .wk-src { margin: -12px 0 0; font-size: 12px; line-height: 18px; color: var(--ink-muted); }
+  .wk-src > span { display: block; font-weight: 600; margin-bottom: 4px; }
+  .wk-src ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .wk-src a { display: inline-flex; align-items: center; gap: 4px; color: var(--ink-secondary); text-decoration: none; }
+  .wk-src a:hover { color: var(--ink-brand); text-decoration: underline; }
+  .wk-src__fx { margin: 6px 0 0; }
+  .wk-narrowset { max-width: 420px; padding: 8px 0 64px; } /* wk-rail */
+</style>
+<script>
+  /* Desk, one playbook: what it is worth and where the figure comes from, its steps, when it runs and what it can reach. Sample data: a Seoul law firm on Mon 28 Sep 2026. */
+
+  const h = React.createElement;
+  const R = window.Redrob;
+  const I = R.icons;
+  const ic = (n, s, p) => h(I[n], Object.assign({ width: s || 15, height: s || 15, 'aria-hidden': true }, p));
+  const MARK_L = '/_blob/4acde94cf2db0da7cc2c123d4cafbb66';
+  const MARK_D = '/_blob/9d0341656bedf8aaacf9584371167cb2';
+  const SYMBOL = '/_blob/a35853f38695b112ff00dae9ab62fdce';
+  const NOW = new Date(2026, 8, 28, 10, 0); /* Mon 28 Sep 2026, 10:00 Seoul */
+  const RECENT = [{"id":"indemnity","label":"Seorin indemnity cap","meta":"2h"},{"id":"notice","label":"Notice by email - valid?","meta":"Mon"},{"id":"hanbit-exh","label":"Hanbit exhibit list","meta":"Fri"}];
+  /* The Desk sidebar: five places, recent chats, then how Desk works for you, each with its state. */
+  function nav(current, apps) {
+    const it = (id, label, icon, meta) => ({ id, label, icon: ic(icon), meta, href: '#' + id, current: current === id });
+    return [it('chat', 'Chat', 'message'), it('projects', 'Projects', 'folder'), it('playbooks', 'Playbooks', 'checklist'), it('scheduled', 'Scheduled', 'calendarClock', '2'), it('history', 'History', 'history'),
+      { heading: 'Recent' }].concat(RECENT.map(c => ({ id: 'r-' + c.id, label: c.label, meta: c.meta, href: '#chat' })), [
+      { heading: 'How Desk works for you' },
+      it('guide', 'Model Guide', 'chart', 'Auto'), it('connectors', 'Connectors', 'plug', String(apps || 6)),
+      it('privacy', 'Privacy protection', 'shieldCheck', 'High'), it('memory', 'Memory', 'bookOpen', 'On'), it('opinion', 'Second opinion', 'compare', 'On')]);
+  }
+  function shell(current, p, body, apps) {
+    return h(R.AppShell, Object.assign({ product: 'Desk', mark: MARK_L, markDark: MARK_D, symbol: SYMBOL, collapsible: true, defaultCollapsed: false,
+      theme: h(R.ThemeSwitch, { size: 'sm' }), nav: nav(current, apps), navLabel: 'Desk' }, p), body);
+  }
+  const PROFESSIONS = [["lawyer","Lawyer"],["accountant","Accountant"],["recruiter","Recruiter"],["hr","HR"],["founder","Founder"],["sales","Sales"],["marketer","Marketer"],["consultant","Consultant"],["pm","Product manager"],["engineer","Engineer"]];
+  const FX = "at ₩1,387.97 and ₹95.87 per $1, Federal Reserve H.10, 18 Sep 2026";
+  const PLAYBOOKS = [{"id":"first-review","p":"lawyer","high":true,"name":"Contract first review","icon":"clause","purpose":"Use it when a contract comes in from the other side and needs a first read against your usual positions.","summary":"Desk reads the contract against your firm's positions and marks every clause that departs from them, rated by risk. It drafts the redlines and a short note for the client, both ready for you to check.","gets":"A marked-up draft and a one-page issues list, ordered by risk, with fallback wording for each issue.","needs":"The contract, your clause library or past signed deals, and your document system.","impact":["2 days to 2 hours","for a first review of a supplier contract"],"stake":"Off-market terms are caught before anyone signs. Legal teams using this kind of review report 8 hours or more back per lawyer each week.","src":[["Harvey customer results, 2025","https://www.harvey.ai/blog/how-harvey-saves-lawyers-time"],["Luminance in-house case study: 60% less review time","https://www.techuk.org/resource/ai-adoption-case-study-learn-how-luminance-s-legal-team-reduced-time-spent-on-contract-review-with-ai.html"]],"steps":[{"label":"Read the contract and pull out the key terms"},{"label":"Compare each clause with our positions"},{"label":"Rate each departure: accept, push back or must change"},{"label":"Draft the redlines and fallback wording","detail":"From clauses we have already agreed elsewhere"},{"label":"Write the issues note for the client"},{"label":"Send the redlines to the other side","detail":null,"approval":true,"approvalLabel":"You approve the redlines first"}],"owner":"Han Jiwoo","runs":"run 9 times","lastRun":"Fri 25 Sep","team":true,"cadence":"When Seorin sends a draft"},{"id":"deadline-tracker","p":"lawyer","high":true,"name":"Court deadline watch","icon":"calendarClock","purpose":"Use it on a matter folder. It reads every judgment, order and court notice the day it arrives.","summary":"Desk reads each court paper, records the date it was served and works out every deadline it starts, under the court's rules. Deadlines that cannot be extended, like the two-week appeal period in Korea, get extra warning.","gets":"A deadline list for each matter with the rule behind every date, on the team calendar with reminders 7, 3 and 1 days before.","needs":"The matter folder or court e-filing notices, the matter list and the team calendar.","impact":["1 in 3","malpractice claims start with an administrative slip, like a missed deadline"],"stake":"In Korea the civil appeal period is two weeks from service and cannot be extended (민사소송법 제396조). A missed date there cannot be fixed.","src":[["ABA Profile of Legal Malpractice Claims, 2016-2019","https://nwsidebar.wsba.org/2020/10/22/risk-management-by-the-numbers-new-aba-study-on-malpractice-claims/"],["민사소송법 제396조","https://casenote.kr/법령/민사소송법/제396조"]],"steps":[{"label":"Read the new paper and record the date it was served"},{"label":"Work out every deadline it starts","detail":"Counted under the court's rules, skipping public holidays"},{"label":"Mark the deadlines that cannot be extended"},{"label":"Add each deadline to the team calendar","detail":"With the paper it came from and an owner","approval":true,"approvalLabel":"You confirm each date first"},{"label":"Warn the team about anything due in under 7 days"}],"owner":"Han Jiwoo","runs":"run 112 times","lastRun":"Today, 07:40","team":true,"cadence":"When a new file arrives"},{"id":"renewal-sweep","p":"lawyer","name":"Contract renewal sweep","icon":"repeat","purpose":"Use it once a month on a folder of signed contracts, yours or a client's.","summary":"Desk reads every signed contract for its renewal date, notice period, price rises and key duties. It warns you before each notice window closes and drafts the letters for the ones you choose to end.","gets":"A renewal calendar that shows which contracts to keep, renegotiate or end, and draft notice letters for the ones to end.","needs":"A project with the signed contracts in it (scanned PDFs are fine) and the calendar.","impact":["9%","of a contract's value is lost, on average, to poor contract management"],"stake":"It stops contracts renewing on their own when nobody chose to keep them. (The 9% is an older, widely quoted figure.)","src":[["World Commerce & Contracting, via Juro","https://juro.com/learn/contract-value-leakage"]],"steps":[{"label":"Read each contract and pull out its dates and terms"},{"label":"Build the renewal calendar"},{"label":"Warn you 60 and 30 days before each notice deadline"},{"label":"Choose which to end or renegotiate","detail":null,"approval":true,"approvalLabel":"You pick which to end"},{"label":"Draft the notice letters","detail":"To the notice address in each contract"},{"label":"Send the letters","detail":null,"approval":true,"approvalLabel":"You approve before they go"}],"owner":"Han Jiwoo","runs":"run 34 times","lastRun":"Today, 08:14","team":true,"cadence":"Every Monday, 08:00 KST"}];
+  const PB = Object.fromEntries(PLAYBOOKS.map(p => [p.id, p]));
+  const ME = 'Han Jiwoo';
+  const PROJECTS = [{"id":"seorin","name":"Seorin MSA","about":"Master services agreement with Seorin Bio","files":18,"chats":6,"playbooks":["first-review"],"active":"2h ago","people":["Han Jiwoo","Lee Dohyun","Kim Minjun"]},{"id":"supplier","name":"Q3 supplier contracts","about":"Every supplier contract up for renewal this year","files":41,"chats":3,"playbooks":["renewal-sweep"],"active":"Mon","people":["Han Jiwoo","Choi Yuna"]},{"id":"hanbit","name":"Hanbit v. Daeil","about":"Seoul Central District Court, damages claim","files":126,"chats":11,"playbooks":["deadline-tracker"],"active":"Today","people":["Han Jiwoo","Lee Dohyun","Park Sera","Jung Hoon"]},{"id":"nara","name":"Nara Series B diligence","about":"Acting for the lead investor","files":212,"chats":4,"playbooks":[],"active":"18 Sep","people":["Han Jiwoo","Kim Minjun"]},{"id":"clauses","name":"Our clause library","about":"The positions the firm has agreed, clause by clause","files":64,"chats":2,"playbooks":[],"active":"9 Sep","people":["Everyone at the firm"]}];
+  const PJ = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
+  const CONNECTORS = [{"id":"outlook","name":"Outlook","maker":"Microsoft 365","cat":"Email and calendar","icon":"mail","does":"Reads and drafts email, and checks your calendar."},{"id":"teams","name":"Microsoft Teams","maker":"Microsoft 365","cat":"Chat and meetings","icon":"videoCall","does":"Reads the chats and channels you pick, and meeting transcripts."},{"id":"onedrive","name":"OneDrive and SharePoint","maker":"Microsoft 365","cat":"Files","icon":"folder","does":"Finds and reads files in the folders you choose."},{"id":"gmail","name":"Gmail","maker":"Google Workspace","cat":"Email","icon":"mail","on":true,"does":"Reads and drafts email."},{"id":"gdrive","name":"Google Drive","maker":"Google Workspace","cat":"Files","icon":"folderOpen","on":true,"does":"Finds and reads files in the folders you choose."},{"id":"gcal","name":"Google Calendar","maker":"Google Workspace","cat":"Calendar","icon":"calendar","on":true,"does":"Checks when people are free and adds events."},{"id":"zoom","name":"Zoom","maker":"Zoom Communications","cat":"Meetings","icon":"videoCall","on":true,"does":"Reads meeting recordings and transcripts to write notes and follow-ups."},{"id":"slack","name":"Slack","maker":"Salesforce","cat":"Chat","icon":"messages","on":true,"does":"Reads the channels you pick and sums up threads."},{"id":"dropbox","name":"Dropbox","maker":"Dropbox","cat":"Files","icon":"archive","does":"Finds and reads files in the folders you choose."},{"id":"github","name":"GitHub","maker":"GitHub","cat":"Code","icon":"code","does":"Reads code, pull requests and issues, and leaves review comments."},{"id":"notion","name":"Notion","maker":"Notion Labs","cat":"Docs and notes","icon":"note","does":"Reads pages and databases, and drafts edits."},{"id":"salesforce","name":"Salesforce","maker":"Salesforce","cat":"CRM","icon":"users","does":"Reads accounts, deals and contacts."},{"id":"hubspot","name":"HubSpot","maker":"HubSpot","cat":"CRM and marketing","icon":"target","does":"Reads contacts, deals and email history."},{"id":"jira","name":"Jira","maker":"Atlassian","cat":"Project tracking","icon":"kanban","does":"Reads tickets and sprints, and drafts new tickets and updates."},{"id":"confluence","name":"Confluence","maker":"Atlassian","cat":"Docs and notes","icon":"book","does":"Reads your team's pages and drafts new ones."},{"id":"docusign","name":"Docusign","maker":"Docusign","cat":"E-signature","icon":"signature","on":true,"does":"Checks where each agreement stands and prepares envelopes."},{"id":"box","name":"Box","maker":"Box","cat":"Files","icon":"folderPlus","does":"Finds and reads files in the folders you choose."},{"id":"asana","name":"Asana","maker":"Asana","cat":"Project tracking","icon":"checklist","does":"Reads projects and tasks, and drafts updates and new tasks."},{"id":"quickbooks","name":"QuickBooks","maker":"Intuit","cat":"Accounting","icon":"receipt","does":"Reads invoices, bills and reports, and drafts entries."},{"id":"zoho","name":"Zoho","maker":"Zoho","cat":"CRM, mail and books","icon":"building","does":"Reads CRM records, invoices and mail, and drafts changes."}];
+  const USES = {"lawyer":["gdrive","gmail","gcal","docusign"],"accountant":["gmail","gdrive","outlook"],"recruiter":["gmail","gcal","zoom"],"hr":["gmail","gdrive","slack","docusign"],"founder":["gdrive","gmail","hubspot"],"sales":["salesforce","gmail","zoom"],"marketer":["hubspot","gdrive","slack"],"consultant":["gdrive","zoom","gmail"],"pm":["jira","notion","slack"],"engineer":["github","jira","slack"]};
+  const ConnCtx = React.createContext(null);
+  function useConn() { return React.useContext(ConnCtx); }
+  const Sec = ({ title, trailing, lede, children }) => h('section', { className: 'wk-sec' }, [
+    h(R.SectionMark, { key: 'm', label: title, as: 'heading', level: 2, trailing }),
+    lede ? h('p', { key: 'l', className: 'wk-lede' }, lede) : null,
+    h('div', { key: 'b', className: 'wk-sec__body' }, children)
+  ]);
+  const Back = ({ to, children }) => h('a', { className: 'wk-back', href: to }, [ic('arrowLeft', 14), children]);
+  function PlaybookView({ id }) {
+    const [pid, pj] = (id || '').split('@');
+    const p = PB[pid] || PLAYBOOKS[0];
+    return h('div', { className: 'wk-page wk-pbv' }, [
+      h(Back, { key: 'b', to: '#playbooks' }, 'Playbooks'),
+      h('div', { key: 'w', className: 'wk-worth' }, [
+        h('div', { key: 'v', className: 'wk-worth__v' }, [h('b', { key: 'b' }, p.impact[0]), h('span', { key: 's' }, p.impact[1])]),
+        h('p', { key: 's', className: 'wk-worth__s' }, [p.high ? h(R.Badge, { key: 'b', tone: 'brand', size: 'sm' }, 'High impact') : null, h('span', { key: 't' }, p.stake)])
+      ]),
+      h('div', { key: 'x', className: 'wk-explain' }, [['What it does', p.summary], ['What you get', p.gets], ['What it needs', p.needs]].map(([t, d], i) =>
+        h('div', { key: i }, [h('h3', { key: 't' }, t), h('p', { key: 'd' }, d)]))),
+      p.src && p.src.length ? h('div', { key: 'src', className: 'wk-src' }, [h('span', { key: 'h' }, 'Where the figures come from'),
+        h('ul', { key: 'l' }, p.src.map(([t, u], i) => h('li', { key: i }, h('a', { href: u, target: '_blank', rel: 'noopener noreferrer' }, [t, ic('external', 12)])))), p.fx ? h('p', { key: 'fx', className: 'wk-src__fx' }, 'Dollar amounts ' + FX + '.') : null]) : h('p', { key: 'src', className: 'wk-src' }, 'The figure above is our estimate, not a measurement.'),
+      h(R.Playbook, { key: 'p', name: 'The steps', purpose: p.purpose, steps: p.steps, owner: p.owner === 'Redrob example' ? 'An example from Redrob' : p.owner,
+        runs: p.runs || 'not run yet', lastRun: p.lastRun, runLabel: 'Run now', onRun: () => { location.hash = '#history'; } })
+    ]);
+  }
+  const appsFor = (conn) => CONNECTORS.map(c => ({ id: c.id, name: c.name, category: c.cat, maker: c.maker, description: c.does, icon: ic(c.icon, 15), connected: !!conn[c.id] }));
+  function PlaybookRail({ id }) {
+    const [pid, pj] = (id || '').split('@');
+    const p = PB[pid] || PLAYBOOKS[0];
+    const { conn, setConn } = useConn();
+    const [proj, setProj] = React.useState(pj || (PROJECTS.find(x => x.playbooks.includes(p.id)) || PROJECTS[0]).id);
+    const writes = p.steps.some(x => /Send|Post|Publish|Add each|Book|Update|Draft/.test(x.label));
+    const [apps, setApps] = React.useState(() => (USES[p.p] || []).map(id2 => ({ id: id2, mode: writes && /gmail|outlook|gcal|salesforce|hubspot|jira|github|slack/.test(id2) ? 'write' : 'read' })));
+    const [mem, setMem] = React.useState(true);
+    const initial = p.cadence && /arrives|sends/.test(p.cadence) ? 'event' : p.cadence ? 'repeat' : 'once';
+    return h('div', { className: 'wk-rail' }, [
+      h(R.Select, { key: 'r', label: 'Run it in', value: proj, onChange: (e) => setProj(e.target.value), options: PROJECTS.map(x => ({ value: x.id, label: x.name })) }),
+      h(R.SchedulePicker, { key: 'w', now: NOW, where: PJ[proj].name, locale: 'en-GB', weekStart: 1,
+        defaultValue: { mode: initial, date: '2026-09-29', start: '2026-09-28', time: '08:00', zone: 'Asia/Seoul', freq: 'weekly', days: ['1'] } }),
+      h(R.AppAccess, { key: 'x', apps: appsFor(conn), value: apps, onChange: setApps, memory: mem, onMemoryChange: setMem, dialogTitle: 'Add an app to ' + p.name,
+        onConnect: (cid) => setConn(Object.assign({}, conn, { [cid]: true })) })
+    ]);
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(h(function Root() { const [conn, setConn] = React.useState(() => Object.fromEntries(CONNECTORS.map(c => [c.id, !!c.on])));
+      /* The rail hides below 1180px, so there the settings move under the steps: nothing only the rail says. */
+      const [narrow, setNarrow] = React.useState(() => window.matchMedia('(max-width: 1180px)').matches);
+      React.useEffect(() => { const m = window.matchMedia('(max-width: 1180px)'); const f = () => setNarrow(m.matches); m.addEventListener('change', f); return () => m.removeEventListener('change', f); }, []);
+      const settings = h(PlaybookRail, { id: 'renewal-sweep' });
+      return h(ConnCtx.Provider, { value: { conn, setConn } }, shell('playbooks', { title: 'Contract renewal sweep', meta: 'Saved by Han Jiwoo, run 34 times', rail: narrow ? undefined : settings,
+        actions: [h(R.Button, { key: 'e', size: 'sm', variant: 'ghost', iconLeft: ic('edit', 14) }, 'Edit steps'), h(R.Button, { key: 'd', size: 'sm', variant: 'secondary', iconLeft: ic('duplicate', 14) }, 'Make a copy')] },
+        narrow ? h('div', null, [h(PlaybookView, { key: 'v', id: 'renewal-sweep' }), h('div', { key: 's', className: 'wk-narrowset' }, settings)]) : h(PlaybookView, { id: 'renewal-sweep' }), Object.values(conn).filter(Boolean).length)); }));
+</script>

@@ -122,8 +122,23 @@ export { EmptyState } from './components/EmptyState/EmptyState';
 export type { EmptyStateProps } from './components/EmptyState/EmptyState';
 
 /* ---- Data display -------------------------------------------------------- */
+export { Card } from './components/Card/Card';
+export type { CardProps } from './components/Card/Card';
+export { Table } from './components/Table/Table';
+export type { TableProps, TableColumn } from './components/Table/Table';
+export { Stat } from './components/Stat/Stat';
+export type { StatProps } from './components/Stat/Stat';
+export { Chart } from './components/Chart/Chart';
+export type { ChartProps, ChartSeries } from './components/Chart/Chart';
+export { Sparkline } from './components/Sparkline/Sparkline';
+export type { SparklineProps } from './components/Sparkline/Sparkline';
 export { Badge } from './components/Badge/Badge';
 export type { BadgeProps } from './components/Badge/Badge';
+export { Avatar } from './components/Avatar/Avatar';
+export type { AvatarProps } from './components/Avatar/Avatar';
+export { AvatarMark } from './components/AvatarMark/AvatarMark';
+export type { AvatarMarkProps } from './components/AvatarMark/AvatarMark';
+export { seriesColor, niceMax, SERIES_LIGHT, SERIES_DARK } from './internal/chart';
 
 /* ---- Frames -------------------------------------------------------------- */
 export { Band } from './components/Band/Band';

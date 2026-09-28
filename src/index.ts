@@ -140,6 +140,54 @@ export { AvatarMark } from './components/AvatarMark/AvatarMark';
 export type { AvatarMarkProps } from './components/AvatarMark/AvatarMark';
 export { seriesColor, niceMax, SERIES_LIGHT, SERIES_DARK } from './internal/chart';
 
+/* ---- Agent chat ---------------------------------------------------------- */
+export { Message } from './components/Message/Message';
+export type { MessageProps } from './components/Message/Message';
+export { Composer } from './components/Composer/Composer';
+export type { ComposerProps } from './components/Composer/Composer';
+export { ModelPicker } from './components/ModelPicker/ModelPicker';
+export type {
+  ModelPickerProps,
+  ModelPick,
+  ModelTask,
+  ModelProfession,
+} from './components/ModelPicker/ModelPicker';
+export { ModelGuide } from './components/ModelGuide/ModelGuide';
+export type {
+  ModelGuideProps,
+  GuidePick,
+  GuideTask,
+  GuideProfession,
+} from './components/ModelGuide/ModelGuide';
+export { ComposerStatus } from './components/ComposerStatus/ComposerStatus';
+export type { ComposerStatusProps, ComposerStatusItem } from './components/ComposerStatus/ComposerStatus';
+export { AnswerReceipt } from './components/AnswerReceipt/AnswerReceipt';
+export type { AnswerReceiptProps, AnswerReceiptItem } from './components/AnswerReceipt/AnswerReceipt';
+export { PrivateText } from './components/PrivateText/PrivateText';
+export type { PrivateTextProps } from './components/PrivateText/PrivateText';
+export { Disputed } from './components/Disputed/Disputed';
+export type { DisputedProps, DisputedView } from './components/Disputed/Disputed';
+export { OpinionAdded } from './components/OpinionAdded/OpinionAdded';
+export type { OpinionAddedProps } from './components/OpinionAdded/OpinionAdded';
+export { ModelSwitch } from './components/ModelSwitch/ModelSwitch';
+export type { ModelSwitchProps } from './components/ModelSwitch/ModelSwitch';
+export { MemorySaved } from './components/MemorySaved/MemorySaved';
+export type { MemorySavedProps } from './components/MemorySaved/MemorySaved';
+export { Streaming } from './components/Streaming/Streaming';
+export type { StreamingProps } from './components/Streaming/Streaming';
+export { PromptSuggestions } from './components/PromptSuggestions/PromptSuggestions';
+export type { PromptSuggestionsProps, PromptSuggestion } from './components/PromptSuggestions/PromptSuggestions';
+export { Citation } from './components/Citation/Citation';
+export type { CitationProps } from './components/Citation/Citation';
+export { Confidence } from './components/Confidence/Confidence';
+export type { ConfidenceProps } from './components/Confidence/Confidence';
+export { AgentAction } from './components/AgentAction/AgentAction';
+export type { AgentActionProps } from './components/AgentAction/AgentAction';
+export { AgentTimeline } from './components/AgentTimeline/AgentTimeline';
+export type { AgentTimelineProps, AgentTimelineStep } from './components/AgentTimeline/AgentTimeline';
+export { ApprovalStep } from './components/ApprovalStep/ApprovalStep';
+export type { ApprovalStepProps } from './components/ApprovalStep/ApprovalStep';
+
 /* ---- Frames -------------------------------------------------------------- */
 export { AppShell } from './components/AppShell/AppShell';
 export type { AppShellProps, AppShellNavItem } from './components/AppShell/AppShell';

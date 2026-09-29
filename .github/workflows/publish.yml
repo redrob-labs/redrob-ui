@@ -81,10 +81,21 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          # 22.14 is the floor for trusted publishing (OIDC); 20.x cannot do it at all, so a workflow
+          # pinned there silently has only the token path available no matter what npm is configured to
+          # accept. Node 24 also ships an npm new enough to detect the OIDC environment.
+          node-version: "24.x"
           registry-url: "https://registry.npmjs.org"
           scope: "@redrob-labs"
           cache: yarn
+
+      # Trusted publishing needs npm >= 11.5.1. The npm bundled with a Node release drifts behind, and
+      # the failure when it is too old is an authentication error that says nothing about the version.
+      - name: Use an npm that can do OIDC
+        run: |
+          set -euo pipefail
+          npm install -g npm@latest
+          npm --version
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -95,42 +106,101 @@ jobs:
       - name: Assert the published surface exists
         run: |
           set -euo pipefail
-          for f in dist/index.js dist/index.d.ts; do
-            [ -s "$f" ] || { echo "::error::$f is missing or empty; refusing to publish an empty package"; exit 1; }
+          # Both halves of the dual build, and the native token headers. `dist/esm/package.json` is the
+          # `"type": "module"` marker: without it Node parses the ESM tree as CommonJS and every export
+          # is a syntax error, so shipping it is not optional.
+          for f in dist/index.js dist/index.d.ts dist/esm/index.js dist/esm/package.json \
+                   dist/styles/tokens.json dist/native/redrob_tokens.h; do
+            [ -s "$f" ] || { echo "::error::$f is missing or empty; refusing to publish an incomplete package"; exit 1; }
           done
-          for d in dist/styles dist/fonts; do
+          for d in dist/styles dist/fonts dist/native; do
             [ -d "$d" ] && [ -n "$(ls -A "$d")" ] || { echo "::error::$d is missing or empty"; exit 1; }
           done
 
-      # Already-published versions are immutable, so a retry of a partially-succeeded run must not fail
-      # the whole job on the one step that cannot be repeated.
-      # The public registry needs a real npm token; GITHUB_TOKEN cannot publish there. Fail with the
-      # reason rather than letting `npm publish` report a bare 401 nobody can act on.
-      - name: Assert the npm token is configured
-        if: ${{ github.event_name == 'release' || inputs.dry_run == false }}
+      # A published version is immutable, so the entry points get checked HERE and not only on pull
+      # requests. This loads both halves and compares their exports; a broken ESM specifier passes a
+      # bundler and fails Node, and the only fix after publishing is another release.
+      - name: Assert the entry points resolve
+        run: yarn exports:check
+
+      # Provenance is decided here rather than declared in package.json, because it is not always
+      # possible. npm does not generate provenance from a PRIVATE source repository - that was
+      # withdrawn in 2023 - and it applies even when the package itself is public. With
+      # `publishConfig.provenance: true` set unconditionally, every publish from this repository would
+      # fail while it stays private, for a reason unrelated to the package.
+      #
+      # Trusted publishing generates provenance automatically when the repository is public, with no
+      # flag at all. So: ask, and only ask for it when it can be given.
+      - name: Can this repository produce provenance
+        id: prov
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          visibility="$(gh api "repos/${GITHUB_REPOSITORY}" --jq '.visibility')"
+          if [ "$visibility" = "public" ]; then
+            echo "provenance=true" >> "$GITHUB_OUTPUT"
+            echo "repository is public; provenance will be attested"
+          else
+            echo "provenance=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::repository is $visibility, so npm cannot attest provenance; publishing without it"
+          fi
+
+      # Authentication is EITHER a token or OIDC, and the npm CLI prefers OIDC when it detects it. So
+      # this reports which one is in play instead of failing on a missing token: a repository with a
+      # trusted publisher configured needs no secret at all, and demanding one would block the more
+      # secure path.
+      #
+      # Note the ordering problem for a FIRST publish: a trusted publisher is configured on a package's
+      # settings page, and a package that has never been published has no settings page. So version one
+      # goes up another way, and OIDC takes over from the second.
+      - name: Report the authentication path
+        id: auth
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
-          [ -n "$NPM_TOKEN" ] || {
-            echo "::error::NPM_TOKEN is not set. Add a repository secret with publish rights on the @redrob-labs scope."
-            exit 1
-          }
+          if [ -n "${NPM_TOKEN:-}" ]; then
+            echo "has_token=true" >> "$GITHUB_OUTPUT"
+            echo "NPM_TOKEN is set; it will be used unless OIDC is available."
+          else
+            echo "has_token=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "### No NPM_TOKEN — relying on trusted publishing (OIDC)"
+              echo
+              echo "This works only when a trusted publisher is configured for the package on npmjs.com:"
+              echo "**Packages -> @redrob-labs/ui -> Settings -> Trusted publishing**, with"
+              echo "repository \`${GITHUB_REPOSITORY}\` and workflow filename \`publish.yml\`."
+              echo
+              echo "A package that has never been published has no settings page, so the FIRST version"
+              echo "cannot use this. Publish v1 with \`npm publish\` locally, or add an NPM_TOKEN secret"
+              echo "(granular, write on the @redrob-labs scope, 90 days maximum), then configure the"
+              echo "trusted publisher and remove the secret."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice::no NPM_TOKEN; attempting OIDC."
+          fi
 
       - name: Publish to npm
         if: ${{ github.event_name == 'release' || inputs.dry_run == false }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           TAG: ${{ steps.ref.outputs.tag }}
+          WANT_PROVENANCE: ${{ steps.prov.outputs.provenance }}
         run: |
           set -euo pipefail
           version="${TAG#v}"
           name="$(node -p "require('./package.json').name")"
+          # An already-published version is immutable, so a retry of a partly-succeeded run must not
+          # fail on the one step that cannot be repeated.
           if npm view "$name@$version" version >/dev/null 2>&1; then
             echo "::notice::$name@$version is already published; nothing to do"
             exit 0
           fi
-          npm publish --provenance --access public
+          if [ "$WANT_PROVENANCE" = "true" ]; then
+            npm publish --provenance --access public
+          else
+            npm publish --access public
+          fi
 
       - name: Pack only (dry run)
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}

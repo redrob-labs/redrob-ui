@@ -14,7 +14,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/redrob-labs/redrob-ui"
+    "url": "git+https://github.com/redrob-labs/redrob-ui.git"
   },
   "bugs": {
     "url": "https://github.com/redrob-labs/redrob-ui/issues"
@@ -22,8 +22,7 @@
   "homepage": "https://github.com/redrob-labs/redrob-ui#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "main": "dist/index.js",
   "module": "dist/esm/index.js",

@@ -185,4 +185,44 @@ function exportedNames() {
   return JSON.parse(json).components.map((c) => c.name);
 }
 
-module.exports = { loadReference, loadOurs, readCase, renderCase, compare, exportedNames, normalise };
+/**
+ * `Cover` is the delivery's title page: static HTML with no `<script>`, so there is no case to run
+ * and nothing to compare.
+ *
+ * It is named here rather than filtered by "has no script" on purpose. A composition that LOSES its
+ * script in a future delivery must fail as `no-case`, not quietly drop out of the gate.
+ */
+const STATIC_COMPOSITIONS = new Set(['Cover']);
+
+/**
+ * The composition fixtures: the page and screen assemblies the delivery ships beside the
+ * components. The bundle does not export them and `src/` does not implement them - `PageHome`'s
+ * preview says so itself, "Screen-only composition. The parts are bundle components; this is how a
+ * page arranges them".
+ *
+ * They are compared anyway. Each one assembles exported components (72 distinct ones across the
+ * set) into a real page, and a component can be at parity on its own while a page built out of it
+ * is not: ordering, nesting and the props a page passes are only exercised here. Comparing them
+ * costs nothing extra, because the case runs against whichever `window.Redrob` it is handed, the
+ * same as a component case.
+ */
+function compositionNames() {
+  const exported = new Set(exportedNames());
+  return fs
+    .readdirSync(COMPONENTS_DIR)
+    .filter((n) => fs.statSync(path.join(COMPONENTS_DIR, n)).isDirectory())
+    .filter((n) => !exported.has(n) && !STATIC_COMPOSITIONS.has(n))
+    .sort();
+}
+
+module.exports = {
+  loadReference,
+  loadOurs,
+  readCase,
+  renderCase,
+  compare,
+  exportedNames,
+  compositionNames,
+  STATIC_COMPOSITIONS,
+  normalise,
+};

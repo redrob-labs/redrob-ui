@@ -41,6 +41,7 @@
     "icons:check": "node tools/generate/icons.js --check",
     "docs": "yarn build && node tools/docs/build.js",
     "docs:check": "yarn build && node tools/docs/build.js --check",
+    "assets:check": "node tools/check/assets.js",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {

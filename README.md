@@ -225,6 +225,11 @@ example that could be wrong on its own.
 description and full prop list in one fetch. Both are committed at the repository root as well, so
 an agent reading the source finds the same reference as one reading the site.
 
+The site deploys from `main`, which is the released state — `publish.yml` refuses a tag that is not an
+ancestor of `main`. So the version the site names is the version you can install, and the site does not
+move until a promotion. Documentation describing an unreleased tree is worse than documentation that
+lags, because a reader cannot tell which one they have.
+
 Nothing in either surface is typed by hand. Grouping and order come from `src/index.ts`, descriptions
 from the JSDoc above each export, props from each `<Name>Props` interface read with the TypeScript
 AST, and the renderings from `dist/`. A docs page cannot claim a prop the type does not declare.

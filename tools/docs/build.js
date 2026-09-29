@@ -36,6 +36,43 @@ const SITE = path.join(ROOT, 'site');
 const PKG = require(path.join(ROOT, 'package.json'));
 const REPO = 'https://github.com/redrob-labs/redrob-ui';
 
+/**
+ * The stylesheet subpaths, in the order a consumer must import them, taken from the package's own
+ * `exports` map rather than written out here.
+ *
+ * Written out, they went stale the moment the map changed: this file told every agent reading
+ * `llms.txt` to import `@redrob-labs/ui/styles/tokens.css`, a path the map does not expose, so the
+ * import throws ERR_PACKAGE_PATH_NOT_EXPORTED. Nothing caught it, because the docs gate only checks
+ * that the committed file matches what this generator produces - and the generator was confidently
+ * producing the wrong path.
+ *
+ * The ORDER is stated here and not read from the map, because it is a real dependency (`styles.css`
+ * reads the custom properties `tokens.css` declares) and object key order is not a promise. A missing
+ * entry is a hard failure rather than a silent omission: documentation that leaves out a required
+ * stylesheet produces an unstyled page and no error.
+ */
+const STYLE_SUBPATHS = (() => {
+  const required = ['tokens.css', 'styles.css'];
+  const optional = ['preflight.css'];
+  const exported = new Set(Object.keys(PKG.exports || {}).map((k) => k.replace(/^\.\//, '')));
+
+  const missing = required.filter((p) => !exported.has(p));
+  if (missing.length > 0) {
+    console.error(`package.json exports does not expose: ${missing.join(', ')}`);
+    console.error('The documentation would tell every consumer to import a path that does not resolve.');
+    process.exit(1);
+  }
+
+  return [...required, ...optional.filter((p) => exported.has(p))];
+})();
+
+/** `\`pkg/tokens.css\`, \`pkg/styles.css\` and \`pkg/preflight.css\`` — for a sentence. */
+function cssImportList() {
+  const items = STYLE_SUBPATHS.map((p) => `\`${PKG.name}/${p}\``);
+  if (items.length === 1) return items[0];
+  return `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
+}
+
 /* ---- reading the sources ------------------------------------------------- */
 
 /**
@@ -393,7 +430,7 @@ function llmsShort(groups, stats, base) {
   out.push('');
   out.push(`> React components for the Redrob Group Design System 2026. ${stats.total} components, ${stats.icons} icons. Every component is rendered against the design system's own reference bundle and compared markup-for-markup, so its appearance is checked mechanically rather than by eye.`);
   out.push('');
-  out.push(`Version ${PKG.version}. Install \`${PKG.name}\`. Import named exports from the package root; there are no deep imports. Ship \`${PKG.name}/styles/tokens.css\` and \`${PKG.name}/styles/system.css\`, in that order, or nothing is styled.`);
+  out.push(`Version ${PKG.version}. Install \`${PKG.name}\`. Import named exports from the package root. Ship ${cssImportList()}, in that order, or nothing is styled.`);
   out.push('');
   out.push(`Read [llms-full.txt](${base}/llms-full.txt) instead of this file when you need props: it carries every component's description and full prop list in one fetch.`);
   out.push('');
@@ -422,15 +459,16 @@ function llmsFull(groups, stats) {
   out.push('');
   out.push('```tsx');
   out.push(`import { Button, Input, Table } from '${PKG.name}';`);
-  out.push(`import '${PKG.name}/styles/tokens.css';`);
-  out.push(`import '${PKG.name}/styles/system.css';`);
+  for (const p of STYLE_SUBPATHS) out.push(`import '${PKG.name}/${p}';`);
   out.push('```');
   out.push('');
-  out.push('- Every export is named and lives at the package root. There are no deep imports and no default export.');
-  out.push('- `tokens.css` before `system.css`: the second reads the custom properties the first declares.');
+  out.push('- Every export is named and lives at the package root, and there is no default export. The only subpaths are the stylesheets, the fonts and the token files, all listed in the package\'s `exports` map.');
+  out.push('- `tokens.css` before `styles.css`: the second reads the custom properties the first declares.');
+  out.push(`- \`preflight.css\` is OPTIONAL and paints the page itself. Import it when this system owns the whole page; leave it out when mounting a component inside somebody else's page, because neither \`styles.css\` nor the design system's own bundle declares an \`html\` or \`body\` rule and overriding that is the host application's decision. Without it, \`data-theme="dark"\` darkens the components and leaves the page background browser-default white.`);
   out.push('- Every component is a function component taking one props object. None of them read global state.');
   out.push('- A prop marked required below has no default. A prop absent from a component\'s table does not exist on it, whatever a similar component accepts.');
-  out.push('- Fonts ship in the package at `fonts/`; `system.css` declares the `@font-face` rules that point at them.');
+  out.push(`- Fonts ship in the package and are reachable as \`${PKG.name}/fonts/<file>.woff2\`; \`tokens.css\` declares the \`@font-face\` rules that point at them.`);
+  out.push(`- Not React? \`${PKG.name}/tokens.json\` carries every design token resolved to a literal for both themes, and \`${PKG.name}/native/redrob_tokens.h\` the same as C++ constants, for a surface that cannot evaluate CSS.`);
   out.push('');
   out.push('## Components');
   out.push('');

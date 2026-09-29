@@ -48,6 +48,8 @@ export function Stat(props: StatProps): React.ReactElement {
     spark = React.createElement(
       'svg',
       {
+        // Sits in a children array beside the delta and the period, so it carries its own key.
+        key: 'spark',
         className: 'rr-stat__spark',
         width: w,
         height: hgt,

@@ -26,22 +26,41 @@
     "provenance": true
   },
   "main": "dist/index.js",
+  "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles/system.css",
+    "./tokens.css": "./dist/styles/tokens.css",
+    "./preflight.css": "./dist/styles/preflight.css",
+    "./tokens.json": "./dist/styles/tokens.json",
+    "./fonts/*": "./dist/fonts/*",
+    "./native/*": "./dist/native/*",
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist"
   ],
   "sideEffects": [
-    "dist/styles/*.css"
+    "dist/styles/*.css",
+    "dist/esm/styles/*.css"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc && mkdir -p dist/styles dist/fonts && cp src/styles/*.css dist/styles/ && cp src/fonts/*.woff2 dist/fonts/",
+    "build": "rm -rf dist && tsc && tsc -p tsconfig.esm.json && node tools/build/esm-extensions.js && node tools/generate/tokens.js && mkdir -p dist/styles dist/fonts && cp src/styles/*.css src/styles/*.json dist/styles/ && cp src/fonts/*.woff2 dist/fonts/",
     "test": "node tools/parity/run.js --quiet",
     "test:self": "node tools/parity/run.js --self --quiet",
     "icons": "node tools/generate/icons.js",
     "icons:check": "node tools/generate/icons.js --check",
+    "tokens": "node tools/generate/tokens.js",
+    "tokens:check": "node tools/generate/tokens.js --check",
     "docs": "yarn build && node tools/docs/build.js",
     "docs:check": "yarn build && node tools/docs/build.js --check",
     "assets:check": "node tools/check/assets.js",
+    "exports:check": "node tools/check/exports.js",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {

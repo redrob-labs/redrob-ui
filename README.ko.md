@@ -26,8 +26,9 @@ Packages를 썼는데, 공개 패키지를 설치하는 데도 쓰는 쪽이 토
 없습니다. 커스텀 프로퍼티 위에 올린 순수 CSS입니다.
 
 ```javascript
-import '@redrob-labs/ui/dist/styles/tokens.css';
-import '@redrob-labs/ui/dist/styles/system.css';
+import '@redrob-labs/ui/tokens.css';
+import '@redrob-labs/ui/styles.css';
+import '@redrob-labs/ui/preflight.css'; // 페이지 전체를 이 시스템이 맡을 때만 — 아래 참고
 ```
 
 ```jsx
@@ -51,6 +52,110 @@ function Landing() {
 
 폰트 18종은 `dist/fonts/`에 들어가고 `system.css`가 상대 경로로 참조하므로, 패키지를 어디서 서빙해도
 경로가 맞습니다.
+
+### 페이지 배경은 라이브러리가 아니라 앱이 칠합니다
+
+`system.css`도, 디자인 시스템 원본 번들도 `html`이나 `body` 규칙을 선언하지 않습니다. 일부러입니다.
+페이지를 칠하는 라이브러리는 그것을 쓰는 앱의 결정을 빼앗고, 자기 셸을 가진 앱은 그걸 다시 되돌려야
+합니다.
+
+대가는 함정 하나입니다. `data-theme="dark"`를 켜면 컴포넌트는 어두워지는데 그 뒤 페이지는 브라우저
+기본 흰색으로 남습니다. `preflight.css`를 불러오거나, 직접 적으십시오.
+
+```css
+html, body { background: var(--surface-base); color: var(--ink-primary); }
+[data-theme='dark'] { color-scheme: dark; }
+```
+
+`preflight.css`에는 `color-scheme`도 들어 있습니다. 스크롤바와 네이티브 `<select>` 팝업이 테마를
+따르게 하는 유일한 방법입니다. `:lang(ko)`의 한국어 폰트 스택과 `prefers-reduced-motion` 블록도
+같이 들어 있습니다. 제품 화면에서는 불러오고, 남의 페이지 안에 얹는 위젯에서는 넣지 않습니다.
+
+## React 없이 쓰기
+
+React 컴포넌트는 세 층 중 맨 위 한 층입니다. React를 못 돌리는 Redrob 제품도 눈으로는 같은 제품이
+될 수 있습니다.
+
+| 층 | 무엇인가 | 누가 쓰나 |
+| --- | --- | --- |
+| `@redrob-labs/ui` | 타입 붙은 컴포넌트 123개 | Next·Electron 렌더러: 웹사이트, 콘솔, 챗, 오피스 |
+| `tokens.css` + `styles.css` + `fonts/` | 클래스 블록 149개, 셀렉터 1,239개, React 없음 | Vue, Solid, 크로미움 WebUI, 순수 HTML |
+| `tokens.json` + `native/*` | 리터럴로 해석된 토큰 172개 | C++ 창 크롬, 안드로이드, iOS |
+
+### CSS만 — Vue, Solid, 크로미움 WebUI, 순수 HTML
+
+스타일시트 둘과 폰트만 가져가면 됩니다. 클래스 이름이 계약이고 JavaScript는 관여하지 않습니다.
+
+```javascript
+import '@redrob-labs/ui/tokens.css';
+import '@redrob-labs/ui/styles.css';
+```
+
+```html
+<button class="rr-btn rr-btn--primary rr-btn--md"><span>Go</span></button>
+```
+
+생성된 문서의 모든 렌더링이 컴포넌트가 실제로 뱉는 마크업을 그대로 보여 줍니다. 어떤 컴포넌트의
+클래스 조합이든 짐작하지 않고 문서에서 읽어 오면 됩니다.
+
+### 네이티브 — CSS를 해석할 수 없는 화면
+
+`var(--surface-base)`는 CSS 기능입니다. 브라우저 창 크롬은 C++로, 안드로이드 앱은 Kotlin으로 그리고,
+둘 다 그것을 읽지 못합니다. 그래서 `var()` 사슬을 여기서 테마별로 풀어 리터럴로 넘깁니다.
+
+```
+@redrob-labs/ui/tokens.json        토큰 172개, 두 테마, 각 토큰이 지나온 사슬까지
+@redrob-labs/ui/native/redrob_tokens.h    색 89개 × 두 테마, SkColor용 0xAARRGGBB
+@redrob-labs/ui/native/RedrobTokens.kt    같은 값, Kotlin Long
+```
+
+```cpp
+#include "redrob_tokens.h"
+
+// 빌드 플래그가 아니라 지금 켜진 테마로 고릅니다. OS가 밝아도 브라우저는 어두울 수 있습니다.
+SkColor page = dark_mode ? redrob::tokens::dark::kSurfaceBase   // 0xFF0A0B0C
+                         : redrob::tokens::light::kSurfaceBase; // 0xFFFFFFFF
+```
+
+알파는 버리지 않고 함께 넘깁니다. 이 집합에서 두 토큰은 실제로 반투명하고, 그걸 불투명으로 다루면
+디자인이 베일을 의도한 자리에 색 덩어리가 찍힙니다.
+
+`yarn tokens`가 `tokens.css`에서 셋을 다시 만들고, `tokens:check`는 커밋된 `tokens.json`이 뒤처지면
+CI를 떨어뜨립니다. 두 언어에 손으로 적어 두면 첫 색 변경에서 갈라지고, 그 갈라짐은 누가 창과 웹
+페이지를 나란히 찍어 볼 때까지 보이지 않습니다.
+
+### 여기에 해당하지 않는 것
+
+React Native는 `div`와 CSS 클래스가 아니라 네이티브 뷰로 그립니다. 그래서 컴포넌트도 스타일시트도
+거기서는 쓸 수 없고, 토큰 층만 쓸 수 있습니다. WebView 안이나 PWA로 만든 모바일 앱은 세 층을 그대로
+다 씁니다.
+
+토큰 172개 중 29개는 안에 `var()`가 남은 CSS `font` 축약형입니다. 텍스트 스타일은 모두
+`600 21px/28px var(--font-sans)` 꼴이고, 값 전체가 별칭일 때만 더 따라갈 수 있습니다. `tokens.json`에
+`containsVar`로 표시해 뒀습니다. 색은 하나도 여기 없으므로 네이티브 헤더는 영향받지 않습니다.
+
+**힌디는 폰트가 연결돼 있지 않고, 이 구멍은 배포물 쪽 것을 그대로 옮긴 결과입니다.** 디자인 시스템
+타이포그래피 규격은 `--font-sans-hi`를 이름 붙이고 힌디 타입 스케일 전체를 지정합니다 — `hi-display-1`
+72/94, 최소 13px, 이탤릭 대신 weight 600. 그런데 배포물 자기 `tokens.css`가 그중 아무것도 선언하지
+않고, 우리 것도 마찬가지입니다. 양쪽 다 힌디 토큰 0개이고, 우리 `@font-face` 경로 수정 말고는 바이트가
+같습니다. `NotoSansDevanagari-Variable.woff2`와 `Newsreader-Display.woff2`는 `dist/fonts/`에 들어가지만
+어떤 `@font-face`도 참조하지 않으며, 배포물에서도 그렇습니다. 이걸 연결하려면 행간 값을 정해야 하고,
+규격 자기 문서가 그 숫자들은 힌디 독자의 검토를 아직 못 받았다고 적어 뒀습니다. 그래서 조용히 한 줄
+넣을 일이 아니라 의식적으로 내릴 결정입니다.
+
+## 모듈 형식 두 가지
+
+CommonJS와 ESM을 둘 다 내고 `exports` 표로 골라 줍니다. 형식만 갖춘 게 아닙니다.
+
+```
+Button 하나만 import, minify, react는 external
+  dist/index.js      (CommonJS)   405,590 바이트
+  dist/esm/index.js  (ESM)          1,143 바이트
+```
+
+CommonJS 모듈의 export는 실행 시점에 정해지므로, 번들러는 배럴 파일이 이름을 부른 컴포넌트를 전부
+남겨 둬야 합니다. `yarn exports:check`가 두 쪽을 각각 별도 Node 프로세스에서 불러 export 목록을
+맞춰 봅니다. 번들러는 깨진 ESM 지정자를 덮어 주지만 Node는 덮어 주지 않기 때문입니다.
 
 ## 패리티 하네스
 

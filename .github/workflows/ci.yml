@@ -41,24 +41,36 @@ jobs:
       - name: Assert the published surface exists
         run: |
           set -euo pipefail
-          for f in dist/index.js dist/index.d.ts dist/icons/index.js; do
+          for f in dist/index.js dist/index.d.ts dist/icons/index.js dist/esm/index.js dist/esm/package.json; do
             [ -s "$f" ] || { echo "::error::$f is missing or empty after build"; exit 1; }
           done
-          for d in dist/styles dist/fonts; do
+          for d in dist/styles dist/fonts dist/native; do
             [ -d "$d" ] && [ -n "$(ls -A "$d")" ] || { echo "::error::$d is missing or empty after build"; exit 1; }
           done
-          echo "dist entry, types, styles and fonts present"
+          echo "dist entry, esm entry, types, styles, fonts and native headers present"
 
       # The icon module is generated from the delivery's own table. A hand-edit would be silently
       # overwritten by the next `yarn icons`, so the checked-in file must match the generator.
       - name: Assert the generated icons are up to date
         run: yarn icons:check
 
+      # `tokens.json` is committed and is what a consumer in another repository reads, so a change to
+      # `tokens.css` that is not regenerated leaves the browser's C++ chrome and an Android app on the
+      # old colours while the web moves. Nothing else can see that, because CSS still resolves fine.
+      - name: Assert the generated tokens are up to date
+        run: yarn tokens:check
+
       # A stylesheet path that does not resolve is invisible to every other gate: the markup is
       # identical, so parity passes, and the browser silently falls back to a system font. This
       # caught 14 `@font-face` rules that had been wrong since the port began.
       - name: Assert every stylesheet url resolves
         run: yarn assets:check
+
+      # Loads both halves of the dual build in separate Node processes and compares their export
+      # lists. A bundler papers over a bad ESM specifier and Node does not, so this is the only place
+      # the difference shows before a consumer hits ERR_MODULE_NOT_FOUND on a published version.
+      - name: Assert the package entry points resolve
+        run: yarn exports:check
 
   parity:
     name: parity against the reference bundle

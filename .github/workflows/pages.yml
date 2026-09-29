@@ -59,15 +59,61 @@ jobs:
             [ -s "$f" ] || { echo "::error::$f is missing or empty"; exit 1; }
           done
 
+      # Whether Pages is even turned on for this repository, asked before the deploy steps rather than
+      # discovered by them.
+      #
+      # `actions/configure-pages` fails with a bare `HttpError: Not Found` when Pages has never been
+      # configured, which is this repository's state: it is private, and Pages on a private repository
+      # needs a plan that allows it, so turning it on is an owner's decision about spend and visibility
+      # and not something a workflow should do with `enablement: true`.
+      #
+      # The point of the preflight is what a red X is worth. This job failed on every push to
+      # `develop` for a reason that has nothing to do with the commit, and a check that is always red
+      # teaches everyone to stop reading it - at which case the next real failure is invisible too. The
+      # site is still BUILT and still verified above; only the deploy is skipped, with a summary line
+      # saying which setting turns it on.
+      - name: Is Pages configured
+        id: pages_state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -uo pipefail
+          if gh api "repos/${GITHUB_REPOSITORY}/pages" >/dev/null 2>&1; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "Pages is configured; the site will deploy."
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Site built, deploy skipped"
+              echo
+              echo "GitHub Pages is not configured for this repository, so there is nowhere to deploy to."
+              echo "The site itself built and passed its page-count check - that part is verified."
+              echo
+              echo "To turn it on: **Settings -> Pages -> Build and deployment -> Source: GitHub Actions**."
+              echo "This repository is private, so Pages also needs a plan that permits private Pages."
+              echo
+              echo "Re-run this workflow afterwards and the deploy will proceed."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice::Pages is not configured; built the site and skipped the deploy."
+          fi
+
       - uses: actions/configure-pages@v5
+        if: steps.pages_state.outputs.configured == 'true'
 
       - uses: actions/upload-pages-artifact@v3
+        if: steps.pages_state.outputs.configured == 'true'
         with:
           path: site
+
+    outputs:
+      pages_configured: ${{ steps.pages_state.outputs.configured }}
 
   deploy:
     name: deploy to pages
     needs: build
+    # Without this the deploy job runs, finds no artifact, and fails - which would put the red X back
+    # one job further along instead of removing it.
+    if: needs.build.outputs.pages_configured == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

@@ -23,12 +23,13 @@ install a public package.
 
 ## Use
 
-Import the stylesheet once, at your application's entry point. There is no Tailwind config, no
+Import the stylesheets once, at your application's entry point. There is no Tailwind config, no
 PostCSS step and no build plugin: the system is plain CSS on custom properties.
 
 ```javascript
-import '@redrob-labs/ui/dist/styles/tokens.css';
-import '@redrob-labs/ui/dist/styles/system.css';
+import '@redrob-labs/ui/tokens.css';
+import '@redrob-labs/ui/styles.css';
+import '@redrob-labs/ui/preflight.css'; // only when the system owns the whole page — see below
 ```
 
 ```jsx
@@ -53,6 +54,112 @@ with its prop types.
 
 The 18 font faces ship in `dist/fonts/` and `system.css` references them relatively, so they
 resolve wherever the package is served from.
+
+### The page background is yours, not the library's
+
+Neither `system.css` nor the design system's own bundle declares a rule for `html` or `body`. That is
+deliberate: a library that paints the page takes a decision away from the application embedding it,
+and an app with its own shell would have to undo it.
+
+The cost is a trap. Set `data-theme="dark"` and the components go dark while the page behind them
+stays browser-default white. Either import `preflight.css`, or set it yourself:
+
+```css
+html, body { background: var(--surface-base); color: var(--ink-primary); }
+[data-theme='dark'] { color-scheme: dark; }
+```
+
+`preflight.css` also carries `color-scheme`, which is the only way the scrollbar and native
+`<select>` popups follow the theme, plus the Korean font stack under `:lang(ko)` and a
+`prefers-reduced-motion` block. Import it on a product surface; skip it for a widget mounted inside
+somebody else's page.
+
+## Using this outside React
+
+The React components are one of three layers, and only the top one needs React. A Redrob product
+that cannot run React can still be the same product visually.
+
+| layer | what it is | who it is for |
+| --- | --- | --- |
+| `@redrob-labs/ui` | 123 typed components | Next and Electron renderers: the sites, console, chat, Office |
+| `tokens.css` + `styles.css` + `fonts/` | 149 class blocks, 1,239 selectors, no React | Vue, Solid, Chromium WebUI, plain HTML |
+| `tokens.json` + `native/*` | 172 tokens resolved to literals | C++ window chrome, Android, iOS |
+
+### CSS only — Vue, Solid, Chromium WebUI, plain HTML
+
+Take the two stylesheets and the fonts. The class names are the contract; no JavaScript is involved.
+
+```javascript
+import '@redrob-labs/ui/tokens.css';
+import '@redrob-labs/ui/styles.css';
+```
+
+```html
+<button class="rr-btn rr-btn--primary rr-btn--md"><span>Go</span></button>
+```
+
+Every rendering in the generated documentation shows the exact markup a component produces, so the
+class combination for any component can be read off the docs rather than guessed.
+
+### Native — a surface that cannot evaluate CSS
+
+`var(--surface-base)` is a CSS feature. The browser's window chrome is painted in C++ and an Android
+app in Kotlin; neither can read it. So the `var()` chains are resolved here, per theme, and handed
+over as literals:
+
+```
+@redrob-labs/ui/tokens.json        172 tokens, both themes, with the chain each one resolved through
+@redrob-labs/ui/native/redrob_tokens.h    89 colours × 2 themes, 0xAARRGGBB for SkColor
+@redrob-labs/ui/native/RedrobTokens.kt    the same, as Kotlin Longs
+```
+
+```cpp
+#include "redrob_tokens.h"
+
+// Pick by the active theme, not by a build flag: the browser can be dark while the OS is light.
+SkColor page = dark_mode ? redrob::tokens::dark::kSurfaceBase   // 0xFF0A0B0C
+                         : redrob::tokens::light::kSurfaceBase; // 0xFFFFFFFF
+```
+
+Alpha is carried, not dropped — two tokens in the set are genuinely translucent, and treating them as
+opaque paints a block where the design has a veil.
+
+`yarn tokens` regenerates all three from `tokens.css`, and `tokens:check` fails CI when the committed
+`tokens.json` has fallen behind. Written by hand in two languages, the numbers drift on the first
+colour change and the drift is invisible until someone photographs a window beside a web page.
+
+### What this does not cover
+
+React Native renders to native views, not to `div` and CSS classes, so neither the components nor the
+stylesheets apply there — only the token layer does. A mobile app inside a WebView or as a PWA uses
+all three layers unchanged.
+
+Of the 172 tokens, 29 are CSS `font` shorthands that still contain a `var()` — every text style is
+`600 21px/28px var(--font-sans)`, and only a whole-value alias can be followed further. They are
+flagged `containsVar` in `tokens.json`. No colour is among them, so the native headers are unaffected.
+
+**Hindi has no font wired, and that gap is the delivery's, reproduced faithfully.** The design
+system's typography spec names `--font-sans-hi` and prescribes a full Hindi type scale — `hi-display-1`
+at 72/94, a 13px size floor, weight 600 instead of italic — but the delivery's own `tokens.css`
+declares none of it, and neither does ours: 0 Hindi tokens on both sides, byte-identical apart from our
+`@font-face` path fix. `NotoSansDevanagari-Variable.woff2` and `Newsreader-Display.woff2` ship in
+`dist/fonts/` with no `@font-face` rule referencing them, in the delivery too. Wiring them means
+choosing leading values, and the spec says its own numbers are unreviewed by a Hindi reader — so it is
+a decision to take deliberately, not a line to add quietly.
+
+## Both module formats
+
+The package ships CommonJS and ESM, selected through the `exports` map. This is not a formality:
+
+```
+importing Button alone, minified, react external
+  dist/index.js      (CommonJS)   405,590 bytes
+  dist/esm/index.js  (ESM)          1,143 bytes
+```
+
+A CommonJS module's exports are decided at runtime, so a bundler must keep every component the barrel
+file names. `yarn exports:check` loads both halves in separate Node processes and compares their
+export lists, because a bundler papers over a broken ESM specifier and Node does not.
 
 ## The parity harness
 

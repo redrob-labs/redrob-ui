@@ -8,7 +8,7 @@
 
   const PRIVACY = h(R.PrivacyProtection, { level: 'high', summary: '214 private details kept from AI this week.',
     last: ['Your last message: 3 details kept private. ', h('a', { key: 'a', href: '#what-the-ai-saw' }, 'See what the AI saw')],
-    foot: [h('span', { key: 'a' }, 'Set to High for your whole team by your admin, Park Hyunjin.'), h('a', { key: 'b', href: '#privacy' }, 'How it works')] });
+    foot: [h('span', { key: 'a' }, 'Set to High for your whole team by your admin, Richard Stiles.'), h('a', { key: 'b', href: '#privacy' }, 'How it works')] });
   const MEMORY = (value, onChange) => h(R.MemoryScope, { value, onChange,
     options: [
       { value: 'project', label: 'This project', detail: '12 notes about Seorin MSA', summary: '12 notes, kept by Redrob outside any AI, so they work with every model.' },
@@ -35,7 +35,7 @@
     const [op, setOp] = React.useState('auto');
     const [web, setWeb] = React.useState(false);
     return h('div', { style: { maxWidth: '760px', minHeight: '560px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: '16px' } }, [
-      h(R.Composer, { key: 'c', defaultValue: 'Send Kim Minjun a short update on where we are',
+      h(R.Composer, { key: 'c', defaultValue: 'Send John Major a short update on where we are',
         context: h('span', { className: 'rr-composer__chip' }, [ic('folder', 14), h('span', { key: 't' }, 'Seorin MSA')]),
         status: h(R.ComposerStatus, { items: statusItems(mem, setMem, op, setOp, web), defaultOpen: 'privacy' }) }),
       h('div', { key: 'x', style: { display: 'flex', gap: '8px', alignItems: 'center', fontSize: '12px', color: 'var(--ink-secondary)' } }, [

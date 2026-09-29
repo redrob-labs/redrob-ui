@@ -38,14 +38,14 @@
     return h(R.AppShell, Object.assign({ product: 'Desk', mark: MARK_L, markDark: MARK_D, symbol: SYMBOL, collapsible: true, defaultCollapsed: false,
       theme: h(R.ThemeSwitch, { size: 'sm' }), nav: nav(current, apps), navLabel: 'Desk' }, p), body);
   }
-  const ME = 'Han Jiwoo';
-  const PROJECTS = [{"id":"seorin","name":"Seorin MSA","about":"Master services agreement with Seorin Bio","files":18,"chats":6,"playbooks":["first-review"],"active":"2h ago","people":["Han Jiwoo","Lee Dohyun","Kim Minjun"]},{"id":"supplier","name":"Q3 supplier contracts","about":"Every supplier contract up for renewal this year","files":41,"chats":3,"playbooks":["renewal-sweep"],"active":"Mon","people":["Han Jiwoo","Choi Yuna"]},{"id":"hanbit","name":"Hanbit v. Daeil","about":"Seoul Central District Court, damages claim","files":126,"chats":11,"playbooks":["deadline-tracker"],"active":"Today","people":["Han Jiwoo","Lee Dohyun","Park Sera","Jung Hoon"]},{"id":"nara","name":"Nara Series B diligence","about":"Acting for the lead investor","files":212,"chats":4,"playbooks":[],"active":"18 Sep","people":["Han Jiwoo","Kim Minjun"]},{"id":"clauses","name":"Our clause library","about":"The positions the firm has agreed, clause by clause","files":64,"chats":2,"playbooks":[],"active":"9 Sep","people":["Everyone at the firm"]}];
+  const ME = 'Jane Major';
+  const PROJECTS = [{"id":"seorin","name":"Seorin MSA","about":"Master services agreement with Seorin Bio","files":18,"chats":6,"playbooks":["first-review"],"active":"2h ago","people":["Jane Major","Richard Major","John Major"]},{"id":"supplier","name":"Q3 supplier contracts","about":"Every supplier contract up for renewal this year","files":41,"chats":3,"playbooks":["renewal-sweep"],"active":"Mon","people":["Jane Major","Mary Poe"]},{"id":"hanbit","name":"Hanbit v. Daeil","about":"Seoul Central District Court, damages claim","files":126,"chats":11,"playbooks":["deadline-tracker"],"active":"Today","people":["Jane Major","Richard Major","Mary Miles","John Roe"]},{"id":"nara","name":"Nara Series B diligence","about":"Acting for the lead investor","files":212,"chats":4,"playbooks":[],"active":"18 Sep","people":["Jane Major","John Major"]},{"id":"clauses","name":"Our clause library","about":"The positions the firm has agreed, clause by clause","files":64,"chats":2,"playbooks":[],"active":"9 Sep","people":["Everyone at the firm"]}];
   const PJ = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
   function statusItems(mem, setMem, project) {
     const pj = project && PJ[project];
     return [
       { id: 'privacy', icon: ic('shieldCheck'), tone: 'safe', name: 'Privacy', value: 'High', level: { n: 2, of: 3 }, live: 'Running on this laptop',
-        panel: h(R.PrivacyProtection, { level: 'high', summary: '214 private details kept from AI this week.', foot: [h('span', { key: 'a' }, 'Set to High for your whole team by your admin, Park Hyunjin.')] }) },
+        panel: h(R.PrivacyProtection, { level: 'high', summary: '214 private details kept from AI this week.', foot: [h('span', { key: 'a' }, 'Set to High for your whole team by your admin, Richard Stiles.')] }) },
       { id: 'memory', icon: ic('bookOpen'), tone: mem === 'none' ? 'plain' : 'on', name: 'Memory', value: mem === 'none' ? 'Off for this chat' : 'On for every AI',
         panel: h(R.MemoryScope, { value: mem, onChange: setMem,
           options: [
@@ -74,7 +74,7 @@
   function ChatHome() {
         const line = GREETING;
     return h('div', { className: 'wk-new' }, h('div', { className: 'wk-new__in' }, [
-      h('p', { key: 'h', className: 'wk-new__hello' }, [ic('sparkle', 18), 'Hello, Jiwoo']),
+      h('p', { key: 'h', className: 'wk-new__hello' }, [ic('sparkle', 18), 'Hello, Jane']),
       h('h2', { key: 'l', className: 'wk-new__line' }, line),
       h(Compose, { key: 'c' })
     ]));

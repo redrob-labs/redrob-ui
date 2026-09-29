@@ -3,7 +3,7 @@
 <script>
   const h = React.createElement, R = window.Redrob;
   function Demo() {
-    const [a, setA] = React.useState({ full: '김민준', second: 'Minjun Kim', preferred: '민준' });
+    const [a, setA] = React.useState({ full: '홍길동', second: 'Gildong Hong', preferred: '길동' });
     const [b, setB] = React.useState({ full: 'R. Shalini' });
     return h('div', { style:{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'40px', alignItems:'start' } }, [
       h('div', { key:'a' }, [

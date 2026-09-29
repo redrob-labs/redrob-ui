@@ -61,7 +61,7 @@
 
   const PRIVACY = h(R.PrivacyProtection, { level: 'high', summary: '214 private details kept from AI this week.',
     last: ['Your last message: 3 details kept private. ', h('a', { key: 'a', href: '#what-the-ai-saw' }, 'See what the AI saw')],
-    foot: [h('span', { key: 'a' }, 'Set to High for your whole team by your admin, Park Hyunjin.'), h('a', { key: 'b', href: '#privacy' }, 'How it works')] });
+    foot: [h('span', { key: 'a' }, 'Set to High for your whole team by your admin, Richard Stiles.'), h('a', { key: 'b', href: '#privacy' }, 'How it works')] });
   const MEMORY = (value, onChange) => h(R.MemoryScope, { value, onChange,
     options: [
       { value: 'project', label: 'This project', detail: '12 notes about Seorin MSA', summary: '12 notes, kept by Redrob outside any AI, so they work with every model.' },
@@ -114,7 +114,7 @@
     { re: /\b01[016789]-\d{3,4}-\d{4}\b/g, token: 'Phone' },
     { re: /\b\d{3}-\d{2,6}-\d{2,6}\b/g, out: true },
     { re: /\b[\w.+-]+@[\w-]+\.[\w.]+\b/g, token: 'Email' },
-    { re: /\b(Kim Minjun|Park Hyunjin|Lee Seoyeon)\b/g, token: 'Person' },
+    { re: /\b(John Major|Richard Stiles|Lee Seoyeon)\b/g, token: 'Person' },
     { re: /\bSeorin\b/g, token: 'Client' }
   ];
   function withPrivate(text) {
@@ -150,7 +150,7 @@
     React.useEffect(() => { const t = [setTimeout(() => setStage(1), 700), setTimeout(() => setStage(2), 1700), runs ? setTimeout(() => setStage(3), 3400) : 0]; return () => t.forEach(clearTimeout); }, []);
     const p = withPrivate(turn.text);
     return h(React.Fragment, null, [
-      h(R.Message, { key: 'u', role: 'user', author: 'Felix',
+      h(R.Message, { key: 'u', role: 'user', author: 'John',
         footer: stage === 0 ? h('span', { className: 'note' }, [h(R.Loader, { key: 'l', size: 'sm', label: 'Checking' }), 'Privacy protection is checking this on your laptop']) : privNote(p.count) },
         stage === 0 ? turn.text : p.nodes),
       stage >= 1 && pick.model !== prev ? h(R.ModelSwitch, { key: 's', to: pick.model, by: turn.pinned ? 'you' : 'auto', reason: turn.pinned ? '' : 'for ' + FOR[task] }) : null,
@@ -165,7 +165,7 @@
 
   function Chat() {
     const [sent, setSent] = React.useState([]);
-    const [text, setText] = React.useState('Send Kim Minjun at Seorin (010-4821-7730) a short update on where we are, and copy Park Hyunjin. Their fees go to 110-234-567890.');
+    const [text, setText] = React.useState('Send John Major at Seorin (010-4821-7730) a short update on where we are, and copy Richard Stiles. Their fees go to 110-234-567890.');
     const [pin, setPin] = React.useState(null);
     const [task, setTask] = React.useState('auto');
     const [mem, setMem] = React.useState('project');
@@ -175,9 +175,9 @@
     const models = ['Claude Opus 5.5'].concat(sent.map(t => (t.pinned ? findPick(t.pinned) : best(t.task === 'auto' ? matchTask(t.text) : t.task)).model));
     const last = sent.length ? (sent[sent.length - 1].task === 'auto' ? matchTask(sent[sent.length - 1].text) : sent[sent.length - 1].task) : 'draft';
     const thread = h('div', { className: 'thread' }, [
-      h(R.Message, { key: 'u1', role: 'user', author: 'Felix', footer: privNote(3) },
+      h(R.Message, { key: 'u1', role: 'user', author: 'John', footer: privNote(3) },
         ['Review the ', h(R.PrivateText, { key: 'a', as: 'Client 1' }, 'Seorin'), ' draft agreement against our standard positions and flag anything that moves risk onto us. Their lawyer is ',
-         h(R.PrivateText, { key: 'b', as: 'Person 1' }, 'Kim Minjun'), '.']),
+         h(R.PrivateText, { key: 'b', as: 'Person 1' }, 'John Major'), '.']),
       h(R.Message, { key: 'a1', role: 'assistant', author: 'Desk',
         footer: h(R.AnswerReceipt, { items: [choiceItem('review', opus), Object.assign({}, memItem, { label: '3 notes used' }),
           { id: 'o', icon: ic('compare', 14), tone: 'differ', label: 'Checked by ' + chk.map(c => c.short).join(' and '), sub: 'see one point differently',

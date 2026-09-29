@@ -27,17 +27,17 @@
 
   const rows = [
     { id: 'MRC-2024-0118', party: '주식회사 한미글로벌엔지니어링건설', country: 'KR',
-      owner: '박현진', renews: '2026-10-02', notice: 60, value: '₩ 412,800,000', state: 'inside' },
+      owner: '박영수', renews: '2026-10-02', notice: 60, value: '₩ 412,800,000', state: 'inside' },
     { id: 'MRC-2024-0091', party: 'Daejin Precision Components and Tooling Pvt. Ltd.', country: 'IN',
-      owner: 'Swati Chauhan', renews: '2026-10-09', notice: 60, value: '₹ 2,84,00,000', state: 'inside' },
+      owner: 'John Stiles', renews: '2026-10-09', notice: 60, value: '₹ 2,84,00,000', state: 'inside' },
     { id: 'MRC-2024-0140', party: '디에스이엔지니어링주식회사', country: 'KR',
-      owner: '박현진', renews: '2026-11-14', notice: 90, value: '₩ 88,000,000', state: 'watch' },
+      owner: '박영수', renews: '2026-11-14', notice: 90, value: '₩ 88,000,000', state: 'watch' },
     { id: 'MRC-2024-0077', party: 'Northbridge Facilities Management LLC', country: 'US',
-      owner: 'Jae Gardner', renews: '2026-11-30', notice: 30, value: '$ 240,000', state: 'watch' },
+      owner: 'Mary Major', renews: '2026-11-30', notice: 30, value: '$ 240,000', state: 'watch' },
     { id: 'MRC-2024-0163', party: '한국산업안전보건공단 위탁운영', country: 'KR',
-      owner: '박현진', renews: '2027-01-08', notice: 90, value: '₩ 1,204,500,000', state: 'ok' },
+      owner: '박영수', renews: '2027-01-08', notice: 90, value: '₩ 1,204,500,000', state: 'ok' },
     { id: 'MRC-2024-0022', party: 'Meridian Logistics', country: 'US',
-      owner: 'Jae Gardner', renews: '2027-02-19', notice: 30, value: '$ 61,200', state: 'ok' }
+      owner: 'Mary Major', renews: '2027-02-19', notice: 30, value: '$ 61,200', state: 'ok' }
   ];
 
   const TONE = { inside: ['danger', 'Inside 60 days'], watch: ['warning', 'Watch'], ok: ['neutral', 'Fine'] };
@@ -63,7 +63,7 @@
         ]),
         h('div', { key: 'a', style: { display: 'flex', gap: '8px', alignItems: 'center' } }, [
           h(R.Badge, { key: 'e', tone: 'neutral', variant: 'outline', size: 'sm' }, 'Staging'),
-          h(R.Avatar, { key: 'v', name: 'Felix Kim', size: 'sm' })
+          h(R.Avatar, { key: 'v', name: 'John Doe', size: 'sm' })
         ])
       ]),
       h('div', { className: 'con__body', key: 'b' }, [
@@ -82,7 +82,7 @@
             h('div', { key: 'q', style: { width: '210px' } },
               h(R.Input, { placeholder: 'Reference or counterparty' })),
             h('div', { key: 'o', style: { width: '190px' } },
-              h(R.Combobox, { options: ['Everyone', '박현진', 'Swati Chauhan', 'Jae Gardner'],
+              h(R.Combobox, { options: ['Everyone', '박영수', 'John Stiles', 'Mary Major'],
                 defaultValue: 'Everyone', placeholder: 'Owner' })),
             h('div', { key: 'c', style: { width: '160px' } },
               h(R.Combobox, { options: ['All three', 'Korea', 'India', 'United States'],

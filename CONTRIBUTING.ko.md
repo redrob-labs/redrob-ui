@@ -91,6 +91,10 @@ yarn test:self   # 원본을 원본과 비교. 깨진 하네스가 통과로 보
 CI가 `yarn icons:check`로 검사합니다.
 
 예시 데이터에는 `example.com`을 씁니다. 실제 사람과 내부 도메인은 쓰지 않습니다.
+픽스처의 사람은 정해진 가명에서 고릅니다. `John Doe`, `Jane Doe`, `Richard Roe`, `Mary Major`,
+`John Stiles`, `Richard Miles`, 그리고 한글 `홍길동`, `김철수`, `이영희`, `박영수`입니다.
+문자 체계는 그대로 둡니다. 한글 이름은 한 음절 이니셜과 CJK 줄바꿈을 검사하므로, 로마자 이름으로
+바꾸면 그 검사가 조용히 사라집니다.
 
 ## 릴리스
 

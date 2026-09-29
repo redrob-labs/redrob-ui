@@ -65,11 +65,11 @@
     h(Figs, { key: 'f', items: [['214', 'Private details kept from AI this week'], ['52', 'Messages and files checked'], ['0', 'Sent as written']] }),
     h(Sec, { key: 's', title: 'What happens when you press Send' }, h('ol', { className: 'steps' }, [
       h('li', { key: 1 }, [h('b', { key: 'b' }, 'Your laptop reads it first'), 'A small privacy AI on this laptop checks the message and any files, in about a second. Nothing leaves before that.']),
-      h('li', { key: 2 }, [h('b', { key: 'b' }, 'The AI sees placeholders'), '"Kim Minjun" goes as "Person 1", "Seorin" as "Client 1". ID and bank numbers are left out.']),
+      h('li', { key: 2 }, [h('b', { key: 'b' }, 'The AI sees placeholders'), '"John Major" goes as "Person 1", "Seorin" as "Client 1". ID and bank numbers are left out.']),
       h('li', { key: 3 }, [h('b', { key: 'b' }, 'You read the real names'), 'When the answer comes back, your laptop puts the names back, and your message shows what was kept private.'])
     ])),
     h(Sec, { key: 'l', title: 'Protection levels' }, [LEVELS,
-      h('p', { key: 'a', className: 'admin' }, [ic('lock', 14), 'Your admin, Park Hyunjin, sets the level for the whole team. Only an admin can change it or turn it off.'])]),
+      h('p', { key: 'a', className: 'admin' }, [ic('lock', 14), 'Your admin, Richard Stiles, sets the level for the whole team. Only an admin can change it or turn it off.'])]),
     h(Sec, { key: 'x', title: 'Where it works, and what it can miss' }, h(Cols, { two: true, items: [
       ['Desktop app only', 'The check happens on your laptop, so it works in the Redrob desktop app. On the web and on your phone the status reads "Privacy: Off on the web", and on Strict nothing can be sent from there.'],
       ['What it can miss', 'ID, phone, bank and card numbers have a fixed shape and are always caught. Names are found by the privacy AI, which can miss one written unusually, or text inside an image.']

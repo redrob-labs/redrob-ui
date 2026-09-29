@@ -11,9 +11,9 @@
     /* Something has to be behind the scrim. A drawer over an empty ground is a
        gray rectangle with a dialog on it, which is not what a drawer looks like. */
     const behind = h('div', { key: 'bg', style: { position: 'absolute', inset: 0, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '10px' } },
-      [['Aarav Sharma', 'Backend Engineer', 'Noida', '92%'],
+      [['Richard Doe', 'Backend Engineer', 'Noida', '92%'],
        ['Ji-woo Park', 'Product Designer', 'Seoul', '88%'],
-       ['Meera Nair', 'Data Analyst', 'Noida', '74%'],
+       ['Mary Doe', 'Data Analyst', 'Noida', '74%'],
        ['Daniel Okafor', 'Backend Engineer', 'Lagos', '69%'],
        ['Sofia Bianchi', 'Product Designer', 'Remote', '61%']].map((r, i) =>
         h('div', { key: i, style: { display: 'grid', gridTemplateColumns: '1.3fr 1.2fr 1fr auto', gap: '12px', alignItems: 'center', fontSize: '13px', color: 'var(--ink-secondary)', paddingBottom: '10px', borderBottom: '1px solid var(--border-subtle)' } },
@@ -24,7 +24,7 @@
       behind,
       open && h(R.Drawer, {
         key: 'd',
-        title: 'Aarav Sharma',
+        title: 'Richard Doe',
         description: 'Backend Engineer - Noida',
         onClose: () => setOpen(false),
         footer: [

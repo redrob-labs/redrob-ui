@@ -654,8 +654,8 @@
   function initials(name) {
     if (!name) return '';
     var parts = String(name).trim().split(/\s+/);
-    /* A Hangul name is one family syllable, not two letters: 김정우 is 김, as AvatarMark
-       and the Avatar README say. Taking two gave 김정, which reads as a different name. */
+    /* A Hangul name is one family syllable, not two letters: 김철수 is 김, as AvatarMark
+       and the Avatar README say. Taking two gave 김철, which reads as a different name. */
     if (/^[\uAC00-\uD7AF]/.test(parts[0])) return parts[0].charAt(0);
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();

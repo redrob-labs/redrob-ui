@@ -168,10 +168,12 @@
   --focus-ring-width: 2px; /* Focus outline width, with the same value as its offset. */
   --tick-angle: 40deg; /* The rake of the brand's own mark, reused for the tick that marks a meta line and a section. */
   --card-radius-feature: 24px; /* The one card in a view that carries weight. Its top-left corner stays square - the gateway notch. */
-  --font-sans: Pretendard, 'Wanted Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-sans: Pretendard, 'Wanted Sans', 'Noto Sans Devanagari', system-ui, -apple-system, Segoe UI, sans-serif;
   --font-serif: Newsreader, 'Nanum Myeongjo', Georgia, 'Times New Roman', serif;
+  --font-serif-display: 'Newsreader Display', Newsreader, 'Nanum Myeongjo', Georgia, serif; /* Newsreader at optical size 52, for voice-1 (64px) and voice-2 (40px). 23px and below keeps the text cut. */
   --font-sans-kr: 'Wanted Sans', Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   --font-serif-kr: 'Nanum Myeongjo', 'Apple Myungjo', Batang, serif;
+  --font-sans-hi: 'Noto Sans Devanagari', Pretendard, 'Nirmala UI', sans-serif; /* Hindi-first surfaces. Pretendard follows for Latin in a mixed line; Nirmala UI is the Windows fallback. */
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --text-display-1: 800 72px/72px var(--font-sans); /* Hero headline. ExtraBold, one or two lines. */
   --text-display-2: 800 52px/56px var(--font-sans); /* Section opener on marketing pages. */
@@ -329,6 +331,17 @@
   font-weight: 400;
   letter-spacing: -0.004em;
   font-style: italic;
+}
+/* `.voice-quote` is the only utility class in this file that asks for italic, and Devanagari has no
+   italic cut - so a browser SYNTHESISES one by slanting the upright glyphs, which `37-devanagari.md`
+   forbids outright: "Never a slanted substitute." `system.css` already guards the component form
+   (`:lang(hi) .rr-voice-quote`) and the `em`/`i` elements; this utility class was the one path that
+   still reached a slant, confirmed in a browser before the guard existed. Emphasis goes to weight 600,
+   the same substitution the spec prescribes for `em` under `:lang(hi)`. */
+:lang(hi) .voice-quote,
+[lang='hi'] .voice-quote {
+  font-style: normal;
+  font-weight: 600;
 }
 .voice-lede {
   font-family: var(--font-serif);
@@ -502,6 +515,38 @@
   font-family: "Nanum Myeongjo";
   src: url("../fonts/NanumMyeongjo-Bold.woff2") format("woff2");
   font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Noto Sans Devanagari and Newsreader Display shipped in `fonts/` with no @font-face rule anywhere -
+   not here, and not in the delivery's own bundle either. A font file with no rule is unreachable: the
+   family name still resolves against whatever the reader happens to have installed locally, so a
+   machine with Nirmala UI looked correct and a machine without it fell through to a system face, and
+   the 121 KB in the package was never loaded on either.
+
+   Hindi is the sharper half of that. `system.css` already carries every Hindi rule - the voice scale,
+   upright emphasis, word-break, the rake fallback - and one of them, `.rr-rake:lang(hi)`, reads
+   `var(--font-sans-hi)` with NO fallback value. An undeclared custom property there makes the whole
+   `font-family` declaration invalid at computed-value time, so a Hindi hero inherited its font instead
+   of taking the one the system chose for it.
+
+   Both rules and both stacks are transcribed from `30-typography.md`, which names `--font-sans-hi` and
+   `--font-serif-display` and gives their fallback order; the sizes match the faces the spec measured
+   (Devanagari variable 100-900 at 118 KB, Newsreader Display at optical size 52 and 30 KB). Nothing
+   here is chosen by us. */
+@font-face {
+  font-family: "Noto Sans Devanagari";
+  src: url("../fonts/NotoSansDevanagari-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader Display";
+  src: url("../fonts/Newsreader-Display.woff2") format("woff2");
+  /* The display cut is 400 upright only - there is no italic and no other weight in the file. */
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }

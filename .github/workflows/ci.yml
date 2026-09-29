@@ -54,6 +54,12 @@ jobs:
       - name: Assert the generated icons are up to date
         run: yarn icons:check
 
+      # A stylesheet path that does not resolve is invisible to every other gate: the markup is
+      # identical, so parity passes, and the browser silently falls back to a system font. This
+      # caught 14 `@font-face` rules that had been wrong since the port began.
+      - name: Assert every stylesheet url resolves
+        run: yarn assets:check
+
   parity:
     name: parity against the reference bundle
     runs-on: ubuntu-latest

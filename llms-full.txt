@@ -1,20 +1,23 @@
 # @redrob-labs/ui - full reference
 
-Version 1.0.12. 123 React components on the Redrob Group Design System 2026, plus 252 icons.
+Version 1.0.0. 123 React components on the Redrob Group Design System 2026, plus 252 icons.
 
 ## Using the package
 
 ```tsx
 import { Button, Input, Table } from '@redrob-labs/ui';
-import '@redrob-labs/ui/styles/tokens.css';
-import '@redrob-labs/ui/styles/system.css';
+import '@redrob-labs/ui/tokens.css';
+import '@redrob-labs/ui/styles.css';
+import '@redrob-labs/ui/preflight.css';
 ```
 
-- Every export is named and lives at the package root. There are no deep imports and no default export.
-- `tokens.css` before `system.css`: the second reads the custom properties the first declares.
+- Every export is named and lives at the package root, and there is no default export. The only subpaths are the stylesheets, the fonts and the token files, all listed in the package's `exports` map.
+- `tokens.css` before `styles.css`: the second reads the custom properties the first declares.
+- `preflight.css` is OPTIONAL and paints the page itself. Import it when this system owns the whole page; leave it out when mounting a component inside somebody else's page, because neither `styles.css` nor the design system's own bundle declares an `html` or `body` rule and overriding that is the host application's decision. Without it, `data-theme="dark"` darkens the components and leaves the page background browser-default white.
 - Every component is a function component taking one props object. None of them read global state.
 - A prop marked required below has no default. A prop absent from a component's table does not exist on it, whatever a similar component accepts.
-- Fonts ship in the package at `fonts/`; `system.css` declares the `@font-face` rules that point at them.
+- Fonts ship in the package and are reachable as `@redrob-labs/ui/fonts/<file>.woff2`; `tokens.css` declares the `@font-face` rules that point at them.
+- Not React? `@redrob-labs/ui/tokens.json` carries every design token resolved to a literal for both themes, and `@redrob-labs/ui/native/redrob_tokens.h` the same as C++ constants, for a surface that cannot evaluate CSS.
 
 ## Components
 

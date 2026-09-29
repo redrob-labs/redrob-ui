@@ -202,6 +202,79 @@ jobs:
             npm publish --access public
           fi
 
+      # `npm publish` printing `+ name@version` is NOT proof the version is public.
+      #
+      # A 2FA-bypass granular token no longer publishes directly - npm reduced it to STAGING a publish,
+      # which a maintainer then approves with a 2FA challenge. A staged publish prints the same
+      # `+ @scope/name@1.0.0` line and exits 0, so the first real release of this package reported a
+      # fully green workflow while `npm install` answered 404.
+      #
+      # The tell is that the two registry reads disagree: the VERSION document is already there (200,
+      # tarball downloadable by URL) while the PACKUMENT - the document npm resolves an install
+      # through - is still 404. Checking only the version document, or only that the tarball fetches,
+      # would call a staged publish a success.
+      #
+      # Retried, because a genuinely public publish still needs a moment to reach the CDN, and a gate
+      # that fails on propagation lag would be turned off within a week.
+      - name: Assert the version is actually installable
+        if: ${{ github.event_name == 'release' || inputs.dry_run == false }}
+        env:
+          TAG: ${{ steps.ref.outputs.tag }}
+        run: |
+          set -uo pipefail
+          version="${TAG#v}"
+          name="$(node -p "require('./package.json').name")"
+
+          for attempt in 1 2 3 4 5 6; do
+            if npm view "$name@$version" version >/dev/null 2>&1; then
+              echo "$name@$version resolves from the registry after ${attempt} attempt(s)"
+              exit 0
+            fi
+            echo "not resolvable yet (attempt ${attempt}/6); waiting 20s"
+            sleep 20
+          done
+
+          # Distinguish "staged" from "never arrived", because the remedies are completely different.
+          encoded="$(node -p "encodeURIComponent('$name')")"
+          version_doc="$(curl -s -o /dev/null -w '%{http_code}' "https://registry.npmjs.org/${encoded}/${version}")"
+          packument="$(curl -s -o /dev/null -w '%{http_code}' "https://registry.npmjs.org/${encoded}")"
+
+          {
+            echo "### \`$name@$version\` is on the registry but NOT installable"
+            echo
+            echo "| read | status |"
+            echo "| --- | --- |"
+            echo "| version document | $version_doc |"
+            echo "| packument (what an install resolves through) | $packument |"
+            echo
+            if [ "$version_doc" = "200" ]; then
+              echo "The version exists and the packument does not, which is a **staged publish**."
+              echo
+              echo "npm no longer lets a 2FA-bypass granular token publish directly; it stages instead, and a"
+              echo "maintainer has to approve with a 2FA challenge. \`npm publish\` prints the same"
+              echo "\`+ $name@$version\` line either way, which is why this needs its own check."
+              echo
+              echo "Approve it - needs npm 11 or later, and cannot be done with a token:"
+              echo
+              echo '```'
+              echo "npm stage list $name"
+              echo "npm stage approve $name@$version"
+              echo '```'
+              echo
+              echo "Or on npmjs.com under the package's staged publishes."
+              echo
+              echo "To stop staging happening at all, configure **trusted publishing** for this package"
+              echo "(Settings -> Trusted publishing: repository \`${GITHUB_REPOSITORY}\`, workflow"
+              echo "\`publish.yml\`). An OIDC publish is not a 2FA-bypass token, so it publishes directly."
+            else
+              echo "Neither read resolves, so the publish did not reach the registry at all. Check the"
+              echo "publish step's output above for the error npm reported."
+            fi
+          } >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+
+          echo "::error::$name@$version is not installable (version doc $version_doc, packument $packument). See the run summary."
+          exit 1
+
       - name: Pack only (dry run)
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}
         run: |

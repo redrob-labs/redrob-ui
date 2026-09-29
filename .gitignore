@@ -13,7 +13,12 @@ node_modules
 
 # build output
 /dist
-/storybook-static
+
+# generated documentation site. `llms.txt` and `llms-full.txt` at the repo root are generated too but
+# ARE committed: an agent that reaches the repository instead of the published site must find the
+# same reference, and `yarn docs:check` in CI is what keeps the committed copies honest.
+/site
+
 # next.js
 /.next/
 /out/
@@ -41,4 +46,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-*storybook.log
+

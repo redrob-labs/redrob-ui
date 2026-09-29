@@ -1,0 +1,207 @@
+<!-- @dsCard group="Product screens" height=1000 width=1320 page -->
+<div id="root" style="font-family: var(--font-sans); color: var(--ink-primary);"></div>
+<style>
+  #root, .rr-shell { min-height: 1000px; }
+  /* The three pages share one layout: a large status card, the figures, then sections. */
+  .page { display: flex; flex-direction: column; gap: 56px; padding: 12px 0 72px; max-width: 920px; }
+  .figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: -24px 0 0;
+          border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); }
+  .fig { padding: 20px 24px 20px 0; }
+  .fig + .fig { padding-left: 24px; border-left: 1px solid var(--border-subtle); }
+  .fig dt { font-size: 13px; line-height: 19px; color: var(--ink-secondary); }
+  .fig dd { margin: 6px 0 0; font-size: 32px; line-height: 38px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .sec { display: flex; flex-direction: column; gap: 20px; }
+  .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  .cols--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .col b { display: block; font-size: 15px; line-height: 22px; font-weight: 600; margin-bottom: 6px; }
+  .col p { margin: 0; font-size: 14px; line-height: 23px; color: var(--ink-secondary); }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; counter-reset: s; }
+  .steps li { counter-increment: s; font-size: 14px; line-height: 23px; color: var(--ink-secondary); }
+  .steps li::before { content: counter(s); display: inline-flex; width: 26px; height: 26px; margin-bottom: 10px; align-items: center; justify-content: center;
+                      border-radius: 50%; background: var(--surface-sunken); font-size: 12px; font-weight: 600; color: var(--ink-primary); }
+  .steps b { display: block; font-size: 15px; margin-bottom: 4px; color: var(--ink-primary); }
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+  .admin { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--ink-secondary); }
+  .thread { display: flex; flex-direction: column; gap: 18px; }
+  .note { display: inline-flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; font-size: 13px; line-height: 20px; color: var(--ink-secondary); }
+  .note > span:first-child { display: inline-flex; color: var(--status-success); }
+  .note a { font-weight: 600; color: var(--ink-brand); text-decoration: none; }
+  .answer p { margin: 0 0 10px; } .answer p:last-child { margin: 0; }
+  @media (max-width: 720px) {
+    .page { gap: 40px; } .figs, .cols, .cols--2, .steps { grid-template-columns: minmax(0, 1fr); }
+    .fig + .fig { padding-left: 0; border-left: 0; border-top: 1px solid var(--border-subtle); }
+  }
+</style>
+<script>
+  const h = React.createElement;
+  const R = window.Redrob;
+  const I = R.icons;
+  const ic = (n, s) => h(I[n], { width: s || 15, height: s || 15 });
+
+  const MARK_L = '/_blob/4acde94cf2db0da7cc2c123d4cafbb66';
+  const MARK_D = '/_blob/9d0341656bedf8aaacf9584371167cb2';
+  /* The Desk sidebar: five places, recent chats, then how Desk works for you, each with its state. */
+  function deskNav(current) {
+    const it = (id, label, icon, meta) => ({ id, label, icon: h(I[icon], { width: 15, height: 15 }), meta, href: '#' + id, current: current === id });
+    return [it('chat', 'Chat', 'message'), it('projects', 'Projects', 'folder'), it('playbooks', 'Playbooks', 'checklist'), it('scheduled', 'Scheduled', 'calendarClock', '2'), it('history', 'History', 'history'),
+      { heading: 'Recent' }, { id: 'r1', label: 'Seorin MSA', meta: '2h', href: '#chat', current: current === 'recent' }, { id: 'r2', label: 'Notice by email - valid?', meta: 'Mon', href: '#chat' }, { id: 'r3', label: 'Hanbit exhibit list', meta: 'Fri', href: '#chat' },
+      { heading: 'How Desk works for you' },
+      it('guide', 'Model Guide', 'chart', 'Auto'), it('connectors', 'Connectors', 'plug', '6'),
+      it('privacy', 'Privacy protection', 'shieldCheck', 'High'), it('memory', 'Memory', 'bookOpen', 'On'), it('opinion', 'Second opinion', 'compare', 'On')];
+  }
+  function nav(current) { return deskNav(current === 'chat' ? 'recent' : current); }
+
+  const Figs = ({ items }) => h('dl', { className: 'figs' }, items.map(([v, l], i) => h('div', { key: i, className: 'fig' }, [h('dt', { key: 'l' }, l), h('dd', { key: 'v' }, v)])));
+  const Sec = ({ title, children }) => h('section', { className: 'sec' }, [h(R.SectionMark, { key: 'm', label: title, as: 'heading', level: 2 }), h('div', { key: 'b' }, children)]);
+  const Cols = ({ items, two }) => h('div', { className: two ? 'cols cols--2' : 'cols' }, items.map(([t, d], i) => h('div', { key: i, className: 'col' }, [h('b', { key: 'b' }, t), h('p', { key: 'p' }, d)])));
+  function shell(current, title, meta, body, foot) {
+    return h(R.AppShell, { product: 'Desk', mark: MARK_L, markDark: MARK_D, symbol: '/_blob/a35853f38695b112ff00dae9ab62fdce', collapsible: true, defaultCollapsed: false, theme: h(R.ThemeSwitch, { size: 'sm' }),
+      nav: nav(current), title, meta, foot }, body);
+  }
+
+  const PRIVACY = h(R.PrivacyProtection, { level: 'high', summary: '214 private details kept from AI this week.',
+    last: ['Your last message: 3 details kept private. ', h('a', { key: 'a', href: '#what-the-ai-saw' }, 'See what the AI saw')],
+    foot: [h('span', { key: 'a' }, 'Set to High for your whole team by your admin, Richard Stiles.'), h('a', { key: 'b', href: '#privacy' }, 'How it works')] });
+  const MEMORY = (value, onChange) => h(R.MemoryScope, { value, onChange,
+    options: [
+      { value: 'project', label: 'This project', detail: '12 notes about Seorin MSA', summary: '12 notes, kept by Redrob outside any AI, so they work with every model.' },
+      { value: 'all', label: 'All my work', detail: 'Also 31 notes on how you like to work', summary: '43 notes, kept by Redrob outside any AI, so they work with every model.' },
+      { value: 'none', label: 'Off for this chat', detail: 'Nothing is read, and nothing is saved', off: true }
+    ],
+    foot: [h('span', { key: 'a' }, 'Yours to keep: download every note at any time.'), h('a', { key: 'b', href: '#memory' }, 'Open Memory')] });
+  const OPINION = (value, onChange) => h(R.SecondOpinionSetting, { value, onChange,
+    foot: [h('span', { key: 'a' }, 'The checkers are the next best AIs for the task, from other companies.'), h('a', { key: 'b', href: '#second-opinion' }, 'See how a check reads')] });
+
+  function statusItems(mem, setMem, op, setOp, web) {
+    return [
+      web
+        ? { id: 'privacy', icon: ic('shield'), tone: 'warn', name: 'Privacy', value: 'Off on the web',
+            panel: h(R.PrivacyProtection, { state: 'off', foot: [h('span', { key: 'a' }, 'On Strict, your admin can stop sending from the web altogether.'), h('a', { key: 'b', href: '#privacy' }, 'How it works')] }) }
+        : { id: 'privacy', icon: ic('shieldCheck'), tone: 'safe', name: 'Privacy', value: 'High', level: { n: 2, of: 3 }, live: 'Running on this laptop', panel: PRIVACY },
+      { id: 'memory', icon: ic('bookOpen'), tone: mem === 'none' ? 'plain' : 'on', name: 'Memory', value: mem === 'none' ? 'Off' : 'On for every AI', panel: MEMORY(mem, setMem) },
+      { id: 'opinion', icon: ic('compare'), tone: op === 'off' ? 'plain' : 'on', name: 'Second opinion', value: op === 'off' ? 'Off' : op === 'always' ? 'Always' : 'When it matters', panel: OPINION(op, setOp) }
+    ];
+  }
+
+  /* From the Redrob Leaderboard (September 2026, sample figures): the top five for each
+     lawyer task, in the order the method decides. BOARD adds the places after the five
+     that run in Desk, which is where the second-opinion checkers come from. */
+  const LAWYER = [{"id": "review", "label": "Review documents and contracts", "title": "Top 5 for a lawyer reviewing documents and contracts", "usage": "Priced for about 40 documents reviewed a month.", "picks": [{"id": "review-5", "model": "Gemini 3.8 Flash", "short": "Gemini 3.8 Flash", "harness": "Gemini Enterprise for Legal", "effort": {"label": "Medium", "level": 2, "of": 3}, "why": "A fast first pass on standard paper. Introductory price until the end of 2026.", "monthly": 6.75}, {"id": "review-2", "model": "Claude Sonnet 5", "short": "Sonnet 5", "harness": "Claude for Word", "effort": {"label": "Medium", "level": 2, "of": 5}, "why": "Marks up a draft inside Word as tracked changes, at half the price of Opus 5.5.", "monthly": 18.0}, {"id": "review-1", "model": "Claude Opus 5.5", "short": "Opus 5.5", "harness": "Redrob Desk", "effort": {"label": "Medium", "level": 2, "of": 5}, "why": "Reads the documents where they sit and returns the issues, with the clause behind each one.", "monthly": 36.0}, {"id": "review-3", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "harness": "Gemini Enterprise for Legal", "effort": {"label": "Medium", "level": 2, "of": 3}, "why": "Built for legal teams, with your playbook and document system connected.", "monthly": 19.2}, {"id": "review-4", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "harness": "ChatGPT Work", "effort": {"label": "High", "level": 3, "of": 5}, "why": "Careful on long agreements, and returns a clean list of issues.", "monthly": 21.0}]}, {"id": "research", "label": "Research the law", "title": "Top 5 for a lawyer researching the law", "usage": "Priced for about 20 research questions a month.", "picks": [{"id": "research-1", "model": "Kimi K3", "short": "Kimi K3", "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "why": "Reads the longest reading lists in full and cites every source. An open model, run by Redrob.", "monthly": 14.6}, {"id": "research-2", "model": "Claude Opus 5.5", "short": "Opus 5.5", "harness": "Redrob Desk", "effort": {"label": "Extra high", "level": 4, "of": 5}, "why": "Searches, reads the cases in full and sets out what each one held, with where it came from.", "monthly": 58.4}, {"id": "research-3", "model": "Claude Fable 5.1", "short": "Fable 5.1", "harness": "Claude Research", "effort": {"label": "Extra high", "level": 4, "of": 5}, "why": "Among the top scores on public legal research tests. Stronger on the hardest questions, at over twice the price.", "monthly": 146.0}, {"id": "research-4", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "harness": "Gemini Deep Research", "effort": {"label": "High", "level": 3, "of": 3}, "why": "Reads widely and lists its sources, for a broad first sweep.", "monthly": 26.8}, {"id": "research-5", "model": "GPT-6 Astra", "short": "GPT-6 Astra", "harness": "ChatGPT Work", "effort": {"label": "Extra High", "level": 4, "of": 5}, "why": "OpenAI's largest model, for a second opinion on a hard question.", "monthly": 146.0}]}, {"id": "memo", "label": "Write briefs and memos", "title": "Top 5 for a lawyer writing briefs and memos", "usage": "Priced for about 10 briefs or memos a month.", "picks": [{"id": "memo-1", "model": "GPT-6 Astra", "short": "GPT-6 Astra", "harness": "Redrob Desk", "effort": {"label": "High", "level": 3, "of": 5}, "why": "Writes a tight memo from the whole record, and states the weak points of our own position.", "monthly": 24.0}, {"id": "memo-2", "model": "Claude Opus 5.5", "short": "Opus 5.5", "harness": "Redrob Desk", "effort": {"label": "High", "level": 3, "of": 5}, "why": "Writes long, structured argument from the research already in your folder.", "monthly": 22.0}, {"id": "memo-3", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "harness": "Gemini Enterprise for Legal", "effort": {"label": "High", "level": 3, "of": 3}, "why": "Built to check the citations in a brief against their sources.", "monthly": 12.2}, {"id": "memo-4", "model": "Claude Fable 5.1", "short": "Fable 5.1", "harness": "Claude Cowork", "effort": {"label": "High", "level": 3, "of": 5}, "why": "A little stronger on the hardest questions, at over twice the price.", "monthly": 55.0}, {"id": "memo-5", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "harness": "ChatGPT Work", "effort": {"label": "Medium", "level": 2, "of": 5}, "why": "For short memos, at the lowest price here.", "monthly": 9.0}]}, {"id": "draft", "label": "Draft contracts", "title": "Top 5 for a lawyer drafting contracts", "usage": "Priced for about 12 contracts drafted a month.", "picks": [{"id": "draft-1", "model": "Claude Opus 5.5", "short": "Opus 5.5", "harness": "Redrob Desk", "effort": {"label": "High", "level": 3, "of": 5}, "why": "Drafts from the term sheet, your templates and past deals in the folder, and keeps defined terms consistent.", "monthly": 16.2}, {"id": "draft-4", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "harness": "ChatGPT Work", "effort": {"label": "Medium", "level": 2, "of": 5}, "why": "Good on standard agreements, for a fraction of the cost.", "monthly": 6.6}, {"id": "draft-5", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "harness": "Gemini Enterprise for Legal", "effort": {"label": "High", "level": 3, "of": 3}, "why": "Built for legal teams, with your clause library connected.", "monthly": 9.0}, {"id": "draft-2", "model": "Claude Fable 5.1", "short": "Fable 5.1", "harness": "Claude Cowork", "effort": {"label": "High", "level": 3, "of": 5}, "why": "Anthropic's largest model. Slightly stronger on unusual terms, at over twice the price.", "monthly": 40.5}, {"id": "draft-3", "model": "GPT-6 Astra", "short": "GPT-6 Astra", "harness": "ChatGPT Work", "effort": {"label": "High", "level": 3, "of": 5}, "why": "OpenAI's largest model. A strong second opinion on a first draft.", "monthly": 40.5}]}, {"id": "client", "label": "Advise and update clients", "title": "Top 5 for a lawyer advising and updating clients", "usage": "Priced for about 60 client letters, emails and updates a month.", "picks": [{"id": "client-1", "model": "Kimi K3", "short": "Kimi K3", "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "why": "Short, clear updates a client can act on, for very little. An open model, run by Redrob.", "monthly": 3.2}, {"id": "client-2", "model": "Claude Opus 5.5", "short": "Opus 5.5", "harness": "Redrob Desk", "effort": {"label": "Medium", "level": 2, "of": 5}, "why": "Writes the update from the matter file, in plain words the client can act on.", "monthly": 15.6}, {"id": "client-3", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "harness": "ChatGPT Work", "effort": {"label": "Medium", "level": 2, "of": 5}, "why": "Quick, clear letters and emails, and a first client deck.", "monthly": 7.8}, {"id": "client-4", "model": "Gemini 3.8 Flash", "short": "Gemini 3.8 Flash", "harness": "Gemini in Gmail", "effort": {"label": "Low", "level": 1, "of": 3}, "why": "Replies inside Gmail for almost nothing.", "monthly": 2.48}, {"id": "client-5", "model": "Claude Sonnet 5", "short": "Sonnet 5", "harness": "Claude Cowork", "effort": {"label": "Low", "level": 1, "of": 5}, "why": "Routine updates from the folder, at a lower price.", "monthly": 6.6}]}];
+  const BOARD = {"review": [{"id": "review-5", "model": "Gemini 3.8 Flash", "short": "Gemini 3.8 Flash", "harness": "Gemini Enterprise for Legal", "effort": {"label": "Medium", "level": 2, "of": 3}, "monthly": 6.75, "why": "A fast first pass on standard paper. Introductory price until the end of 2026.", "place": 1, "maker": "Google", "open": false}, {"id": "review-2", "model": "Claude Sonnet 5", "short": "Sonnet 5", "harness": "Claude for Word", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 18.0, "why": "Marks up a draft inside Word as tracked changes, at half the price of Opus 5.5.", "place": 2, "maker": "Anthropic", "open": false}, {"id": "review-1", "model": "Claude Opus 5.5", "short": "Opus 5.5", "harness": "Redrob Desk", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 36.0, "why": "Reads the documents where they sit and returns the issues, with the clause behind each one.", "place": 3, "maker": "Anthropic", "open": false}, {"id": "review-3", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "harness": "Gemini Enterprise for Legal", "effort": {"label": "Medium", "level": 2, "of": 3}, "monthly": 19.2, "why": "Built for legal teams, with your playbook and document system connected.", "place": 4, "maker": "Google", "open": false}, {"id": "review-4", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "harness": "ChatGPT Work", "effort": {"label": "High", "level": 3, "of": 5}, "monthly": 21.0, "why": "Careful on long agreements, and returns a clean list of issues.", "place": 5, "maker": "OpenAI", "open": false}, {"id": "lb-review-6", "model": "DeepSeek V4 Pro", "short": "DeepSeek V4 Pro", "maker": "DeepSeek", "open": true, "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 3.4, "why": "Nearly as careful on standard paper, at a tenth of the price.", "place": 6}, {"id": "lb-review-7", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "maker": "Google", "open": false, "harness": "Redrob Desk", "effort": {"label": "High", "level": 3, "of": 3}, "monthly": 19.2, "why": "Strong on long bundles, with the passage behind every point.", "place": 7}, {"id": "lb-review-8", "model": "Kimi K3", "short": "Kimi K3", "maker": "Moonshot AI", "open": true, "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 9.8, "why": "Good at spotting what is missing, not only what is wrong.", "place": 8}, {"id": "lb-review-9", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "maker": "OpenAI", "open": false, "harness": "Redrob Desk", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 21, "why": "Careful on long agreements, and returns a clean list of issues.", "place": 9}], "research": [{"id": "research-1", "model": "Kimi K3", "short": "Kimi K3", "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 14.6, "why": "Reads the longest reading lists in full and cites every source. An open model, run by Redrob.", "place": 1, "maker": "Moonshot AI", "open": true}, {"id": "research-2", "model": "Claude Opus 5.5", "short": "Opus 5.5", "harness": "Redrob Desk", "effort": {"label": "Extra high", "level": 4, "of": 5}, "monthly": 58.4, "why": "Searches, reads the cases in full and sets out what each one held, with where it came from.", "place": 2, "maker": "Anthropic", "open": false}, {"id": "research-3", "model": "Claude Fable 5.1", "short": "Fable 5.1", "harness": "Claude Research", "effort": {"label": "Extra high", "level": 4, "of": 5}, "monthly": 146.0, "why": "Among the top scores on public legal research tests. Stronger on the hardest questions, at over twice the price.", "place": 3, "maker": "Anthropic", "open": false}, {"id": "research-4", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "harness": "Gemini Deep Research", "effort": {"label": "High", "level": 3, "of": 3}, "monthly": 26.8, "why": "Reads widely and lists its sources, for a broad first sweep.", "place": 4, "maker": "Google", "open": false}, {"id": "research-5", "model": "GPT-6 Astra", "short": "GPT-6 Astra", "harness": "ChatGPT Work", "effort": {"label": "Extra High", "level": 4, "of": 5}, "monthly": 146.0, "why": "OpenAI's largest model, for a second opinion on a hard question.", "place": 5, "maker": "OpenAI", "open": false}, {"id": "lb-research-6", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "maker": "OpenAI", "open": false, "harness": "Redrob Desk", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 25, "why": "Quick to find the leading cases, at under half the price of first place.", "place": 6}, {"id": "lb-research-7", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "maker": "Google", "open": false, "harness": "Redrob Desk", "effort": {"label": "High", "level": 3, "of": 3}, "monthly": 26.8, "why": "Good at recent decisions and at saying when the law is unsettled.", "place": 7}, {"id": "lb-research-8", "model": "DeepSeek V4 Pro", "short": "DeepSeek V4 Pro", "maker": "DeepSeek", "open": true, "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 4.2, "why": "A capable first pass for a fraction of the cost.", "place": 8}], "memo": [{"id": "memo-1", "model": "GPT-6 Astra", "short": "GPT-6 Astra", "harness": "Redrob Desk", "effort": {"label": "High", "level": 3, "of": 5}, "monthly": 24.0, "why": "Writes a tight memo from the whole record, and states the weak points of our own position.", "place": 1, "maker": "OpenAI", "open": false}, {"id": "memo-2", "model": "Claude Opus 5.5", "short": "Opus 5.5", "harness": "Redrob Desk", "effort": {"label": "High", "level": 3, "of": 5}, "monthly": 22.0, "why": "Writes long, structured argument from the research already in your folder.", "place": 2, "maker": "Anthropic", "open": false}, {"id": "memo-3", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "harness": "Gemini Enterprise for Legal", "effort": {"label": "High", "level": 3, "of": 3}, "monthly": 12.2, "why": "Built to check the citations in a brief against their sources.", "place": 3, "maker": "Google", "open": false}, {"id": "memo-4", "model": "Claude Fable 5.1", "short": "Fable 5.1", "harness": "Claude Cowork", "effort": {"label": "High", "level": 3, "of": 5}, "monthly": 55.0, "why": "A little stronger on the hardest questions, at over twice the price.", "place": 4, "maker": "Anthropic", "open": false}, {"id": "memo-5", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "harness": "ChatGPT Work", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 9.0, "why": "For short memos, at the lowest price here.", "place": 5, "maker": "OpenAI", "open": false}, {"id": "lb-memo-6", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "maker": "Google", "open": false, "harness": "Redrob Desk", "effort": {"label": "High", "level": 3, "of": 3}, "monthly": 12.2, "why": "Clear structure, and good with a long record behind it.", "place": 6}, {"id": "lb-memo-7", "model": "Kimi K3", "short": "Kimi K3", "maker": "Moonshot AI", "open": true, "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 6.1, "why": "Well organized first drafts at a low price.", "place": 7}, {"id": "lb-memo-8", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "maker": "OpenAI", "open": false, "harness": "Redrob Desk", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 9, "why": "Plain, readable memos for a client audience.", "place": 8}, {"id": "lb-memo-9", "model": "GLM-5.3", "short": "GLM-5.3", "maker": "Z.ai", "open": true, "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 2.9, "why": "A serviceable first draft for very little.", "place": 9}], "draft": [{"id": "draft-1", "model": "Claude Opus 5.5", "short": "Opus 5.5", "harness": "Redrob Desk", "effort": {"label": "High", "level": 3, "of": 5}, "monthly": 16.2, "why": "Drafts from the term sheet, your templates and past deals in the folder, and keeps defined terms consistent.", "place": 1, "maker": "Anthropic", "open": false}, {"id": "draft-4", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "harness": "ChatGPT Work", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 6.6, "why": "Good on standard agreements, for a fraction of the cost.", "place": 2, "maker": "OpenAI", "open": false}, {"id": "draft-5", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "harness": "Gemini Enterprise for Legal", "effort": {"label": "High", "level": 3, "of": 3}, "monthly": 9.0, "why": "Built for legal teams, with your clause library connected.", "place": 3, "maker": "Google", "open": false}, {"id": "draft-2", "model": "Claude Fable 5.1", "short": "Fable 5.1", "harness": "Claude Cowork", "effort": {"label": "High", "level": 3, "of": 5}, "monthly": 40.5, "why": "Anthropic's largest model. Slightly stronger on unusual terms, at over twice the price.", "place": 4, "maker": "Anthropic", "open": false}, {"id": "draft-3", "model": "GPT-6 Astra", "short": "GPT-6 Astra", "harness": "ChatGPT Work", "effort": {"label": "High", "level": 3, "of": 5}, "monthly": 40.5, "why": "OpenAI's largest model. A strong second opinion on a first draft.", "place": 5, "maker": "OpenAI", "open": false}, {"id": "lb-draft-6", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "maker": "OpenAI", "open": false, "harness": "Redrob Desk", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 6.6, "why": "Good on standard agreements, for a fraction of the cost.", "place": 6}, {"id": "lb-draft-7", "model": "DeepSeek V4 Pro", "short": "DeepSeek V4 Pro", "maker": "DeepSeek", "open": true, "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 1.6, "why": "Solid on standard clauses, at a tenth of the price of first place.", "place": 7}, {"id": "lb-draft-8", "model": "Gemini 3.1 Pro", "short": "Gemini 3.1 Pro", "maker": "Google", "open": false, "harness": "Redrob Desk", "effort": {"label": "High", "level": 3, "of": 3}, "monthly": 9, "why": "Careful with defined terms across a long agreement.", "place": 8}, {"id": "lb-draft-9", "model": "Qwen3.8 Max", "short": "Qwen3.8 Max", "maker": "Alibaba", "open": true, "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 2.2, "why": "Handles Korean and English side by side well.", "place": 9}], "client": [{"id": "client-1", "model": "Kimi K3", "short": "Kimi K3", "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 3.2, "why": "Short, clear updates a client can act on, for very little. An open model, run by Redrob.", "place": 1, "maker": "Moonshot AI", "open": true}, {"id": "client-2", "model": "Claude Opus 5.5", "short": "Opus 5.5", "harness": "Redrob Desk", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 15.6, "why": "Writes the update from the matter file, in plain words the client can act on.", "place": 2, "maker": "Anthropic", "open": false}, {"id": "client-3", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "harness": "ChatGPT Work", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 7.8, "why": "Quick, clear letters and emails, and a first client deck.", "place": 3, "maker": "OpenAI", "open": false}, {"id": "client-4", "model": "Gemini 3.8 Flash", "short": "Gemini 3.8 Flash", "harness": "Gemini in Gmail", "effort": {"label": "Low", "level": 1, "of": 3}, "monthly": 2.48, "why": "Replies inside Gmail for almost nothing.", "place": 4, "maker": "Google", "open": false}, {"id": "client-5", "model": "Claude Sonnet 5", "short": "Sonnet 5", "harness": "Claude Cowork", "effort": {"label": "Low", "level": 1, "of": 5}, "monthly": 6.6, "why": "Routine updates from the folder, at a lower price.", "place": 5, "maker": "Anthropic", "open": false}, {"id": "lb-client-6", "model": "GPT-6 Sol", "short": "GPT-6 Sol", "maker": "OpenAI", "open": false, "harness": "Redrob Desk", "effort": {"label": "Medium", "level": 2, "of": 5}, "monthly": 7.8, "why": "Short, clear letters and emails a client can act on.", "place": 6}, {"id": "lb-client-7", "model": "DeepSeek V4 Pro", "short": "DeepSeek V4 Pro", "maker": "DeepSeek", "open": true, "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 0.9, "why": "Quick routine updates for almost nothing.", "place": 7}, {"id": "lb-client-8", "model": "Gemini 3.8 Flash", "short": "Gemini 3.8 Flash", "maker": "Google", "open": false, "harness": "Redrob Desk", "effort": {"label": "Medium", "level": 2, "of": 3}, "monthly": 2.48, "why": "Fast and cheap for short replies.", "place": 8}, {"id": "lb-client-9", "model": "Qwen3.8 Max", "short": "Qwen3.8 Max", "maker": "Alibaba", "open": true, "harness": "Redrob Desk", "effort": {"label": "Thinking", "level": 2, "of": 2}, "monthly": 1.3, "why": "Good for updates that go out in both Korean and English.", "place": 9}]};
+  const PROFESSIONS = [
+    ...['Founder','Small team','Engineer','Designer','Product manager','Marketer','Salesperson','Recruiter','HR'].map(l => ({ id: l.toLowerCase().replace(/ /g, '-'), label: l, disabled: true })),
+    { id: 'lawyer', label: 'Lawyer', tasks: LAWYER },
+    ...['Accountant','Consultant'].map(l => ({ id: l.toLowerCase(), label: l, disabled: true }))
+  ];
+  const SOURCE = { name: 'Redrob Leaderboard', edition: 'September 2026', note: 'Updated monthly' };
+  const HERE = 'Redrob Desk';
+  const FOR = { review: 'reviewing contracts', research: 'legal research', memo: 'writing memos', draft: 'drafting contracts', client: 'client updates' };
+  const IMPORTANT = { review: true, research: true };
+  const ORD = (n) => n + (n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th');
+  const best = (t) => BOARD[t].find(p => p.harness === HERE);
+  const findPick = (id) => Object.values(BOARD).flat().find(p => p.id === id);
+  const checkers = (t, w) => { const seen = { [w.maker]: 1 }; return BOARD[t].filter(p => p.harness === HERE && p.id !== w.id && !seen[p.maker] && (seen[p.maker] = 1)).slice(0, 2); };
+  function matchTask(text) {
+    const t = text.toLowerCase();
+    if (/\b(review|check|flag|risk)\b/.test(t)) return 'review';
+    if (/\b(case law|precedent|research|ruling)\b/.test(t)) return 'research';
+    if (/\b(memo|brief)\b/.test(t)) return 'memo';
+    if (/\b(draft|markup|redline)\b/.test(t)) return 'draft';
+    return 'client';
+  }
+  /* A stand-in for the privacy AI on the laptop: fixed patterns and a list of names. */
+  const RULES = [
+    { re: /\b01[016789]-\d{3,4}-\d{4}\b/g, token: 'Phone' },
+    { re: /\b\d{3}-\d{2,6}-\d{2,6}\b/g, out: true },
+    { re: /\b[\w.+-]+@[\w-]+\.[\w.]+\b/g, token: 'Email' },
+    { re: /\b(John Major|Richard Stiles|Lee Seoyeon)\b/g, token: 'Person' },
+    { re: /\bSeorin\b/g, token: 'Client' }
+  ];
+  function withPrivate(text) {
+    const hits = [];
+    RULES.forEach(r => { r.re.lastIndex = 0; let m; while ((m = r.re.exec(text))) { if (!hits.some(x => m.index < x.e && m.index + m[0].length > x.s)) hits.push({ s: m.index, e: m.index + m[0].length, t: m[0], r }); } });
+    hits.sort((a, b) => a.s - b.s);
+    const n = {}, seen = {}; const out = []; let i = 0;
+    hits.forEach((x, k) => {
+      out.push(text.slice(i, x.s));
+      if (x.r.out) out.push(h(R.PrivateText, { key: k, out: true }, x.t));
+      else { const key = x.r.token + x.t; if (!seen[key]) { n[x.r.token] = (n[x.r.token] || 0) + 1; seen[key] = x.r.token + ' ' + n[x.r.token]; } out.push(h(R.PrivateText, { key: k, as: seen[key] }, x.t)); }
+      i = x.e;
+    });
+    out.push(text.slice(i));
+    return { nodes: out, count: hits.length };
+  }
+  const privNote = (n) => h('span', { className: 'note' }, [h('span', { key: 'i' }, ic('shieldCheck', 14)), n + ' private detail' + (n === 1 ? ' was' : 's were') + ' kept from the AI.', h('a', { key: 'l', href: '#what-the-ai-saw' }, 'What the AI saw')]);
+  function choiceItem(task, pick, you) {
+    return { id: 'm', icon: ic(you ? 'pin' : 'sparkle', 14), label: pick.model, sub: you ? 'your choice' : 'by Redrob Auto',
+      detail: you ? 'You chose ' + pick.model + ' for this chat. It is ' + ORD(pick.place) + ' for ' + FOR[task] + ' this month.'
+        : 'Redrob Auto read your message as ' + FOR[task] + '. It chose ' + pick.model + ', ' + (pick.place === 1 ? 'first on the Redrob Leaderboard' : ORD(pick.place) + ' on the Redrob Leaderboard, the highest place that runs in Desk') + '.' };
+  }
+  const NOTE_LIST = h('ul', { style: { margin: 0, paddingLeft: '18px' } }, [h('li', { key: 1 }, 'Our standard notice period is 60 days'), h('li', { key: 2 }, 'Seorin\'s lawyer prefers a Word redline')]);
+  const memItem = { id: 'n', icon: ic('bookOpen', 14), label: '2 notes used', sub: 'shared memory', detail: NOTE_LIST };
+
+  /* A sent message: checked on the laptop, then answered, then (when it runs) checked by two other AIs. */
+  function Turn({ turn, prev }) {
+    const [stage, setStage] = React.useState(0);
+    const task = turn.task === 'auto' ? matchTask(turn.text) : turn.task;
+    const pick = turn.pinned ? findPick(turn.pinned) : best(task);
+    const chk = checkers(task, pick);
+    const runs = turn.mode === 'always' || (turn.mode === 'auto' && IMPORTANT[task]);
+    React.useEffect(() => { const t = [setTimeout(() => setStage(1), 700), setTimeout(() => setStage(2), 1700), runs ? setTimeout(() => setStage(3), 3400) : 0]; return () => t.forEach(clearTimeout); }, []);
+    const p = withPrivate(turn.text);
+    return h(React.Fragment, null, [
+      h(R.Message, { key: 'u', role: 'user', author: 'John',
+        footer: stage === 0 ? h('span', { className: 'note' }, [h(R.Loader, { key: 'l', size: 'sm', label: 'Checking' }), 'Privacy protection is checking this on your laptop']) : privNote(p.count) },
+        stage === 0 ? turn.text : p.nodes),
+      stage >= 1 && pick.model !== prev ? h(R.ModelSwitch, { key: 's', to: pick.model, by: turn.pinned ? 'you' : 'auto', reason: turn.pinned ? '' : 'for ' + FOR[task] }) : null,
+      stage >= 1 ? h(R.Message, { key: 'a', role: 'assistant', author: 'Desk',
+        footer: stage >= 2 ? h(R.AnswerReceipt, { items: [choiceItem(task, pick, !!turn.pinned), memItem,
+          runs ? (stage >= 3 ? { id: 'o', icon: ic('compare', 14), tone: 'agree', label: 'Checked by ' + chk.map(c => c.short).join(' and '), sub: 'they agree', detail: 'Both read the answer on their own and agree with it.' }
+                             : { id: 'o', busy: true, label: 'Getting a second opinion from ' + chk.map(c => c.short).join(' and ') }) : null] }) : null },
+        stage < 2 ? h('span', { className: 'note' }, [h(R.Loader, { key: 'l', size: 'sm', label: 'Working' }), turn.pinned ? 'Asking ' + pick.model : 'Redrob Auto is choosing the best AI for this'])
+          : 'Here is a short update, ready to send. It says the draft is back with our changes to three clauses, and asks one decision: is a limit of twelve months of fees acceptable?') : null
+    ]);
+  }
+
+  function Chat() {
+    const [sent, setSent] = React.useState([]);
+    const [text, setText] = React.useState('Send John Major at Seorin (010-4821-7730) a short update on where we are, and copy Richard Stiles. Their fees go to 110-234-567890.');
+    const [pin, setPin] = React.useState(null);
+    const [task, setTask] = React.useState('auto');
+    const [mem, setMem] = React.useState('project');
+    const [op, setOp] = React.useState('auto');
+    const opus = BOARD.review.find(p => p.model === 'Claude Opus 5.5');
+    const chk = checkers('review', opus);
+    const models = ['Claude Opus 5.5'].concat(sent.map(t => (t.pinned ? findPick(t.pinned) : best(t.task === 'auto' ? matchTask(t.text) : t.task)).model));
+    const last = sent.length ? (sent[sent.length - 1].task === 'auto' ? matchTask(sent[sent.length - 1].text) : sent[sent.length - 1].task) : 'draft';
+    const thread = h('div', { className: 'thread' }, [
+      h(R.Message, { key: 'u1', role: 'user', author: 'John', footer: privNote(3) },
+        ['Review the ', h(R.PrivateText, { key: 'a', as: 'Client 1' }, 'Seorin'), ' draft agreement against our standard positions and flag anything that moves risk onto us. Their lawyer is ',
+         h(R.PrivateText, { key: 'b', as: 'Person 1' }, 'John Major'), '.']),
+      h(R.Message, { key: 'a1', role: 'assistant', author: 'Desk',
+        footer: h(R.AnswerReceipt, { items: [choiceItem('review', opus), Object.assign({}, memItem, { label: '3 notes used' }),
+          { id: 'o', icon: ic('compare', 14), tone: 'differ', label: 'Checked by ' + chk.map(c => c.short).join(' and '), sub: 'see one point differently',
+            detail: 'They agree with the rest, see the marked point differently, and added one point at the end. It ran because this is reviewing contracts.' }] }) },
+        h('div', { className: 'answer' }, [
+          h('p', { key: 1 }, ['Clause 8.2 makes your promise to cover their losses unlimited. ',
+            h(R.Disputed, { key: 'd', n: 1, onSettle: () => {}, views: [
+              { who: chk[1].model, said: 'Agrees. The exception names "any breach of Clause 13 (Data)", so data breaches have no limit.' },
+              { who: chk[0].model, said: 'Sees it differently. It reads 11.4(c) as covering only gross negligence.' }] },
+              'Clause 11.4 limits what you owe to 12 months of fees, but data breaches are outside that limit.'),
+            ' Clause 14.1 lets them end the agreement on 30 days\' notice.']),
+          h(R.OpinionAdded, { key: 'x', by: chk[1].model }, h('p', null, 'Clause 6.3 renews the agreement for another 12 months unless you cancel 90 days ahead. Your usual is 60.'))
+        ])),
+      h(R.MemorySaved, { key: 'm', onUndo: () => {} }, 'your standard notice period is 60 days'),
+      sent.map((t, i) => h(Turn, { key: t.id, turn: t, prev: models[i] }))
+    ]);
+    const composer = h(R.Composer, { value: text, onChange: setText, placeholder: 'Ask Desk to do something in this folder',
+      onSubmit: (v) => { setSent(sent.concat([{ id: Date.now(), text: v, pinned: pin, task, mode: op }])); setText(''); },
+      context: h('span', { className: 'rr-composer__chip' }, [ic('folder', 14), h('span', { key: 't' }, 'Seorin MSA')]),
+      tools: h(R.ModelPicker, { label: 'Model', professions: PROFESSIONS, source: SOURCE, rates: { KRW: 1387.97, INR: 95.87 },
+        auto: true, here: HERE, defaultProfession: 'lawyer', task, onTaskChange: (t) => { setTask(t); setPin(null); }, matchedTask: last,
+        value: pin, onChange: (k) => setPin(k ? k.id : null), placement: 'top', align: 'end', guideHref: '#model-guide' }),
+      status: h(R.ComposerStatus, { items: statusItems(mem, setMem, op, setOp, false) }) });
+    return shell('chat', 'Seorin MSA', 'Chat in Redrob Desk', thread, composer);
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Chat));
+</script>

@@ -3,7 +3,7 @@
 한국어: [CONTRIBUTING.ko.md](./CONTRIBUTING.ko.md)
 
 The organization-wide rules live in
-[mckinley-and-rice/.github](https://github.com/mckinley-and-rice/.github). This file says what
+[redrob-labs/.github](https://github.com/redrob-labs/.github). This file says what
 is true of **this** repository, which is the part a document cannot inherit.
 
 ## Setup
@@ -12,7 +12,7 @@ Node.js 20.x, Yarn 1.x.
 
 ```bash
 yarn install
-yarn storybook
+yarn build && yarn test
 ```
 
 ## Branches
@@ -53,33 +53,49 @@ and the `back-merged` check then has nothing real to compare.
 
 ## Verifying a change
 
-There is **no test suite**. `yarn test` exits non-zero on purpose so that nothing reports a
-pass that never ran. That means the burden is on you and on the reviewer:
+`yarn test` is the gate. It renders every component twice against the design system delivery's
+own `preview.html` case - once from the reference bundle, once from our built `dist` - and
+compares the markup.
 
 ```bash
-yarn build            # tsc, then the style and asset copies
-yarn build-storybook  # the whole story set has to compile
-yarn storybook        # then look at the component you changed
+yarn build       # tsc, then the style and font copies
+yarn test        # every component vs the reference bundle
+yarn test:self   # the reference vs itself, so a broken harness cannot look like a pass
 ```
 
-A green build is not verification of anything a user sees. Open the story, interact with the
-component, and say in the pull request what you looked at and what it did.
+Read the build's own exit code. `tsc` has no `noEmitOnError`, so it writes output **even when it
+reports errors**, and the parity runner will happily read that broken output and pass. This has
+happened twice in this repository. **Parity green with a red build is not a pass.**
 
-Because no test job exists, none can be a required check. `ci` is the required one: it builds
-the package and Storybook and asserts both produced real output, because the build is `tsc`
-plus two `cp` commands and an empty `dist/` would otherwise pass silently.
+Never weaken, skip or special-case the harness to make something pass. If the reference and our
+implementation genuinely have to differ, say so in the pull request with the reason - a silent
+exception makes the gate worthless for every component after it.
 
 ## Adding a component
 
-1. `src/components/<Name>.tsx`.
-2. Export it from `src/index.ts`. That file is the entire public surface; a component not
-   exported there does not exist to a consumer.
-3. `src/stories/<Name>.stories.tsx`. Storybook is the documentation, so a component with no
-   story is undocumented.
-4. Style with Tailwind classes. Anything the package's own `tailwind.config.js` does not know
-   about will not reach a consumer, because their build purges by `content`.
+1. Read the reference first: `sed -n '/^  function <Name>(/,/^  }$/p' reference/components/bundle.js`,
+   plus `reference/components/index.d.ts` for the prop contract. Transcribe behaviour; do not
+   improve it, because the gate compares markup.
+2. `src/components/<Name>/<Name>.tsx`, written with `React.createElement` to keep the call shape
+   the same as the reference's.
+3. A typed props interface, and doc comments that say **why** - what it is for, what not to use it
+   for, what a prop protects against. Never a comment that restates the code.
+4. Export it from `src/index.ts` under its group heading, types included. That file is the entire
+   public surface; a component not exported there does not exist to a consumer.
+5. `yarn build && yarn test <Name>` until it passes, then `yarn test` for the whole set so nothing
+   earlier regressed.
+
+Styling is plain CSS on tokens. The class names come from the delivery's stylesheet
+(`src/styles/system.css`); there is no Tailwind and no utility classes to add.
+
+`src/icons/index.tsx` is generated - edit `tools/generate/icons.js`, never the file. CI checks it
+with `yarn icons:check`.
 
 Use `example.com` in placeholder data. Never a real person, and never an internal domain.
+People in fixtures are placeholders from a fixed set - `John Doe`, `Jane Doe`, `Richard Roe`,
+`Mary Major`, `John Stiles`, `Richard Miles`, and the Hangul `홍길동`, `김철수`, `이영희`, `박영수`.
+Keep the script: a Hangul name exercises one-syllable initials and CJK wrapping, so replacing it
+with a Latin one silently drops that coverage.
 
 ## Releasing
 
@@ -109,4 +125,4 @@ skipped here:
 ## Reporting a vulnerability
 
 Not in an issue. See the organization's
-[security policy](https://github.com/mckinley-and-rice/.github/blob/main/SECURITY.md).
+[security policy](https://github.com/redrob-labs/.github/blob/main/SECURITY.md).

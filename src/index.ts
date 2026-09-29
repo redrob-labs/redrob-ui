@@ -1,262 +1,325 @@
-'use client';
+/**
+ * Redrob design system - React components.
+ *
+ * Built on the Redrob Group Design System 2026. Every component here is held to the system's own
+ * reference bundle by `tools/parity/run.js`, which renders both against the delivery's preview cases
+ * and compares the markup, so "looks right" is never the standard.
+ *
+ * Components are exported in the system's own order: the base, then the controls a person touches,
+ * then what shows data, then the frames, then the product's surfaces, then the public site.
+ */
 
-import './style/custom.css';
-import './style/driver.css';
-import './style/editor.css';
-import './style/global.css';
-import './style/hljs.css';
-import './style/livekit.css';
-/** A */
-export { Accordian, AccordianGroup } from './components/Accordian';
-export { default as AutoCompleteTag } from './components/AutoCompleteTag';
-export { default as Avatar } from './components/Avatar';
-/** B */
-export { default as Backdrop } from './components/Backdrop';
-export { default as BackdropLoader } from './components/BackdropLoader';
-export { default as Badge } from './components/Badge';
-export { default as Banner } from './components/Banner';
-export { default as Board } from './components/Board';
-export { default as Button } from './components/Button';
-/** C */
-export { default as Card } from './components/Card';
-export { default as Checkbox } from './components/Checkbox';
-export { default as Chip } from './components/Chip';
-export { default as ClickAwayListener } from './components/ClickAwayListener';
-export { default as Container } from './components/Container';
-export { default as CustomButton } from './components/CustomButton';
-/** D */
-export { default as Dialog } from './components/Dialog';
-export { default as Donut } from './components/Donut';
+export { icons, iconNames, svg } from './icons';
+export type { IconName, IconProps, IconComponent } from './icons';
 
-export { default as Divider } from './components/Divider';
-export { default as Drawer } from './components/Drawer';
-/** E */
-export { default as EmptyState } from './components/EmptyState';
-export { default as ExpandabeLayout } from './components/ExpandabeLayout';
-/** F */
-export { default as FloatingButton } from './components/FloatingButton';
-/** I */
-export { default as IconButton } from './components/IconButton';
-export { default as InformationTag } from './components/InformationTag';
-/** L */
-export { default as List } from './components/List';
-export { default as ListGroup } from './components/ListGroup';
-export { default as ListMenu } from './components/ListMenu';
-export { default as Loader } from './components/Loader';
+/* ---- Foundations --------------------------------------------------------- */
+export { Mark } from './components/Mark/Mark';
+export type { MarkProps } from './components/Mark/Mark';
+export { MarkReveal } from './components/MarkReveal/MarkReveal';
+export type { MarkRevealProps } from './components/MarkReveal/MarkReveal';
+export { Layer, LayerContext, LAYER_MEANS } from './components/Layer/Layer';
+export type { LayerProps } from './components/Layer/Layer';
+export { Illustration } from './components/Illustration/Illustration';
+export type { IllustrationProps } from './components/Illustration/Illustration';
+export { Diagram } from './components/Diagram/Diagram';
+export type { DiagramProps, DiagramStep, DiagramActor } from './components/Diagram/Diagram';
+export { illustrations, illustrationNames, CONSTRUCTIONS, RAKE } from './internal/illustrations';
 
-/** M */
-/** N */
-export { default as NotificationBanner } from './components/NotificationBanner';
-/** P */
-export { default as Pagination } from './components/Pagination';
-export { default as Point } from './components/Point';
-export { default as Popover } from './components/Popover';
-export { default as ProgressLinear } from './components/ProgressLinear';
-/** R */
-export { default as Radio } from './components/Radio';
-export { default as ResultNotAvailiable } from './components/ResultNotAvailiable';
+/* ---- Voice --------------------------------------------------------------- */
+export { Display } from './components/Display/Display';
+export type { DisplayProps } from './components/Display/Display';
+export { Statement } from './components/Statement/Statement';
+export type { StatementProps } from './components/Statement/Statement';
+export { Quote } from './components/Quote/Quote';
+export type { QuoteProps } from './components/Quote/Quote';
+export { SectionMark } from './components/SectionMark/SectionMark';
+export type { SectionMarkProps } from './components/SectionMark/SectionMark';
 
-/** S  */
-export { default as SearchBar } from './components/SearchBar';
-export { default as Select } from './components/Select';
-export { default as SelectMenu } from './components/SelectMenu';
-export { default as SideNavigation } from './components/SideNavigation';
-export { default as Skeleton } from './components/Skeleton';
-export { default as StatCard } from './components/StatCard';
-export { default as StatusTag } from './components/StatusTag';
-export { default as SubsicribeBanner } from './components/SubsicribeBanner';
-export { default as Switch } from './components/Switch';
-/** T */
-export { default as Table } from './components/Table';
-export { default as TableHeader } from './components/TableHeader';
-export { default as Tabs } from './components/Tabs';
-export { default as TextField } from './components/TextField';
-export { default as TimeStampCard } from './components/TimeStampCard';
-export { default as ToastProvider } from './components/ToastProvider';
-export { default as Toggle } from './components/Toggle';
-export { default as Tooltip } from './components/Tooltip';
-/** U */
-export { default as UploadFile } from './components/UploadFile';
-export { default as UploadItem } from './components/UploadItem';
-/** component - types */
-export { default as OptionType } from './components/Radio';
-export {
-  default as TableColumnType,
-  default as TableRowType,
-} from './components/Table';
-/** icons */
-export { AlignCenterIcon } from './icons/AlignCenterIcon';
-export { AlignLeftIcon } from './icons/AlignLeftIcon';
-export { AlignRightIcon } from './icons/AlignRightIcon';
-export { AnswerLongIcon } from './icons/AnswerLongIcon';
-export { AnswerShortIcon } from './icons/AnswerShortIcon';
-export { ArrowDownIcon } from './icons/ArrowDownIcon';
-export { ArrowLeftIcon } from './icons/ArrowLeftIcon';
-export { ArrowLineRightIcon } from './icons/ArrowLineRightIcon';
-export { ArrowRightIcon } from './icons/ArrowRightIcon';
-export { ArrowVerticalDownIcon } from './icons/ArrowVerticalDownIcon';
-export { ArrowVerticalUpIcon } from './icons/ArrowVerticalUpIcon';
-export { AscIcon } from './icons/AscIcon';
-export { AssessmentIcon } from './icons/AssessmentIcon';
-export { AudioIcon } from './icons/AudioIcon';
-export { AudioSlashIcon } from './icons/AudioSlashIcon';
-export { AutoPilotIcon } from './icons/AutoPilotIcon';
-export { AutoSaveErrorIcon } from './icons/AutoSaveErrorIcon';
-export { AutoSaveIcon } from './icons/AutoSaveIcon';
-export { BellIcon } from './icons/BellIcon';
-export { BookIcon } from './icons/BookIcon';
-export { BookmarkFillIcon } from './icons/BookmarkFillIcon';
-export { BookmarkLineIcon } from './icons/BookmarkLineIcon';
-export { BoxIcon } from './icons/BoxIcon';
-export { BrushIcon } from './icons/BrushIcon';
-export { BuildingIcon } from './icons/BuildingIcon';
-export { CalendarCheckIcon } from './icons/CalendarCheckIcon';
-export { CalendarIcon } from './icons/CalendarIcon';
-export { CandidateIcon } from './icons/CandidateIcon';
-export { CaretDoubleLeftIcon } from './icons/CaretDoubleLeftIcon';
-export { CaretDoubleRightIcon } from './icons/CaretDoubleRightIcon';
-export { CaretDownIcon } from './icons/CaretDownIcon';
-export { CaretLeftIcon } from './icons/CaretLeftIcon';
-export { CaretRightIcon } from './icons/CaretRightIcon';
-export { CaretUpIcon } from './icons/CaretUpIcon';
-export { CartIcon } from './icons/CartIcon';
-export { CategoryIconAll } from './icons/CategoryIconAll';
-export { CategoryIconAptitude } from './icons/CategoryIconAptitude';
-export { CategoryIconBusiness } from './icons/CategoryIconBusiness';
-export { CategoryIconCommon } from './icons/CategoryIconCommon';
-export { CategoryIconCultFit } from './icons/CategoryIconCultFit';
-export { CategoryIconDesign } from './icons/CategoryIconDesign';
-export { CategoryIconEngineering } from './icons/CategoryIconEngineering';
-export { CategoryIconFinance } from './icons/CategoryIconFinance';
-export { CategoryIconHR } from './icons/CategoryIconHR';
-export { CategoryIconMarketing } from './icons/CategoryIconMarketing';
-export { CategoryIconSales } from './icons/CategoryIconSales';
-export { CategoryIconSelfIntro } from './icons/CategoryIconSelfIntro';
-export { ChatIcon } from './icons/ChatIcon';
-export { CheckCircleIcon } from './icons/CheckCircleIcon';
-export { CheckDoubleIcon } from './icons/CheckDoubleIcon';
-export { CheckIcon } from './icons/CheckIcon';
-export { CheckPackageIcon } from './icons/CheckPackageIcon';
-export { CircleFillIcon } from './icons/CircleFillIcon';
-export { CircleLineIcon } from './icons/CircleLineIcon';
-export { CodeBlockIcon } from './icons/CodeBlockIcon';
-export { CodeIcon } from './icons/CodeIcon';
-export { CoinIcon } from './icons/CoinIcon';
-export { ColumnIcon } from './icons/ColumnIcon';
-export { ComputerIcon } from './icons/ComputerIcon';
-export { CopyIcon } from './icons/CopyIcon';
-export { CrownIcon } from './icons/CrownIcon';
-export { CubeIcon } from './icons/CubeIcon';
-export { DashBoardIcon } from './icons/DashBoardIcon';
-export { DataIcon } from './icons/DataIcon';
-export { DeleteIcon } from './icons/DeleteIcon';
-export { DescIcon } from './icons/DescIcon';
-export { DiamondIcon } from './icons/DiamondIcon';
-export { DividerIcon } from './icons/DividerIcon';
-export { DoubleCaretRightIcon } from './icons/DoubleCaretRightIcon';
-export { DownloadIcon } from './icons/DownloadIcon';
-export { DragHandleIcon } from './icons/DragHandleIcon';
-export { EditIcon } from './icons/EditIcon';
-export { ErrorIcon } from './icons/ErrorIcon';
-export { EssayIcon } from './icons/EssayIcon';
-export { EyeOpenIcon } from './icons/EyeOpenIcon';
-export { EyeSlashIcon } from './icons/EyeSlashIcon';
-export { FileIcon } from './icons/FileIcon';
-export { FilterIcon } from './icons/FilterIcon';
-export { FlagIcon } from './icons/FlagIcon';
-export { GraduationCapIcon } from './icons/GraduationCapIcon';
-export { GraphIcon } from './icons/GraphIcon';
-export { HamburgerIcon } from './icons/HamburgerIcon';
-export { HashtagIcon } from './icons/HashtagIcon';
-export { HomeIcon } from './icons/HomeIcon';
-export { HorizontalRuleIcon } from './icons/HorizontalRuleIcon';
-export { HourglassIcon } from './icons/HourglassIcon';
-export { ImageIcon } from './icons/ImageIcon';
-export { InformationIcon } from './icons/InformationIcon';
-export { IntegrationsIcon } from './icons/IntegrationsIcon';
-export { KeyIcon } from './icons/KeyIcon';
-export { LightningIcon } from './icons/LightningIcon';
-export { LinkBreakIcon } from './icons/LinkBreakIcon';
-export { LinkIcon } from './icons/LinkIcon';
-export { LinkRemoveIcon } from './icons/LinkRemoveIcon';
-export { ListBulletIcon } from './icons/ListBulletIcon';
-export { ListNumberIcon } from './icons/ListNumberIcon';
-export { LoadingIcon } from './icons/LoadingIcon';
-export { LocationIcon } from './icons/LocationIcon';
-export { LockIcon } from './icons/LockIcon';
-export { LogoBlackIcon } from './icons/LogoBlackIcon';
-export { LogoIcon } from './icons/LogoIcon';
-export { LogoutIcon } from './icons/LogoutIcon';
-export { MagicWandIcon } from './icons/MagicWandIcon';
-export { MailAddIcon } from './icons/MailAddIcon';
-export { MailIcon } from './icons/MailIcon';
-export { MailOpenIcon } from './icons/MailOpenIcon';
-export { MainLogoIcon } from './icons/MainLogoIcon';
-export { MapIcon } from './icons/MapIcon';
-export { MapPinIcon } from './icons/MapPinIcon';
-export { MarketIcon } from './icons/MarketIcon';
-export { MemoIcon } from './icons/MemoIcon';
-export { MenuIcon } from './icons/MenuIcon';
-export { MessageIcon } from './icons/MessageIcon';
-export { MobileIcon } from './icons/MobileIcon';
-export { NewTabIcon } from './icons/NewTabIcon';
-export { NumberListIcon } from './icons/NumberListIcon';
-export { PauseIcon } from './icons/PauseIcon';
-export { PayIcon } from './icons/PayIcon';
-export { PaymentIcon } from './icons/PaymentIcon';
-export { PersonFillIcon } from './icons/PersonFillIcon';
-export { PersonFrameIcon } from './icons/PersonFrameIcon';
-export { PersonLineIcon } from './icons/PersonLineIcon';
-export { PhoneIcon } from './icons/PhoneIcon';
-export { PlayCircleIcon } from './icons/PlayCircleIcon';
-export { PlusIcon } from './icons/PlusIcon';
-export { PushPinFillIcon } from './icons/PushPinFillIcon';
-export { PushPinLineIcon } from './icons/PushPinLineIcon';
-export { QuestionMarkIcon } from './icons/QuestionMarkIcon';
-export { RadarIcon } from './icons/RadarIcon';
-export { RadioIcon } from './icons/RadioIcon';
-export { ResetIcon } from './icons/ResetIcon';
-export { ReverseIcon } from './icons/ReverseIcon';
-export { RisingIcon } from './icons/RisingIcon';
-export { RobotIcon } from './icons/RobotIcon';
-export { RowIcon } from './icons/RowIcon';
-export { SalesIcon } from './icons/SalesIcon';
-export { SearchIcon } from './icons/SearchIcon';
-export { SendIcon } from './icons/SendIcon';
-export { SettingIcon } from './icons/SettingIcon';
-export { ShareIcon } from './icons/ShareIcon';
-export { ShortQuestionIcon } from './icons/ShortQuestionIcon';
-export { SkillTestIcon } from './icons/SkillTestIcon';
-export { SliderIcon } from './icons/SliderIcon';
-export { SpinnerIcon } from './icons/SpinnerIcon';
-export { StarFillIcon } from './icons/StarFillIcon';
-export { StarFourDoubleIcon } from './icons/StarFourDoubleIcon';
-export { StarFourIcon } from './icons/StarFourIcon';
-export { StarHalfFillIcon } from './icons/StarHalfFillIcon';
-export { StarLineIcon } from './icons/StarLineIcon';
-export { SuitCaseIcon } from './icons/SuitCaseIcon';
-export { TableIcon } from './icons/TableIcon';
-export { TagIcon } from './icons/TagIcon';
-export { TargetIcon } from './icons/TargetIcon';
-export { TaskIcon } from './icons/TaskIcon';
-export { TeamFillIcon } from './icons/TeamFillIcon';
-export { TeamLineIcon } from './icons/TeamLineIcon';
-export { TemplateIcon } from './icons/TemplateIcon';
-export { TextBoldIcon } from './icons/TextBoldIcon';
-export { TextHeaderOneIcon } from './icons/TextHeaderOneIcon';
-export { TextHeaderTwoIcon } from './icons/TextHeaderTwoIcon';
-export { TextItalicIcon } from './icons/TextItalicIcon';
-export { TextUnderlineIcon } from './icons/TextUnderlineIcon';
-export { TimerIcon } from './icons/TimerIcon';
-export { TrendDownIcon } from './icons/TrendDownIcon';
-export { TrendUpIcon } from './icons/TrendUpIcon';
-export { TriangleDownIcon } from './icons/TriangleDownIcon';
-export { TriangleRightIcon } from './icons/TriangleRightIcon';
-export { TriangleUpIcon } from './icons/TriangleUpIcon';
-export { TrophyIcon } from './icons/TrophyIcon';
-export { UploadIcon } from './icons/UploadIcon';
-export { VideoIcon } from './icons/VideoIcon';
-export { VideoSlashIcon } from './icons/VideoSlashIcon';
-export { WalletIcon } from './icons/WalletIcon';
-export { WarningIcon } from './icons/WarningIcon';
-export { XIcon } from './icons/XIcon';
+/* ---- Actions ------------------------------------------------------------- */
+export { Button } from './components/Button/Button';
+export type { ButtonProps } from './components/Button/Button';
+export { IconButton } from './components/IconButton/IconButton';
+export type { IconButtonProps } from './components/IconButton/IconButton';
+export { Menu } from './components/Menu/Menu';
+export type { MenuProps, MenuItem } from './components/Menu/Menu';
+
+/* ---- Forms --------------------------------------------------------------- */
+export { Form } from './components/Form/Form';
+export type { FormProps, FormError } from './components/Form/Form';
+export { Input } from './components/Input/Input';
+export type { InputProps } from './components/Input/Input';
+export { Textarea } from './components/Textarea/Textarea';
+export type { TextareaProps } from './components/Textarea/Textarea';
+export { Select } from './components/Select/Select';
+export type { SelectProps, SelectOption } from './components/Select/Select';
+export { Combobox } from './components/Combobox/Combobox';
+export type { ComboboxProps, ComboboxOption } from './components/Combobox/Combobox';
+export { Checkbox } from './components/Checkbox/Checkbox';
+export type { CheckboxProps } from './components/Checkbox/Checkbox';
+export { Radio } from './components/Radio/Radio';
+export type { RadioProps } from './components/Radio/Radio';
+export { Switch } from './components/Switch/Switch';
+export type { SwitchProps } from './components/Switch/Switch';
+export { DatePicker } from './components/DatePicker/DatePicker';
+export type { DatePickerProps } from './components/DatePicker/DatePicker';
+export { TimePicker } from './components/TimePicker/TimePicker';
+export type { TimePickerProps } from './components/TimePicker/TimePicker';
+export { TimeZonePicker } from './components/TimeZonePicker/TimeZonePicker';
+export type { TimeZonePickerProps } from './components/TimeZonePicker/TimeZonePicker';
+export { FileUpload } from './components/FileUpload/FileUpload';
+export type { FileUploadProps, UploadedFile } from './components/FileUpload/FileUpload';
+
+/* ---- Borders ------------------------------------------------------------- */
+export { NameInput } from './components/NameInput/NameInput';
+export type { NameInputProps, NameValue } from './components/NameInput/NameInput';
+export { AddressInput } from './components/AddressInput/AddressInput';
+export type { AddressInputProps, AddressValue } from './components/AddressInput/AddressInput';
+export { PhoneInput } from './components/PhoneInput/PhoneInput';
+export type { PhoneInputProps, PhoneValue } from './components/PhoneInput/PhoneInput';
+export { DateInput } from './components/DateInput/DateInput';
+export type { DateInputProps, DateInputValue } from './components/DateInput/DateInput';
+export { Money } from './components/Money/Money';
+export type { MoneyProps } from './components/Money/Money';
+export { ConvertedAmount } from './components/ConvertedAmount/ConvertedAmount';
+export type { ConvertedAmountProps } from './components/ConvertedAmount/ConvertedAmount';
+export { Timestamp } from './components/Timestamp/Timestamp';
+export type { TimestampProps } from './components/Timestamp/Timestamp';
+/** Exported because a consumer validating its own date form needs the same answer DateInput uses. */
+export { dateParts, toE164, tidyPostal } from './internal/borders';
+
+/* ---- Navigation ---------------------------------------------------------- */
+export { Tabs } from './components/Tabs/Tabs';
+export type { TabsProps, TabItem } from './components/Tabs/Tabs';
+export { Breadcrumb } from './components/Breadcrumb/Breadcrumb';
+export type { BreadcrumbProps, BreadcrumbItem } from './components/Breadcrumb/Breadcrumb';
+export { Pagination, pageList } from './components/Pagination/Pagination';
+export type { PaginationProps } from './components/Pagination/Pagination';
+export { Stepper } from './components/Stepper/Stepper';
+export type { StepperProps, StepperStep } from './components/Stepper/Stepper';
+export { Accordion } from './components/Accordion/Accordion';
+export type { AccordionProps, AccordionItem } from './components/Accordion/Accordion';
+export { Scroller } from './components/Scroller/Scroller';
+export type { ScrollerProps } from './components/Scroller/Scroller';
+
+/* ---- Feedback ------------------------------------------------------------ */
+export { Alert } from './components/Alert/Alert';
+export type { AlertProps } from './components/Alert/Alert';
+export { Toast } from './components/Toast/Toast';
+export type { ToastProps } from './components/Toast/Toast';
+export { Modal } from './components/Modal/Modal';
+export type { ModalProps } from './components/Modal/Modal';
+export { Drawer } from './components/Drawer/Drawer';
+export type { DrawerProps } from './components/Drawer/Drawer';
+export { Tooltip } from './components/Tooltip/Tooltip';
+export type { TooltipProps } from './components/Tooltip/Tooltip';
+export { Progress } from './components/Progress/Progress';
+export type { ProgressProps } from './components/Progress/Progress';
+export { Loader } from './components/Loader/Loader';
+export type { LoaderProps } from './components/Loader/Loader';
+export { Skeleton } from './components/Skeleton/Skeleton';
+export type { SkeletonProps } from './components/Skeleton/Skeleton';
+export { EmptyState } from './components/EmptyState/EmptyState';
+export type { EmptyStateProps } from './components/EmptyState/EmptyState';
+
+/* ---- Data display -------------------------------------------------------- */
+export { Card } from './components/Card/Card';
+export type { CardProps } from './components/Card/Card';
+export { Table } from './components/Table/Table';
+export type { TableProps, TableColumn } from './components/Table/Table';
+export { Stat } from './components/Stat/Stat';
+export type { StatProps } from './components/Stat/Stat';
+export { Chart } from './components/Chart/Chart';
+export type { ChartProps, ChartSeries } from './components/Chart/Chart';
+export { Sparkline } from './components/Sparkline/Sparkline';
+export type { SparklineProps } from './components/Sparkline/Sparkline';
+export { Badge } from './components/Badge/Badge';
+export type { BadgeProps } from './components/Badge/Badge';
+export { Avatar } from './components/Avatar/Avatar';
+export type { AvatarProps } from './components/Avatar/Avatar';
+export { AvatarMark } from './components/AvatarMark/AvatarMark';
+export type { AvatarMarkProps } from './components/AvatarMark/AvatarMark';
+export { seriesColor, niceMax, SERIES_LIGHT, SERIES_DARK } from './internal/chart';
+
+/* ---- Agent chat ---------------------------------------------------------- */
+export { Message } from './components/Message/Message';
+export type { MessageProps } from './components/Message/Message';
+export { Composer } from './components/Composer/Composer';
+export type { ComposerProps } from './components/Composer/Composer';
+export { ModelPicker } from './components/ModelPicker/ModelPicker';
+export type {
+  ModelPickerProps,
+  ModelPick,
+  ModelTask,
+  ModelProfession,
+} from './components/ModelPicker/ModelPicker';
+export { ModelGuide } from './components/ModelGuide/ModelGuide';
+export type {
+  ModelGuideProps,
+  GuidePick,
+  GuideTask,
+  GuideProfession,
+} from './components/ModelGuide/ModelGuide';
+export { ComposerStatus } from './components/ComposerStatus/ComposerStatus';
+export type { ComposerStatusProps, ComposerStatusItem } from './components/ComposerStatus/ComposerStatus';
+export { AnswerReceipt } from './components/AnswerReceipt/AnswerReceipt';
+export type { AnswerReceiptProps, AnswerReceiptItem } from './components/AnswerReceipt/AnswerReceipt';
+export { PrivateText } from './components/PrivateText/PrivateText';
+export type { PrivateTextProps } from './components/PrivateText/PrivateText';
+export { Disputed } from './components/Disputed/Disputed';
+export type { DisputedProps, DisputedView } from './components/Disputed/Disputed';
+export { OpinionAdded } from './components/OpinionAdded/OpinionAdded';
+export type { OpinionAddedProps } from './components/OpinionAdded/OpinionAdded';
+export { ModelSwitch } from './components/ModelSwitch/ModelSwitch';
+export type { ModelSwitchProps } from './components/ModelSwitch/ModelSwitch';
+export { MemorySaved } from './components/MemorySaved/MemorySaved';
+export type { MemorySavedProps } from './components/MemorySaved/MemorySaved';
+export { Streaming } from './components/Streaming/Streaming';
+export type { StreamingProps } from './components/Streaming/Streaming';
+export { PromptSuggestions } from './components/PromptSuggestions/PromptSuggestions';
+export type { PromptSuggestionsProps, PromptSuggestion } from './components/PromptSuggestions/PromptSuggestions';
+export { Citation } from './components/Citation/Citation';
+export type { CitationProps } from './components/Citation/Citation';
+export { Confidence } from './components/Confidence/Confidence';
+export type { ConfidenceProps } from './components/Confidence/Confidence';
+export { AgentAction } from './components/AgentAction/AgentAction';
+export type { AgentActionProps } from './components/AgentAction/AgentAction';
+export { AgentTimeline } from './components/AgentTimeline/AgentTimeline';
+export type { AgentTimelineProps, AgentTimelineStep } from './components/AgentTimeline/AgentTimeline';
+export { ApprovalStep } from './components/ApprovalStep/ApprovalStep';
+export type { ApprovalStepProps } from './components/ApprovalStep/ApprovalStep';
+
+/* ---- Safeguards ---------------------------------------------------------- */
+export { StatusCard } from './components/StatusCard/StatusCard';
+export type { StatusCardProps } from './components/StatusCard/StatusCard';
+export { PrivacyProtection } from './components/PrivacyProtection/PrivacyProtection';
+export type { PrivacyProtectionProps } from './components/PrivacyProtection/PrivacyProtection';
+export { MemoryScope } from './components/MemoryScope/MemoryScope';
+export type { MemoryScopeProps, MemoryScopeOption } from './components/MemoryScope/MemoryScope';
+export { SecondOpinionSetting } from './components/SecondOpinionSetting/SecondOpinionSetting';
+export type {
+  SecondOpinionSettingProps,
+  OpinionMode,
+} from './components/SecondOpinionSetting/SecondOpinionSetting';
+export { MemoryList } from './components/MemoryList/MemoryList';
+export type { MemoryListProps, MemoryItem } from './components/MemoryList/MemoryList';
+export { OpinionGrid } from './components/OpinionGrid/OpinionGrid';
+export type { OpinionGridProps, OpinionColumn, OpinionRow } from './components/OpinionGrid/OpinionGrid';
+export { PRIVACY_LEVELS, OPINION_MODES, OPINION_VERDICTS } from './internal/safeguards';
+
+/* ---- Agent harness ------------------------------------------------------- */
+export { TaskStatus } from './components/TaskStatus/TaskStatus';
+export type { TaskStatusProps } from './components/TaskStatus/TaskStatus';
+export { AgentRoster } from './components/AgentRoster/AgentRoster';
+export type { AgentRosterProps, RosterAgent } from './components/AgentRoster/AgentRoster';
+export { AgentHandoff } from './components/AgentHandoff/AgentHandoff';
+export type { AgentHandoffProps } from './components/AgentHandoff/AgentHandoff';
+export { ScopeBadge } from './components/ScopeBadge/ScopeBadge';
+export type { ScopeBadgeProps, Scope } from './components/ScopeBadge/ScopeBadge';
+export { Changes } from './components/Changes/Changes';
+export type { ChangesProps, ChangeItem } from './components/Changes/Changes';
+export { CostMeter } from './components/CostMeter/CostMeter';
+export type { CostMeterProps, CostBreakdown } from './components/CostMeter/CostMeter';
+export { MemoryMeter } from './components/MemoryMeter/MemoryMeter';
+export type { MemoryMeterProps, MemorySegment } from './components/MemoryMeter/MemoryMeter';
+export { Schedule } from './components/Schedule/Schedule';
+export type { ScheduleProps, ScheduleLastRun } from './components/Schedule/Schedule';
+export { SchedulePicker } from './components/SchedulePicker/SchedulePicker';
+export type { SchedulePickerProps } from './components/SchedulePicker/SchedulePicker';
+export { PlaybookRow } from './components/PlaybookRow/PlaybookRow';
+export type { PlaybookRowProps, PlaybookStep } from './components/PlaybookRow/PlaybookRow';
+export { AppAccess } from './components/AppAccess/AppAccess';
+export type { AppAccessProps, AccessApp, AccessGrant } from './components/AppAccess/AppAccess';
+export { ConnectorCard } from './components/ConnectorCard/ConnectorCard';
+export type { ConnectorCardProps } from './components/ConnectorCard/ConnectorCard';
+export { CheckIn } from './components/CheckIn/CheckIn';
+export type { CheckInProps, CheckInOption } from './components/CheckIn/CheckIn';
+export { RUN_LABEL, SCOPE_MODE, describeSchedule, nextScheduledRun } from './internal/harness';
+export type { ScheduleValue } from './internal/harness';
+
+/* ---- Evidence ------------------------------------------------------------ */
+export { SourceSet } from './components/SourceSet/SourceSet';
+export type { SourceSetProps, SourceItem } from './components/SourceSet/SourceSet';
+export { Evidence } from './components/Evidence/Evidence';
+export type { EvidenceProps } from './components/Evidence/Evidence';
+export { Criteria } from './components/Criteria/Criteria';
+export type { CriteriaProps, CriteriaItem } from './components/Criteria/Criteria';
+export { MatchBreakdown } from './components/MatchBreakdown/MatchBreakdown';
+export type { MatchBreakdownProps, MatchItem } from './components/MatchBreakdown/MatchBreakdown';
+export { ReviewGrid } from './components/ReviewGrid/ReviewGrid';
+export type {
+  ReviewGridProps,
+  ReviewColumn,
+  ReviewRow,
+  ReviewCellValue,
+} from './components/ReviewGrid/ReviewGrid';
+export { Finding } from './components/Finding/Finding';
+export type { FindingProps } from './components/Finding/Finding';
+export { Redline } from './components/Redline/Redline';
+export type { RedlineProps, RedlinePart } from './components/Redline/Redline';
+export { Playbook } from './components/Playbook/Playbook';
+export type { PlaybookProps, PlaybookRunStep } from './components/Playbook/Playbook';
+export { Shortlist } from './components/Shortlist/Shortlist';
+export type { ShortlistProps, ShortlistItem } from './components/Shortlist/Shortlist';
+export { DecisionNotice } from './components/DecisionNotice/DecisionNotice';
+export type { DecisionNoticeProps } from './components/DecisionNotice/DecisionNotice';
+export { MET_LABEL, WEIGHT_LABEL, SEV_LABEL, SRC_STATE } from './internal/evidence';
+
+/* ---- Marketing ----------------------------------------------------------- */
+export { Hero } from './components/Hero/Hero';
+export type { HeroProps, HeroFilmSpec } from './components/Hero/Hero';
+export { LogoRow } from './components/LogoRow/LogoRow';
+export type { LogoRowProps, LogoRowLogo } from './components/LogoRow/LogoRow';
+export { FeatureRow } from './components/FeatureRow/FeatureRow';
+export type { FeatureRowProps } from './components/FeatureRow/FeatureRow';
+export { Figure } from './components/Figure/Figure';
+export type { FigureProps } from './components/Figure/Figure';
+export { CustomerStory } from './components/CustomerStory/CustomerStory';
+export type { CustomerStoryProps } from './components/CustomerStory/CustomerStory';
+export { StoryHeader } from './components/StoryHeader/StoryHeader';
+export type { StoryHeaderProps, StoryFact } from './components/StoryHeader/StoryHeader';
+export { PriceTable } from './components/PriceTable/PriceTable';
+export type { PriceTableProps, PricePlan, PriceRow } from './components/PriceTable/PriceTable';
+export { NewsSection } from './components/NewsSection/NewsSection';
+export type { NewsSectionProps, NewsItem } from './components/NewsSection/NewsSection';
+export { Milestones } from './components/Milestones/Milestones';
+export type { MilestonesProps, Milestone } from './components/Milestones/Milestones';
+export { PeopleList } from './components/PeopleList/PeopleList';
+export type { PeopleListProps, Person } from './components/PeopleList/PeopleList';
+export { pubPicture } from './internal/pubPicture';
+export type { PubImage, PubPictureOptions } from './internal/pubPicture';
+
+/* ---- Frames -------------------------------------------------------------- */
+export { AppShell } from './components/AppShell/AppShell';
+export type { AppShellProps, AppShellNavItem } from './components/AppShell/AppShell';
+export { PageShell } from './components/PageShell/PageShell';
+export type { PageShellProps } from './components/PageShell/PageShell';
+export { SiteHeader } from './components/SiteHeader/SiteHeader';
+export type { SiteHeaderProps, SiteHeaderSection, SiteHeaderItem } from './components/SiteHeader/SiteHeader';
+export { SiteFooter } from './components/SiteFooter/SiteFooter';
+export type { SiteFooterProps, SiteFooterColumn, SiteFooterLink } from './components/SiteFooter/SiteFooter';
+export { Band } from './components/Band/Band';
+export type { BandProps, BandProduct } from './components/Band/Band';
+export { LangSwitch } from './components/LangSwitch/LangSwitch';
+export type { LangSwitchProps, LangOption } from './components/LangSwitch/LangSwitch';
+export { ThemeSwitch } from './components/ThemeSwitch/ThemeSwitch';
+export type { ThemeSwitchProps } from './components/ThemeSwitch/ThemeSwitch';
+export { ConsentBar } from './components/ConsentBar/ConsentBar';
+export type { ConsentBarProps, ConsentCategory } from './components/ConsentBar/ConsentBar';
+export { applyTheme, themeTarget } from './internal/theme';
+export type { ThemeMode } from './internal/theme';
+
+/* ---- Publishing ---------------------------------------------------------- */
+export { IndexHeader } from './components/IndexHeader/IndexHeader';
+export type { IndexHeaderProps, IndexTopic } from './components/IndexHeader/IndexHeader';
+export { PostList } from './components/PostList/PostList';
+export type { PostListProps } from './components/PostList/PostList';
+export { ArticleLayout } from './components/ArticleLayout/ArticleLayout';
+export type {
+  ArticleLayoutProps,
+  ArticleTocEntry,
+  ArticleTag,
+} from './components/ArticleLayout/ArticleLayout';
+export { LegalDoc } from './components/LegalDoc/LegalDoc';
+export type { LegalDocProps, LegalSection, LegalRevision } from './components/LegalDoc/LegalDoc';
+export { PubItem, pubAuthors, pubYear } from './internal/publishing';
+export type { PubStory, PubAuthor, PubFinding, PubPaper, PubItemProps } from './internal/publishing';

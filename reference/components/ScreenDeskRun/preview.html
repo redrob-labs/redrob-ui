@@ -1,0 +1,185 @@
+<!-- @dsCard group="Product screens" height=1580 width=1320 page -->
+<div id="root" style="font-family: var(--font-sans); color: var(--ink-primary);"></div>
+<style>
+  /* Everything here is now AppShell. What is left is the run list in the sidebar slot
+     and the two rail headings, which are content, not chrome. */
+  #root, .rr-shell { min-height: 1160px; }
+  .runs { display: flex; flex-direction: column; gap: 2px; }
+  .runs__h { padding: 0 8px 6px; font-size: 11px; font-weight: 600; color: var(--ink-muted); }
+  .runs__i { display: flex; justify-content: space-between; gap: 8px; padding: 7px 8px;
+             border-radius: var(--radius-sm); font-size: 12px; color: var(--ink-secondary); }
+  .runs__i--on { background: var(--surface-base); color: var(--ink-primary); }
+  [data-theme="dark"] .runs__i--on { background: var(--surface-sunken); }
+  .railh { font-size: 11px; font-weight: 600; color: var(--ink-muted); margin-bottom: 10px; }
+</style>
+<script>
+  const h = React.createElement;
+  const R = window.Redrob;
+  /* From the Redrob Leaderboard (September 2026, updated monthly): the top five for a
+     profession and a task, at most two models per maker, in the order the method
+     decides. Sample figures. Effort is each maker's own scale. `monthly` is USD; the page language picks
+     the currency shown, at the rates published with the leaderboard. In the product this
+     all comes from Redrob Router, not from the page. */
+  const LAWYER = [{"id":"review","label":"Review documents and contracts","title":"Top 5 for a lawyer reviewing documents and contracts","usage":"Priced for about 40 documents reviewed a month.","picks":[{"id":"review-5","model":"Gemini 3.8 Flash","short":"Gemini 3.8 Flash","harness":"Gemini Enterprise for Legal","effort":{"label":"Medium","level":2,"of":3},"why":"A fast first pass on standard paper. Introductory price until the end of 2026.","monthly":6.75},{"id":"review-2","model":"Claude Sonnet 5","short":"Sonnet 5","harness":"Claude for Word","effort":{"label":"Medium","level":2,"of":5},"why":"Marks up a draft inside Word as tracked changes, at half the price of Opus 5.5.","monthly":18.0},{"id":"review-1","model":"Claude Opus 5.5","short":"Opus 5.5","harness":"Redrob Desk","effort":{"label":"Medium","level":2,"of":5},"why":"Reads the documents where they sit and returns the issues, with the clause behind each one.","monthly":36.0},{"id":"review-3","model":"Gemini 3.1 Pro","short":"Gemini 3.1 Pro","harness":"Gemini Enterprise for Legal","effort":{"label":"Medium","level":2,"of":3},"why":"Built for legal teams, with your playbook and document system connected.","monthly":19.2},{"id":"review-4","model":"GPT-6 Sol","short":"GPT-6 Sol","harness":"ChatGPT Work","effort":{"label":"High","level":3,"of":5},"why":"Careful on long agreements, and returns a clean list of issues.","monthly":21.0}]},{"id":"research","label":"Research the law","title":"Top 5 for a lawyer researching the law","usage":"Priced for about 20 research questions a month.","picks":[{"id":"research-1","model":"Kimi K3","short":"Kimi K3","harness":"Redrob Desk","effort":{"label":"Thinking","level":2,"of":2},"why":"Reads the longest reading lists in full and cites every source. An open model, run by Redrob.","monthly":14.6},{"id":"research-2","model":"Claude Opus 5.5","short":"Opus 5.5","harness":"Redrob Desk","effort":{"label":"Extra high","level":4,"of":5},"why":"Searches, reads the cases in full and sets out what each one held, with where it came from.","monthly":58.4},{"id":"research-3","model":"Claude Fable 5.1","short":"Fable 5.1","harness":"Claude Research","effort":{"label":"Extra high","level":4,"of":5},"why":"Among the top scores on public legal research tests. Stronger on the hardest questions, at over twice the price.","monthly":146.0},{"id":"research-4","model":"Gemini 3.1 Pro","short":"Gemini 3.1 Pro","harness":"Gemini Deep Research","effort":{"label":"High","level":3,"of":3},"why":"Reads widely and lists its sources, for a broad first sweep.","monthly":26.8},{"id":"research-5","model":"GPT-6 Astra","short":"GPT-6 Astra","harness":"ChatGPT Work","effort":{"label":"Extra High","level":4,"of":5},"why":"OpenAI's largest model, for a second opinion on a hard question.","monthly":146.0}]},{"id":"memo","label":"Write briefs and memos","title":"Top 5 for a lawyer writing briefs and memos","usage":"Priced for about 10 briefs or memos a month.","picks":[{"id":"memo-1","model":"GPT-6 Astra","short":"GPT-6 Astra","harness":"Redrob Desk","effort":{"label":"High","level":3,"of":5},"why":"Writes a tight memo from the whole record, and states the weak points of our own position.","monthly":24.0},{"id":"memo-2","model":"Claude Opus 5.5","short":"Opus 5.5","harness":"Redrob Desk","effort":{"label":"High","level":3,"of":5},"why":"Writes long, structured argument from the research already in your folder.","monthly":22.0},{"id":"memo-3","model":"Gemini 3.1 Pro","short":"Gemini 3.1 Pro","harness":"Gemini Enterprise for Legal","effort":{"label":"High","level":3,"of":3},"why":"Built to check the citations in a brief against their sources.","monthly":12.2},{"id":"memo-4","model":"Claude Fable 5.1","short":"Fable 5.1","harness":"Claude Cowork","effort":{"label":"High","level":3,"of":5},"why":"A little stronger on the hardest questions, at over twice the price.","monthly":55.0},{"id":"memo-5","model":"GPT-6 Sol","short":"GPT-6 Sol","harness":"ChatGPT Work","effort":{"label":"Medium","level":2,"of":5},"why":"For short memos, at the lowest price here.","monthly":9.0}]},{"id":"draft","label":"Draft contracts","title":"Top 5 for a lawyer drafting contracts","usage":"Priced for about 12 contracts drafted a month.","picks":[{"id":"draft-1","model":"Claude Opus 5.5","short":"Opus 5.5","harness":"Redrob Desk","effort":{"label":"High","level":3,"of":5},"why":"Drafts from the term sheet, your templates and past deals in the folder, and keeps defined terms consistent.","monthly":16.2},{"id":"draft-4","model":"GPT-6 Sol","short":"GPT-6 Sol","harness":"ChatGPT Work","effort":{"label":"Medium","level":2,"of":5},"why":"Good on standard agreements, for a fraction of the cost.","monthly":6.6},{"id":"draft-5","model":"Gemini 3.1 Pro","short":"Gemini 3.1 Pro","harness":"Gemini Enterprise for Legal","effort":{"label":"High","level":3,"of":3},"why":"Built for legal teams, with your clause library connected.","monthly":9.0},{"id":"draft-2","model":"Claude Fable 5.1","short":"Fable 5.1","harness":"Claude Cowork","effort":{"label":"High","level":3,"of":5},"why":"Anthropic's largest model. Slightly stronger on unusual terms, at over twice the price.","monthly":40.5},{"id":"draft-3","model":"GPT-6 Astra","short":"GPT-6 Astra","harness":"ChatGPT Work","effort":{"label":"High","level":3,"of":5},"why":"OpenAI's largest model. A strong second opinion on a first draft.","monthly":40.5}]},{"id":"client","label":"Advise and update clients","title":"Top 5 for a lawyer advising and updating clients","usage":"Priced for about 60 client letters, emails and updates a month.","picks":[{"id":"client-1","model":"Kimi K3","short":"Kimi K3","harness":"Redrob Desk","effort":{"label":"Thinking","level":2,"of":2},"why":"Short, clear updates a client can act on, for very little. An open model, run by Redrob.","monthly":3.2},{"id":"client-2","model":"Claude Opus 5.5","short":"Opus 5.5","harness":"Redrob Desk","effort":{"label":"Medium","level":2,"of":5},"why":"Writes the update from the matter file, in plain words the client can act on.","monthly":15.6},{"id":"client-3","model":"GPT-6 Sol","short":"GPT-6 Sol","harness":"ChatGPT Work","effort":{"label":"Medium","level":2,"of":5},"why":"Quick, clear letters and emails, and a first client deck.","monthly":7.8},{"id":"client-4","model":"Gemini 3.8 Flash","short":"Gemini 3.8 Flash","harness":"Gemini in Gmail","effort":{"label":"Low","level":1,"of":3},"why":"Replies inside Gmail for almost nothing.","monthly":2.48},{"id":"client-5","model":"Claude Sonnet 5","short":"Sonnet 5","harness":"Claude Cowork","effort":{"label":"Low","level":1,"of":5},"why":"Routine updates from the folder, at a lower price.","monthly":6.6}]}];
+  const PROFESSIONS = [
+    ...['Founder','Small team','Engineer','Designer','Product manager','Marketer','Salesperson','Recruiter','HR'].map(l => ({ id:l.toLowerCase().replace(/ /g,'-'), label:l, disabled:true })),
+    { id:'lawyer', label:'Lawyer', tasks: LAWYER },
+    ...['Accountant','Consultant'].map(l => ({ id:l.toLowerCase(), label:l, disabled:true }))
+  ];
+  const SOURCE = { name:'Redrob Leaderboard', edition:'September 2026', note:'Updated monthly' };
+  const RATES = { KRW:1387.97, INR:95.87 };
+  const BASIS = [
+    h('p', { key:1 }, 'Ranked for this profession and this task on the Redrob Leaderboard, September 2026, which is updated monthly. No list shows more than two models from one maker.'),
+    h('p', { key:2 }, 'Each price is a typical month of this one task at the maker\'s published API price, before volume or caching discounts, in the currency of the page\'s language. More effort means more thinking, so it costs more on the same model.'),
+    h('p', { key:3 }, 'Effort uses each maker\'s own scale: Claude runs Low to Max, ChatGPT Instant to Pro, Gemini Low to High. Check every citation and clause before you rely on it.')
+  ];
+  const I = R.icons;
+
+  /* The status line under the composer: what Desk does for every message. */
+  const STATUS = h(R.ComposerStatus, { items: [
+    { id: 'privacy', icon: h(I.shieldCheck, { width: 15, height: 15 }), tone: 'safe', name: 'Privacy', value: 'High', level: { n: 2, of: 3 }, live: 'Running on this laptop',
+      panel: h(R.PrivacyProtection, { level: 'high', summary: '214 private details kept from AI this week.' }) },
+    { id: 'memory', icon: h(I.bookOpen, { width: 15, height: 15 }), tone: 'on', name: 'Memory', value: 'On for every AI',
+      panel: h(R.MemoryScope, { defaultValue: 'project', options: [
+        { value: 'project', label: 'This project', detail: '12 notes about this project', summary: '12 notes, kept by Redrob outside any AI, so they work with every model.' },
+        { value: 'none', label: 'Off for this chat', detail: 'Nothing is read, and nothing is saved', off: true }] }) },
+    { id: 'opinion', icon: h(I.compare, { width: 15, height: 15 }), tone: 'on', name: 'Second opinion', value: 'When it matters', panel: h(R.SecondOpinionSetting, { defaultValue: 'auto' }) }
+  ] });
+  /* The Desk sidebar: five places, recent chats, then how Desk works for you, each with its state. */
+  function deskNav(current) {
+    const it = (id, label, icon, meta) => ({ id, label, icon: h(I[icon], { width: 15, height: 15 }), meta, href: '#' + id, current: current === id });
+    return [it('chat', 'Chat', 'message'), it('projects', 'Projects', 'folder'), it('playbooks', 'Playbooks', 'checklist'), it('scheduled', 'Scheduled', 'calendarClock', '2'), it('history', 'History', 'history'),
+      { heading: 'Recent' }, { id: 'r1', label: 'Seorin MSA', meta: '2h', href: '#chat', current: current === 'recent' }, { id: 'r2', label: 'Notice by email - valid?', meta: 'Mon', href: '#chat' }, { id: 'r3', label: 'Hanbit exhibit list', meta: 'Fri', href: '#chat' },
+      { heading: 'How Desk works for you' },
+      it('guide', 'Model Guide', 'chart', 'Auto'), it('connectors', 'Connectors', 'plug', '6'),
+      it('privacy', 'Privacy protection', 'shieldCheck', 'High'), it('memory', 'Memory', 'bookOpen', 'On'), it('opinion', 'Second opinion', 'compare', 'On')];
+  }
+  const MARK_L = '/_blob/4acde94cf2db0da7cc2c123d4cafbb66';
+  const MARK_D = '/_blob/9d0341656bedf8aaacf9584371167cb2';
+  function Timeline() {
+    const payload = h('div', { style: { fontFamily: 'var(--font-mono)', fontSize: '12px', lineHeight: '20px', color: 'var(--ink-secondary)' } },
+      ['supplier/2024/*.pdf  39 read', h('br', { key: 'a' }),
+       'supplier/2024/HANMI-addendum.pdf  scanned, no text layer', h('br', { key: 'b' }),
+       'supplier/2024/.DS_Store  skipped']);
+
+    const steps = [
+      { id: 1, state: 'done', label: 'Opened the folder you pointed at', meta: '0.4s',
+        detail: '41 files. Two are scans with no text in them, listed first below.' },
+      { id: 2, state: 'done', label: 'Read 39 contracts', meta: '2m 51s',
+        children: h(R.AgentAction, { name: 'read_files', state: 'done', duration: '2m 51s',
+          summary: '39 of 41. The two it could not read are named, not silently dropped.' }, payload) },
+      { id: 3, state: 'done', label: 'Pulled the renewal date and the notice period from each', meta: '1m 06s',
+        detail: 'Found both in 34. In 5 the notice period is written into a clause rather than a field.' },
+      { id: 4, state: 'active', label: 'Checking each against the 60 day rule', meta: 'running',
+        detail: 'Nine so far are inside the window. Two of those renew before the next board meeting.' },
+      { id: 5, state: 'todo', label: 'Write the summary and send it',
+        children: h(R.ApprovalStep, {
+          title: 'Send the summary to three people',
+          description: 'This leaves the building, so it waits for you.',
+          detail: 'To 박영수, John Stiles and Mary Major. Subject "9 contracts inside the 60 day window". One PDF attached, 3 pages. Nothing else is sent.',
+          approveLabel: 'Send it', rejectLabel: 'Not yet', alwaysLabel: 'Always send this one'
+        }) }
+    ];
+    return h(R.AgentTimeline, { steps: steps, label: 'Renewal sweep' });
+  }
+
+  function Conversation() {
+    return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '18px' } }, [
+      h(R.Message, { key: 'u', role: 'user', author: 'John' },
+        'Go through the 2024 supplier contracts and tell me which ones renew on their own inside 60 days.'),
+      h(R.Message, { key: 'a', role: 'assistant', author: 'Desk',
+        footer: h('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' } }, [
+          h(R.Confidence, { key: 'c', level: 'medium',
+            note: 'Five of the 39 keep the notice period in a clause rather than a field, so those five were read rather than looked up.' }),
+          h(R.Citation, { key: 'c1', index: 1, source: 'HANMI-2024-03.pdf', title: 'Clause 11.2, notice period' }),
+          h(R.Citation, { key: 'c2', index: 2, source: 'DAEJIN-2024-11.pdf', title: 'Clause 9, automatic renewal' })
+        ]) },
+        'Nine renew on their own inside 60 days. Two of those fall before the 14 October board meeting, so they are first in the list. Two files are scans with no text in them and I have not guessed at what they say.'),
+      h(R.Streaming, { key: 's', state: 'streaming', label: 'Checking the last five', onStop: function () {} })
+    ]);
+  }
+
+  function Conversation() {
+    return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '18px' } }, [
+      h(R.Message, { key: 'u', role: 'user', author: 'John' },
+        'Go through the 2024 supplier contracts and tell me which ones renew on their own inside 60 days.'),
+      h(R.Message, { key: 'a', role: 'assistant', author: 'Desk',
+        footer: h('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' } }, [
+          h(R.Confidence, { key: 'c', level: 'medium',
+            note: 'Five of the 39 keep the notice period in a clause rather than a field, so those five were read rather than looked up.' }),
+          h(R.Citation, { key: 'c1', index: 1, source: 'HANMI-2024-03.pdf', title: 'Clause 11.2, notice period' }),
+          h(R.Citation, { key: 'c2', index: 2, source: 'DAEJIN-2024-11.pdf', title: 'Clause 9, automatic renewal' })
+        ]) },
+        'Nine renew on their own inside 60 days. Two of those fall before the 14 October board meeting, so they are first in the list. Two files are scans with no text in them and I have not guessed at what they say.'),
+      h(R.Streaming, { key: 's', state: 'streaming', label: 'Checking the last five', onStop: function () {} })
+    ]);
+  }
+
+  function Rail() {
+    return h('div', { style: { display: 'contents' } }, [
+      h('div', { key: 'r' }, [
+        h('div', { className: 'railh', key: 'h' }, 'This run'),
+        h(R.TaskStatus, { key: 't', state: 'running', label: 'Checking the 60 day rule', elapsed: '4m 12s' })
+      ]),
+      h('div', { key: 's' }, [
+        h('div', { className: 'railh', key: 'h' }, 'What it can reach'),
+        h(R.ScopeBadge, { key: 'b', scopes: [
+          { kind: 'files', label: 'supplier/2024', mode: 'read' },
+          { kind: 'files', label: 'reports/', mode: 'write' },
+          { kind: 'apps', label: 'Mail', mode: 'write' },
+          { kind: 'web', label: 'Off', mode: 'none' }
+        ] })
+      ]),
+      h('div', { key: 'c' }, [
+        h('div', { className: 'railh', key: 'h' }, 'Agent hours'),
+        h(R.CostMeter, { key: 'm', used: 18.4, budget: 40, unit: 'h', label: 'This month',
+          breakdown: [ { label: 'Reading', value: 11.2 }, { label: 'Checking', value: 5.1 }, { label: 'Writing', value: 2.1 } ] })
+      ]),
+      h('div', { key: 'm' }, [
+        h('div', { className: 'railh', key: 'h' }, 'What it remembers'),
+        h(R.MemoryMeter, { key: 'm', label: 'Q3 supplier contracts', total: 100, segments: [
+          { label: 'This run', value: 34 }, { label: 'Earlier runs', value: 41 }, { label: 'Free', value: 25 }
+        ] })
+      ]),
+      h('div', { key: 'p' }, [
+        h('div', { className: 'railh', key: 'h' }, 'Runs next' ),
+        h(R.Schedule, { key: 's', name: 'Renewal sweep', cadence: 'Every Monday, 08:00 KST',
+          nextRun: 'Mon 5 Oct', enabled: true,
+          lastRun: { state: 'done', at: 'Mon 21 Sep', label: 'Found 6' } })
+      ])
+    ]);
+  }
+
+  function Screen() {
+    return h(R.AppShell, {
+      product: 'Desk', mark: MARK_L, markDark: MARK_D, symbol: '/_blob/a35853f38695b112ff00dae9ab62fdce', collapsible: true, defaultCollapsed: false, theme: h(R.ThemeSwitch, { size: 'sm' }),
+      nav: deskNav('projects'),
+      title: 'Renewal sweep',
+      meta: '41 files - started 4m ago',
+      actions: [
+        h(R.Button, { key: 'p', variant: 'ghost', size: 'sm' }, 'Pause'),
+        h(R.Button, { key: 'v', variant: 'secondary', size: 'sm' }, 'Open the folder')
+      ],
+      rail: h(Rail),
+      foot: [
+        h(R.PromptSuggestions, { key: 'p', label: 'Or ask for',
+          items: ['Which of the nine are worth renegotiating', 'Draft the notice letter for the two before the board', 'Show me the five written into a clause'] }),
+        h(R.Composer, { key: 'i', placeholder: 'Ask Desk to do something in this folder',
+          context: h('span', { className: 'rr-composer__chip' }, [h(I.folder, { key: 'i', width: 14, height: 14 }), h('span', { key: 't' }, 'Q3 supplier contracts')]),
+          tools: h(R.ModelPicker, { label: 'Model', professions: PROFESSIONS, source: SOURCE, rates: RATES,
+            auto: true, here: 'Redrob Desk', defaultProfession: 'lawyer', matchedTask: 'review',
+            basis: BASIS, placement: 'top', align: 'end', guideHref: '#model-guide' }),
+          status: STATUS })
+      ]
+    }, [
+      h(Timeline, { key: 't' }),
+      h(R.Changes, { key: 'c', title: 'What it changed', summary: 'One file written. Nothing else was touched.',
+        items: [
+          { kind: 'added', label: 'reports/renewals-Q3.pdf', note: '3 pages, written just now' },
+          { kind: 'changed', label: 'supplier/2024/index.csv', before: '41 rows', after: '41 rows, two marked unreadable' }
+        ], acceptLabel: 'Keep both', rejectLabel: 'Undo both' }),
+      h(Conversation, { key: 'v' })
+    ]);
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));
+</script>

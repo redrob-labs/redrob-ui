@@ -32,24 +32,48 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # `noEmitOnError` is on and `build` deletes `dist/` first, so a failing build cannot leave a
+      # stale-but-valid tree for a later step to read as a pass. That happened three times during
+      # this port before both guards were in place, so the build's exit code is the gate here.
       - name: Build the package
         run: yarn build
 
-      # The build is `tsc` plus two asset copies, so an empty `dist` is a silent pass. Assert the
-      # entry point, the types and both asset trees actually landed.
       - name: Assert the published surface exists
         run: |
           set -euo pipefail
-          for f in dist/index.js dist/index.d.ts; do
+          for f in dist/index.js dist/index.d.ts dist/icons/index.js dist/esm/index.js dist/esm/package.json; do
             [ -s "$f" ] || { echo "::error::$f is missing or empty after build"; exit 1; }
           done
-          for d in dist/style dist/assets; do
+          for d in dist/styles dist/fonts dist/native; do
             [ -d "$d" ] && [ -n "$(ls -A "$d")" ] || { echo "::error::$d is missing or empty after build"; exit 1; }
           done
-          echo "dist entry, types and assets present"
+          echo "dist entry, esm entry, types, styles, fonts and native headers present"
 
-  storybook:
-    name: storybook builds
+      # The icon module is generated from the delivery's own table. A hand-edit would be silently
+      # overwritten by the next `yarn icons`, so the checked-in file must match the generator.
+      - name: Assert the generated icons are up to date
+        run: yarn icons:check
+
+      # `tokens.json` is committed and is what a consumer in another repository reads, so a change to
+      # `tokens.css` that is not regenerated leaves the browser's C++ chrome and an Android app on the
+      # old colours while the web moves. Nothing else can see that, because CSS still resolves fine.
+      - name: Assert the generated tokens are up to date
+        run: yarn tokens:check
+
+      # A stylesheet path that does not resolve is invisible to every other gate: the markup is
+      # identical, so parity passes, and the browser silently falls back to a system font. This
+      # caught 14 `@font-face` rules that had been wrong since the port began.
+      - name: Assert every stylesheet url resolves
+        run: yarn assets:check
+
+      # Loads both halves of the dual build in separate Node processes and compares their export
+      # lists. A bundler papers over a bad ESM specifier and Node does not, so this is the only place
+      # the difference shows before a consumer hits ERR_MODULE_NOT_FOUND on a published version.
+      - name: Assert the package entry points resolve
+        run: yarn exports:check
+
+  parity:
+    name: parity against the reference bundle
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,11 +86,40 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build Storybook
-        run: yarn build-storybook
+      - name: Build the package
+        run: yarn build
 
-      - name: Assert the static site was produced
-        run: |
-          set -euo pipefail
-          [ -s storybook-static/index.html ] || { echo "::error::storybook-static/index.html is missing"; exit 1; }
-          echo "storybook static site present"
+      # Renders every component twice against the delivery's own preview case - once from the
+      # reference bundle, once from our `dist` - and compares the markup. The test cases belong to
+      # the design system delivery, so they cannot drift toward the implementation they check.
+      #
+      # `reference/` is a vendored 2 MB slice of the delivery, committed so this job runs at all. A
+      # parity job that skips for want of the reference reports green for having checked nothing.
+      - name: Run the parity harness
+        run: yarn test
+
+      # Renders the reference against itself. If this fails the harness is broken, not the port -
+      # without it, a harness that silently compares nothing would look like 123 passes.
+      - name: Harness self-check
+        run: yarn test:self
+
+  docs:
+    name: docs are up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # `llms.txt` and `llms-full.txt` are generated from the types and the JSDoc, and are committed
+      # so an agent reading the repository sees the same reference as one reading the site. A stale
+      # committed copy is worse than a missing one: it states props the code no longer has, and
+      # nothing else in the pipeline would notice. This regenerates them and fails on any difference.
+      - name: Assert the committed agent reference matches the code
+        run: yarn docs:check

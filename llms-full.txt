@@ -1,6 +1,6 @@
 # @redrob-labs/ui - full reference
 
-Version 1.0.1. 123 React components on the Redrob Group Design System 2026, plus 252 icons.
+Version 1.0.2. 123 React components on the Redrob Group Design System 2026, plus 252 icons.
 
 ## Using the package
 

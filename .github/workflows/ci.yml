@@ -72,6 +72,22 @@ jobs:
       - name: Assert the package entry points resolve
         run: yarn exports:check
 
+      # CSS has no compiler. `var(--x)` naming a property nothing declares is not a parse error - it
+      # invalidates its own declaration at computed-value time and the cascade moves on. This caught 28
+      # of them: the delivery's tokens.json defines 119 product tokens and its tokens.css declared
+      # none, so every AppShell product rail lost its identity wash on every consumer, with the sheet
+      # loading, the rail rendering, tsc passing and parity passing (both sides read the same broken
+      # sheet and agreed).
+      - name: Assert every var() reference resolves
+        run: yarn references:check
+
+      # One release ships the same colours twice - tokens.css for the web, dist/native for C++ and
+      # Kotlin - and the native header is generated from tokens.css alone. When system.css redeclared
+      # --ink-muted and --surface-sunken at root scope, the release shipped two different answers nine
+      # points per channel apart, and only a consumer painting from BOTH could see it.
+      - name: Assert the two sheets do not disagree on a token
+        run: yarn supersession:check
+
   parity:
     name: parity against the reference bundle
     runs-on: ubuntu-latest

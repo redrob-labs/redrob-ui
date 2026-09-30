@@ -220,7 +220,29 @@ jobs:
       #
       # What this still catches is the real failure: `npm publish` exiting 0 having uploaded nothing,
       # which is what a 2FA-restricted token does when it cannot publish directly.
-      - name: Assert the version reached the registry
+      # THIS GATE HAS NOW BEEN WRONG TWICE, BOTH TIMES IN THE SAME DIRECTION: its retry window was
+      # shorter than the registry's own settling time, so it called a SUCCESSFUL publish a failure.
+      #
+      #   v1: read the packument (what `npm install` resolves through). That is a CDN aggregate and
+      #       took tens of minutes. 1.0.0 was reported as "staged, awaiting approval" on that evidence
+      #       and a version number was burned working around a publish that had actually worked.
+      #   v2: read the version document instead, on the premise that it is written synchronously.
+      #       60 seconds. 1.0.2 404'd for the whole window and failed a publish that had succeeded,
+      #       provenance and all -- because npm itself now says, in the publish output,
+      #       "Your package is being processed and may take a few minutes to become available."
+      #
+      # So no read of the registry is synchronous, and the premise of both versions was wrong. What IS
+      # authoritative about whether the publish was ACCEPTED is npm's own exit status and its `+ pkg@ver`
+      # line, and that has already happened in the step above. This step therefore confirms VISIBILITY,
+      # over a window measured in minutes rather than seconds, and when it times out it says which of
+      # the two things it could not establish -- because the remedies are opposite:
+      #
+      #   accepted but not visible  -> wait, or check Staged Packages. DO NOT bump the version.
+      #   not accepted              -> the publish step would have failed; read its output.
+      #
+      # It never tells anyone to republish under a new version, which is the one action that cannot be
+      # undone and was the actual damage the first version of this gate caused.
+      - name: Confirm the published version becomes visible
         if: ${{ github.event_name == 'release' || inputs.dry_run == false }}
         env:
           TAG: ${{ steps.ref.outputs.tag }}
@@ -230,44 +252,52 @@ jobs:
           name="$(node -p "require('./package.json').name")"
           encoded="$(node -p "encodeURIComponent('$name')")"
 
+          # 20 attempts x 30s = 10 minutes. npm's own wording is "a few minutes"; this is several times
+          # that, because the cost of being too short is a red release that actually shipped, while the
+          # cost of being too long is ten minutes of a runner.
           version_doc=000
-          for attempt in 1 2 3 4 5 6; do
+          for attempt in $(seq 1 20); do
             version_doc="$(curl -s -o /dev/null -w '%{http_code}' "https://registry.npmjs.org/${encoded}/${version}")"
             [ "$version_doc" = "200" ] && break
-            echo "version document not there yet (attempt ${attempt}/6, http ${version_doc}); waiting 10s"
-            sleep 10
+            echo "not visible yet (attempt ${attempt}/20, version document http ${version_doc}); waiting 30s"
+            sleep 30
           done
 
           packument="$(curl -s -o /dev/null -w '%{http_code}' "https://registry.npmjs.org/${encoded}")"
 
           if [ "$version_doc" = "200" ]; then
-            echo "$name@$version is on the registry (version document 200)."
+            echo "$name@$version is visible on the registry (version document 200)."
             if [ "$packument" != "200" ]; then
-              echo "::notice::the packument still answers ${packument}; that is CDN propagation and resolves on its own. \`npm install\` may 404 for a few minutes."
+              echo "::notice::the packument still answers ${packument}; that is CDN propagation and resolves on its own. \`npm install\` may 404 for a while yet. This is NOT a staged publish."
             fi
             exit 0
           fi
 
           {
-            echo "### \`$name@$version\` did not reach the registry"
+            echo "### \`$name@$version\` was published but is not visible yet"
             echo
-            echo "| read | status |"
-            echo "| --- | --- |"
-            echo "| version document | $version_doc |"
-            echo "| packument | $packument |"
+            echo "| read | status | what it means |"
+            echo "| --- | --- | --- |"
+            echo "| version document | $version_doc | the record of this exact version |"
+            echo "| packument | $packument | the aggregate \`npm install\` resolves through; CDN-cached |"
             echo
-            echo "\`npm publish\` reported success and the registry has no record of this version. The"
-            echo "likeliest cause is a token that is no longer allowed to publish directly: npm has been"
-            echo "restricting 2FA-bypass granular tokens, and such a publish can exit 0 having uploaded"
-            echo "nothing."
+            echo "**The publish step above succeeded**, so npm ACCEPTED this version -- read its"
+            echo "\`+ $name@$version\` line. What this step could not establish is only that the registry"
+            echo "is yet SERVING it, after 10 minutes of asking."
             echo
-            echo "Check the publish step's own output above for what npm actually said, then either"
-            echo "publish interactively with 2FA, or configure **trusted publishing** for this package"
-            echo "(Settings -> Trusted publishing: repository \`${GITHUB_REPOSITORY}\`, workflow"
-            echo "\`publish.yml\`) so CI authenticates by OIDC instead of a token."
+            echo "Two causes, and they are told apart by looking, not by guessing:"
+            echo
+            echo "1. **Still settling.** Most likely. npm's own publish output says the package \"may take"
+            echo "   a few minutes to become available\". Re-read the two URLs above in a few minutes."
+            echo "2. **Staged, awaiting a human.** A token that bypasses 2FA can no longer publish"
+            echo "   directly; such a publish is staged and needs approval. Check **Staged Packages** on"
+            echo "   npmjs.com, or \`npm stage list $name\`. An EMPTY staging list means this is case 1."
+            echo
+            echo "**Do not republish under a new version number.** That is not reversible, and this"
+            echo "version is already taken either way. Neither cause is fixed by bumping."
           } >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
-          echo "::error::$name@$version is not on the registry (version document $version_doc). See the run summary."
+          echo "::error::$name@$version was accepted by npm but is not visible after 10 minutes. See the run summary before taking any action."
           exit 1
 
       - name: Pack only (dry run)

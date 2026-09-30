@@ -75,7 +75,15 @@
   --border-strong: var(--gray-6); /* Control outlines: inputs, checkboxes, segmented controls. 3.8:1 light, 5.2:1 dark, so boundaries stay visible. */
   --ink-primary: var(--redrob-black); /* Body and heading text on surface-base. 19.7:1 light, 18.7:1 dark. */
   --ink-secondary: var(--gray-7); /* Supporting text and labels on surface-base. 6.3:1 light, 9.0:1 dark. */
-  --ink-muted: var(--gray-6); /* Placeholders and disabled text. 3.8:1 on light, so keep it off essential copy - 24px+ or icons only there; 5.2:1 on dark. */
+  /* NOT var(--gray-6). gray-6 #7c8390 is 3.81:1 on the page, 3.62:1 on layer one and 3.37:1 on layer
+     two - below AA for normal text on every light ground in the system, not only the deep one. #686e78
+     clears 4.5:1 on all three at 5.13, 4.87 and 4.54. (#696f79 was tried first and missed layer two at
+     4.47.) The delivery corrected this in system.css and left a note saying tokens.css is where it
+     belongs once tokens.css regenerates; this is that. While the two disagreed, a consumer reading the
+     generated native header painted the failing value and a consumer reading both sheets painted the
+     passing one - nine points per channel apart, in adjacent pixels, with nothing failing.
+     `tools/check/supersession.js` now fails if the two sheets disagree on any token again. */
+  --ink-muted: #686e78; /* Placeholders and disabled text. 5.13:1 on the page, 4.87 on layer one, 4.54 on layer two. */
   --ink-brand: var(--blue-7); /* Links and brand text on surface-base. 8.5:1 light, 9.1:1 dark. */
   --ink-on-brand: var(--redrob-white); /* Text and icons on surface-brand. */
   --action-primary: var(--blue-6); /* Resting fill of primary buttons and active controls. White text on it is 5.6:1. */
@@ -92,18 +100,67 @@
   --shadow-sm: 0 1px 2px rgba(10, 11, 12, 0.08); /* Resting cards and inputs. */
   --shadow-md: 0 4px 12px rgba(10, 11, 12, 0.10); /* Menus, popovers and hovered cards. */
   --shadow-lg: 0 16px 40px rgba(10, 11, 12, 0.14); /* Modals and dialogs. */
+  /* Product colours. Seven products, each a mark (step 6), a 10-step ramp, three themed roles and
+     three `beyond` grounds -- 119 declarations, transcribed from the delivery's tokens.json.
+
+     They are here because system.css REFERENCES them and the delivery's own tokens.css never
+     declared them: `.rr-shell[data-product="browser"] { --product-wash: var(--product-browser-wash) }`
+     named a property nothing declared, so the declaration was invalid and dropped, and every
+     AppShell rail lost its product wash on every consumer. An undeclared custom property fails
+     silently -- no warning, no build error, and the rail still renders, just without its identity.
+     `tools/check/references.js` is what now holds this line. */
+  --product-router: #1194dd;
+  --product-router-1: #f0f8ff; --product-router-2: #daeeff; --product-router-3: #b3deff; --product-router-4: #7ac6ff; --product-router-5: #37abf5;
+  --product-router-6: #1194dd; --product-router-7: #0069a1; --product-router-8: #00527e; --product-router-9: #003c5e; --product-router-10: #00243c;
+  --product-router-wash: var(--product-router-1); --product-router-fill: var(--product-router-2); --product-router-line: var(--product-router-3);
+  --product-router-beyond-light: linear-gradient(130deg, #37abf5 75%, #b3deff 89%, #f0f8ff 100%); --product-router-beyond-brand: linear-gradient(130deg, #7ac6ff 75%, #37abf5 89%, #1194dd 100%); --product-router-beyond-deep: linear-gradient(130deg, #1194dd 75%, #0069a1 100%);
+  --product-chat: #149ca0;
+  --product-chat-1: #e9fbfb; --product-chat-2: #ccf4f5; --product-chat-3: #98e8ea; --product-chat-4: #5fd2d6; --product-chat-5: #3db5b9;
+  --product-chat-6: #149ca0; --product-chat-7: #007275; --product-chat-8: #00595b; --product-chat-9: #004143; --product-chat-10: #002829;
+  --product-chat-wash: var(--product-chat-1); --product-chat-fill: var(--product-chat-2); --product-chat-line: var(--product-chat-3);
+  --product-chat-beyond-light: linear-gradient(130deg, #3db5b9 75%, #98e8ea 89%, #e9fbfb 100%); --product-chat-beyond-brand: linear-gradient(130deg, #5fd2d6 75%, #3db5b9 89%, #149ca0 100%); --product-chat-beyond-deep: linear-gradient(130deg, #149ca0 75%, #007275 100%);
+  --product-code: #02a252;
+  --product-code-1: #e9fded; --product-code-2: #ccf9d6; --product-code-3: #97efaf; --product-code-4: #5ddb87; --product-code-5: #3abe6c;
+  --product-code-6: #02a252; --product-code-7: #00783b; --product-code-8: #005d2c; --product-code-9: #00441f; --product-code-10: #002a10;
+  --product-code-wash: var(--product-code-1); --product-code-fill: var(--product-code-2); --product-code-line: var(--product-code-3);
+  --product-code-beyond-light: linear-gradient(130deg, #3abe6c 75%, #97efaf 89%, #e9fded 100%); --product-code-beyond-brand: linear-gradient(130deg, #5ddb87 75%, #3abe6c 89%, #02a252 100%); --product-code-beyond-deep: linear-gradient(130deg, #02a252 75%, #00783b 100%);
+  --product-desk: #d87101;
+  --product-desk-1: #fff5ee; --product-desk-2: #ffe6d5; --product-desk-3: #ffcba8; --product-desk-4: #ffa664; --product-desk-5: #eb8227;
+  --product-desk-6: #d87101; --product-desk-7: #964d00; --product-desk-8: #763b00; --product-desk-9: #582a00; --product-desk-10: #371800;
+  --product-desk-wash: var(--product-desk-1); --product-desk-fill: var(--product-desk-2); --product-desk-line: var(--product-desk-3);
+  --product-desk-beyond-light: linear-gradient(130deg, #eb8227 75%, #ffcba8 89%, #fff5ee 100%); --product-desk-beyond-brand: linear-gradient(130deg, #ffa664 75%, #eb8227 89%, #d87101 100%); --product-desk-beyond-deep: linear-gradient(130deg, #d87101 75%, #964d00 100%);
+  --product-office: #fe4d3e;
+  --product-office-1: #fff4f2; --product-office-2: #ffe4e0; --product-office-3: #ffc8c0; --product-office-4: #ffa193; --product-office-5: #ff6c5b;
+  --product-office-6: #fe4d3e; --product-office-7: #b81610; --product-office-8: #950001; --product-office-9: #6f0001; --product-office-10: #470000;
+  --product-office-wash: var(--product-office-1); --product-office-fill: var(--product-office-2); --product-office-line: var(--product-office-3);
+  --product-office-beyond-light: linear-gradient(130deg, #ff6c5b 75%, #ffc8c0 89%, #fff4f2 100%); --product-office-beyond-brand: linear-gradient(130deg, #ffa193 75%, #ff6c5b 89%, #fe4d3e 100%); --product-office-beyond-deep: linear-gradient(130deg, #fe4d3e 75%, #b81610 100%);
+  --product-browser: #f14aa8;
+  --product-browser-1: #fff3f8; --product-browser-2: #ffe2ee; --product-browser-3: #ffc4de; --product-browser-4: #ff98ca; --product-browser-5: #ff58b4;
+  --product-browser-6: #f14aa8; --product-browser-7: #ad1373; --product-browser-8: #8b005a; --product-browser-9: #680042; --product-browser-10: #420028;
+  --product-browser-wash: var(--product-browser-1); --product-browser-fill: var(--product-browser-2); --product-browser-line: var(--product-browser-3);
+  --product-browser-beyond-light: linear-gradient(130deg, #ff58b4 75%, #ffc4de 89%, #fff3f8 100%); --product-browser-beyond-brand: linear-gradient(130deg, #ff98ca 75%, #ff58b4 89%, #f14aa8 100%); --product-browser-beyond-deep: linear-gradient(130deg, #f14aa8 75%, #ad1373 100%);
+  --product-design: #c162f4;
+  --product-design-1: #faf4ff; --product-design-2: #f4e4ff; --product-design-3: #eac9ff; --product-design-4: #dca2ff; --product-design-5: #cd72ff;
+  --product-design-6: #c162f4; --product-design-7: #8832b2; --product-design-8: #6e1a94; --product-design-9: #540075; --product-design-10: #35004b;
+  --product-design-wash: var(--product-design-1); --product-design-fill: var(--product-design-2); --product-design-line: var(--product-design-3);
+  --product-design-beyond-light: linear-gradient(130deg, #cd72ff 75%, #eac9ff 89%, #faf4ff 100%); --product-design-beyond-brand: linear-gradient(130deg, #dca2ff 75%, #cd72ff 89%, #c162f4 100%); --product-design-beyond-deep: linear-gradient(130deg, #c162f4 75%, #8832b2 100%);
 }
 [data-theme="dark"] {
   --surface-base: var(--redrob-black);
   --surface-raised: var(--gray-9);
-  --surface-sunken: #000000;
+  /* NOT #000000. Pure black put layer two 7.51 L* BELOW the page instead of above it, so the dark
+     elevation ladder reversed at its second step: a "sunken" well read as a hole punched through the
+     document. #1c1f26 makes the two steps +5.28 and +3.47 L* on gray-9 #17181b, against light's +2.10
+     and +2.83 in the same perceptual units. Corrected by the delivery in system.css; see --ink-muted. */
+  --surface-sunken: #1c1f26;
   --surface-brand: var(--blue-6);
   --surface-brand-subtle: var(--blue-10);
   --border-subtle: var(--gray-8);
   --border-strong: var(--gray-6);
   --ink-primary: var(--gray-1);
   --ink-secondary: var(--gray-5);
-  --ink-muted: var(--gray-6);
+  /* NOT var(--gray-6). gray-6 was 4.32:1 on dark layer two; #838a97 clears 4.75. See light --ink-muted. */
+  --ink-muted: #838a97;
   --ink-brand: var(--blue-4);
   --ink-on-brand: var(--redrob-white);
   --action-primary: var(--blue-6);
@@ -120,6 +177,14 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.7);
   --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.8);
+  /* Product roles, dark: the ramp read from the far end -- wash 10, fill 9, line 8. */
+  --product-router-wash: var(--product-router-10); --product-router-fill: var(--product-router-9); --product-router-line: var(--product-router-8);
+  --product-chat-wash: var(--product-chat-10); --product-chat-fill: var(--product-chat-9); --product-chat-line: var(--product-chat-8);
+  --product-code-wash: var(--product-code-10); --product-code-fill: var(--product-code-9); --product-code-line: var(--product-code-8);
+  --product-desk-wash: var(--product-desk-10); --product-desk-fill: var(--product-desk-9); --product-desk-line: var(--product-desk-8);
+  --product-office-wash: var(--product-office-10); --product-office-fill: var(--product-office-9); --product-office-line: var(--product-office-8);
+  --product-browser-wash: var(--product-browser-10); --product-browser-fill: var(--product-browser-9); --product-browser-line: var(--product-browser-8);
+  --product-design-wash: var(--product-design-10); --product-design-fill: var(--product-design-9); --product-design-line: var(--product-design-8);
 }
 :root {
   --space-1: 4px; /* Icon-to-label gap, hairline insets. */

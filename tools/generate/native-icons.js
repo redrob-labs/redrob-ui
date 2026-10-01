@@ -26,10 +26,17 @@ const { icons } = require(path.join(ROOT, 'dist', 'index.js'));
 fs.mkdirSync(OUT, { recursive: true });
 const manifest = {};
 for (const name of Object.keys(icons).sort()) {
-  const markup = renderToStaticMarkup(icons[name]({ xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24 }));
+  const markup = renderToStaticMarkup(
+    icons[name]({ xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24 })
+  );
   const file = `${markup}\n`;
   fs.writeFileSync(path.join(OUT, `${name}.svg`), file);
   manifest[name] = crypto.createHash('sha256').update(file).digest('hex');
 }
-fs.writeFileSync(path.join(OUT, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
-console.log(`wrote ${Object.keys(manifest).length} SVGs to ${path.relative(ROOT, OUT)}`);
+fs.writeFileSync(
+  path.join(OUT, 'manifest.json'),
+  `${JSON.stringify(manifest, null, 2)}\n`
+);
+console.log(
+  `wrote ${Object.keys(manifest).length} SVGs to ${path.relative(ROOT, OUT)}`
+);

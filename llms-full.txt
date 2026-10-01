@@ -1,6 +1,6 @@
 # @redrob-labs/ui - full reference
 
-Version 1.0.2. 123 React components on the Redrob Group Design System 2026, plus 252 icons.
+Version 1.0.2. 123 React components on the Redrob Group Design System 2026, plus 260 icons.
 
 ## Using the package
 
@@ -2967,7 +2967,7 @@ Exported types: `LegalSection`, `LegalRevision`.
 
 ## Icons
 
-`icons` is a record of 252 components keyed by name, each rendering at `1em` in `currentColor`. `iconNames` is the sorted list of keys and `svg` returns the raw markup for a name.
+`icons` is a record of 260 components keyed by name, each rendering at `1em` in `currentColor`. `iconNames` is the sorted list of keys and `svg` returns the raw markup for a name.
 
 ```tsx
 import { icons, iconNames } from '@redrob-labs/ui';

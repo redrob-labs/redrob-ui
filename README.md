@@ -2,7 +2,7 @@
 
 한국어: [README.ko.md](./README.ko.md)
 
-The **Redrob Group Design System 2026**, as typed React components: 123 components and 252 icons,
+The **Redrob Group Design System 2026**, as typed React components: 123 components and 260 icons,
 written in TypeScript, styled with plain CSS on design tokens.
 
 `@redrob-labs/ui`

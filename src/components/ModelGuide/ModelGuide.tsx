@@ -2,7 +2,8 @@ import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { useStableId } from '../../internal/ids';
 import { docLocale } from '../../internal/datetime';
-import { currencyFor, Effort, EffortMeter } from '../../internal/model';
+import { currencyFor, Effort, EffortLevel, EffortMeter, EffortNoteContext } from '../../internal/model';
+import { EffortTune } from '../../internal/effort';
 import { GUIDE_DIMS, GuideScore, GuideWeights, guidePrice, guideTotal } from '../../internal/guide';
 import { icons } from '../../icons';
 import { Badge } from '../Badge/Badge';
@@ -13,7 +14,10 @@ export interface GuidePick {
   id: string;
   model?: string;
   harness?: string;
+  /** The effort it was ranked at. */
   effort?: Effort;
+  /** Every level a reader can try on it, the ranked one included. With two or more, the detail shows the effort control. */
+  efforts?: EffortLevel[];
   why?: React.ReactNode;
   monthly?: number;
   score?: GuideScore;
@@ -74,7 +78,7 @@ export interface ModelGuideProps {
   advancedLabel?: React.ReactNode;
   professionLabel?: string;
   taskLabel?: string;
-  perLabel?: React.ReactNode;
+  perLabel?: string;
   topLabel?: React.ReactNode;
   promptLabel?: React.ReactNode;
   outputLabel?: string;
@@ -89,7 +93,17 @@ export interface ModelGuideProps {
   className?: string;
   onTaskChange?: (taskId: string | null, professionId: string) => void;
   onModeChange?: (mode: 'simple' | 'advanced') => void;
-  onUse?: (pick: GuidePick, context: { profession: GuideProfession; task: GuideTask }) => void;
+  /** `effort` is the level the reader tried on the pick, or `null` for the ranked one. */
+  onUse?: (
+    pick: GuidePick,
+    context: { profession: GuideProfession; task: GuideTask; effort: EffortLevel | null },
+  ) => void;
+  /** "Try another effort" in the detail; `effortHint` is the line beside it. */
+  effortLabel?: string;
+  effortHint?: string;
+  rankedLabel?: string;
+  resetEffortLabel?: string;
+  effortNote?: (context: EffortNoteContext) => React.ReactNode;
 }
 
 /**
@@ -135,6 +149,21 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
   const mode = props.mode !== undefined ? props.mode : modeHeld;
   const [pickId, setPickId] = React.useState<string | null>(null);
   const current = picks.filter((k) => k.id === pickId)[0] || picks[0];
+  // A level the reader tries on the open pick, or null for the ranked one; reset when the pick changes.
+  const [tried, setTried] = React.useState<{ id: string | null; level: number | null }>({ id: null, level: null });
+  const tryLevel = current && tried.id === current.id ? tried.level : null;
+  function tryEffort(l: EffortLevel): void {
+    const other = l.pick && current && l.pick !== current.id ? picks.filter((k) => k.id === l.pick)[0] : null;
+    if (other) {
+      setPickId(other.id);
+      setTried({ id: null, level: null });
+      return;
+    }
+    setTried({
+      id: current.id,
+      level: l.level == null || l.level === (current.effort || {}).level ? null : l.level,
+    });
+  }
   const w: GuideWeights =
     task.weights || props.weights || { quality: 0.55, reliability: 0.25, speed: 0.05, cost: 0.15 };
   const headId = useStableId('rr-guide');
@@ -367,6 +396,25 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
         ]),
       ]),
       k.why ? React.createElement('p', { key: 'w', className: 'rr-guide__why' }, k.why) : null,
+      k.efforts && k.efforts.length > 1
+        ? React.createElement(EffortTune, {
+            key: 'e',
+            className: 'rr-guide__tune',
+            pick: k,
+            place: i + 1,
+            chosen: tryLevel,
+            onSelect: tryEffort,
+            per: props.perLabel,
+            note: props.effortNote,
+            labels: {
+              effort: props.effortLabel || 'Try another effort',
+              ranked: props.rankedLabel,
+              reset: props.resetEffortLabel,
+            },
+            price: (m: number) => guidePrice(m, shown, base, rates, locale, 'rr-effort__price'),
+            title: props.effortHint || 'The sample below was written at the ranked effort.',
+          })
+        : null,
       React.createElement('div', { key: 's', className: 'rr-guide__sample' }, [
         React.createElement('div', { key: 'q', className: 'rr-guide__turn' }, [
           React.createElement(
@@ -413,7 +461,8 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             key: 'b',
             variant: 'primary',
             onClick: () => {
-              if (props.onUse) props.onUse(k, { profession: prof, task });
+              const lv = tryLevel != null && k.efforts ? k.efforts.filter((l) => l.level === tryLevel)[0] : null;
+              if (props.onUse) props.onUse(k, { profession: prof, task, effort: lv || null });
             },
           },
           props.useLabel || 'Use this in the chat',

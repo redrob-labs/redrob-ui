@@ -18,8 +18,14 @@ export interface MenuItem {
 }
 
 export interface MenuProps {
-  /** The trigger's label. Also names the list for assistive technology. */
+  /** Visible label. Omit it and pass `icon` for an icon-only trigger. A string label also names the list. */
   label?: React.ReactNode;
+  /** An icon before the label, or the whole trigger when there is no label. */
+  icon?: React.ReactNode;
+  /** Accessible name. Required when the label is not a string or there is no label. */
+  ariaLabel?: string;
+  /** `up` opens the list above the trigger, for a menu at the foot of a panel. Default `down`. */
+  placement?: 'down' | 'up';
   items?: MenuItem[];
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
@@ -46,6 +52,10 @@ export function Menu(props: MenuProps): React.ReactElement {
   const close = React.useCallback(() => setOpen(false), []);
   const ref = useDismiss<HTMLDivElement>(open, close);
   const actionable = items.filter((item) => item.type !== 'separator' && !item.disabled);
+  const iconOnly = !!props.icon && (props.label == null || props.label === '');
+  // The accessible name. A label that is a node (an icon and text) has no string to give, so it needs
+  // ariaLabel; a string label names itself.
+  const name = props.ariaLabel || (typeof props.label === 'string' ? props.label : undefined);
 
   function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>): void {
     if (!open) return;
@@ -68,19 +78,32 @@ export function Menu(props: MenuProps): React.ReactElement {
     {
       type: 'button',
       key: 'trigger',
-      className: cx('rr-btn', `rr-btn--${props.variant || 'secondary'}`, `rr-btn--${props.size || 'md'}`),
+      // An icon with no visible label is an icon button: the same sizes as IconButton, and its name
+      // comes from ariaLabel, because a node cannot be read out as a name.
+      className: iconOnly
+        ? cx('rr-iconbtn', `rr-iconbtn--${props.variant || 'ghost'}`, `rr-iconbtn--${props.size || 'md'}`)
+        : cx('rr-btn', `rr-btn--${props.variant || 'secondary'}`, `rr-btn--${props.size || 'md'}`),
       'aria-haspopup': 'menu',
       'aria-expanded': String(open),
+      'aria-label': iconOnly || typeof props.label !== 'string' ? name : undefined,
+      title: iconOnly ? name : undefined,
       onClick: () => setOpen(!open),
     },
-    [
-      React.createElement('span', { key: 'l' }, props.label),
-      React.createElement(
-        'span',
-        { key: 'c', className: 'rr-btn__icon' },
-        icons.chevronDown({ width: 16, height: 16 }),
-      ),
-    ],
+    iconOnly
+      ? React.createElement(
+          'span',
+          { className: 'rr-btn__icon', style: { fontSize: props.size === 'sm' ? '14px' : '18px' } },
+          props.icon,
+        )
+      : [
+          props.icon ? React.createElement('span', { key: 'i', className: 'rr-btn__icon' }, props.icon) : null,
+          React.createElement('span', { key: 'l' }, props.label),
+          React.createElement(
+            'span',
+            { key: 'c', className: 'rr-btn__icon' },
+            icons.chevronDown({ width: 16, height: 16 }),
+          ),
+        ],
   );
 
   const list = open
@@ -88,9 +111,13 @@ export function Menu(props: MenuProps): React.ReactElement {
         'div',
         {
           key: 'list',
-          className: cx('rr-menu__list', props.align === 'right' && 'rr-menu__list--right'),
+          className: cx(
+            'rr-menu__list',
+            props.align === 'right' && 'rr-menu__list--right',
+            props.placement === 'up' && 'rr-menu__list--up',
+          ),
           role: 'menu',
-          'aria-label': props.label,
+          'aria-label': name,
         },
         items.map((item, i) => {
           if (item.type === 'separator') {

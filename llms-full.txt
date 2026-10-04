@@ -1,6 +1,6 @@
 # @redrob-labs/ui - full reference
 
-Version 1.0.2. 123 React components on the Redrob Group Design System 2026, plus 252 icons.
+Version 1.0.2. 135 React components on the Redrob Group Design System 2026, plus 252 icons.
 
 ## Using the package
 
@@ -257,7 +257,10 @@ Import: `import { Menu } from '@redrob-labs/ui';`
 
 | Prop | Type | Required | Notes |
 | --- | --- | --- | --- |
-| `label` | `React.ReactNode` | no | The trigger's label. Also names the list for assistive technology. |
+| `label` | `React.ReactNode` | no | Visible label. Omit it and pass `icon` for an icon-only trigger. A string label also names the list. |
+| `icon` | `React.ReactNode` | no | An icon before the label, or the whole trigger when there is no label. |
+| `ariaLabel` | `string` | no | Accessible name. Required when the label is not a string or there is no label. |
+| `placement` | `'down' \| 'up'` | no | `up` opens the list above the trigger, for a menu at the foot of a panel. Default `down`. |
 | `items` | `MenuItem[]` | no |  |
 | `variant` | `'primary' \| 'secondary' \| 'ghost' \| 'danger'` | no |  |
 | `size` | `'sm' \| 'md' \| 'lg'` | no |  |
@@ -1315,6 +1318,26 @@ Import: `import { Composer } from '@redrob-labs/ui';`
 | `onAdd` | `() => void` | no |  |
 | `onStop` | `() => void` | no |  |
 
+#### ComposerMode
+
+Plan or Run, in the composer bar beside the model.
+
+Plan asks what it needs and writes a plan that runs only when you say so; Run starts at once. It is a per-message choice, so it sits where the message is sent rather than in a settings page somebody has to remember to visit before typing.
+
+Each option carries its label as its accessible name and its hint as a title, so the compact, icons-only form still says Plan and Run to a screen reader.
+
+Import: `import { ComposerMode } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `value` | `string` | no |  |
+| `defaultValue` | `string` | no |  |
+| `onChange` | `(value: string, option: ComposerModeOption) => void` | no |  |
+| `options` | `ComposerModeOption[]` | no |  |
+| `compact` | `boolean` | no | Icons only, labels kept for screen readers. Automatic below 560px. |
+| `label` | `string` | no |  |
+| `className` | `string` | no |  |
+
 #### ModelPicker
 
 Chooses which model answers, by asking what the person does and what they want.
@@ -1363,13 +1386,21 @@ Import: `import { ModelPicker } from '@redrob-labs/ui';`
 | `guideLabel` | `React.ReactNode` | no |  |
 | `guideHref` | `string` | no |  |
 | `basisLabel` | `React.ReactNode` | no |  |
-| `perLabel` | `React.ReactNode` | no |  |
+| `perLabel` | `string` | no |  |
 | `placement` | `string` | no |  |
 | `align` | `string` | no |  |
 | `className` | `string` | no |  |
 | `onChange` | `( pick: ModelPick \| null, context: { profession: ModelProfession; task: ModelTask; taskMode?: string }, ) => void` | no |  |
 | `onTaskChange` | `(id: string, profession: ModelProfession) => void` | no |  |
 | `onOpenGuide` | `(task: ModelTask, profession: ModelProfession) => void` | no |  |
+| `effort` | `number \| null` | no | Effort set by the person on the pinned pick: a level number on its scale, `null` for the ranked one. Reset when the pick changes. |
+| `defaultEffort` | `number \| null` | no |  |
+| `onEffortChange` | `(level: EffortLevel \| null, pick: ModelPick) => void` | no | `level` is `null` when the person goes back to the ranked effort. |
+| `effortLabel` | `string` | no |  |
+| `rankedLabel` | `string` | no |  |
+| `resetEffortLabel` | `string` | no |  |
+| `yoursLabel` | `string` | no | "you set", beside the level the person chose. |
+| `effortNote` | `(context: EffortNoteContext) => React.ReactNode` | no | Replaces the line under the effort control, e.g. for another language. |
 
 Exported types: `ModelPick`, `ModelTask`, `ModelProfession`.
 
@@ -1409,7 +1440,7 @@ Import: `import { ModelGuide } from '@redrob-labs/ui';`
 | `advancedLabel` | `React.ReactNode` | no |  |
 | `professionLabel` | `string` | no |  |
 | `taskLabel` | `string` | no |  |
-| `perLabel` | `React.ReactNode` | no |  |
+| `perLabel` | `string` | no |  |
 | `topLabel` | `React.ReactNode` | no |  |
 | `promptLabel` | `React.ReactNode` | no |  |
 | `outputLabel` | `string` | no |  |
@@ -1424,7 +1455,12 @@ Import: `import { ModelGuide } from '@redrob-labs/ui';`
 | `className` | `string` | no |  |
 | `onTaskChange` | `(taskId: string \| null, professionId: string) => void` | no |  |
 | `onModeChange` | `(mode: 'simple' \| 'advanced') => void` | no |  |
-| `onUse` | `(pick: GuidePick, context: { profession: GuideProfession; task: GuideTask }) => void` | no |  |
+| `onUse` | `( pick: GuidePick, context: { profession: GuideProfession; task: GuideTask; effort: EffortLevel \| null }, ) => void` | no | `effort` is the level the reader tried on the pick, or `null` for the ranked one. |
+| `effortLabel` | `string` | no | "Try another effort" in the detail; `effortHint` is the line beside it. |
+| `effortHint` | `string` | no |  |
+| `rankedLabel` | `string` | no |  |
+| `resetEffortLabel` | `string` | no |  |
+| `effortNote` | `(context: EffortNoteContext) => React.ReactNode` | no |  |
 
 Exported types: `GuidePick`, `GuideTask`, `GuideProfession`.
 
@@ -1483,6 +1519,37 @@ Import: `import { PrivateText } from '@redrob-labs/ui';`
 | `outLabel` | `string` | no |  |
 | `className` | `string` | no |  |
 | `children` | `React.ReactNode` | no |  |
+
+#### Opinion
+
+What Fact check found, inside an answer.
+
+`differs` marks a sentence another AI reads differently and opens what each checker said in place, built of phrasing elements so it can sit inside the answer's paragraph. `added` is what it thinks the answer missed: set after the answer, never merged into it, and marked with whose it is.
+
+Import: `import { Opinion } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `kind` | `'differs' \| 'added'` | no |  |
+| `views` | `DisputedView[]` | no |  |
+
+Also accepts: `Omit<DisputedProps, 'views'>`, `OpinionAddedProps`.
+
+#### ThreadNote
+
+A one-line note in the conversation, between turns rather than in one.
+
+`model` says a different AI took over and that it reads the same memory, so a switch does not read as a reset. `memory` says what was saved and offers Undo beside it, because a product that remembers silently is deciding what it knows about someone without telling them.
+
+Import: `import { ThreadNote } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `kind` | `'model' \| 'memory'` | no |  |
+| `to` | `React.ReactNode` | no |  |
+| `children` | `React.ReactNode` | no |  |
+
+Also accepts: `Omit<ModelSwitchProps, 'to'>`, `Omit<MemorySavedProps, 'children'>`.
 
 #### Disputed
 
@@ -1696,6 +1763,27 @@ Import: `import { ApprovalStep } from '@redrob-labs/ui';`
 
 ### Safeguards
 
+#### ProtectionStatus
+
+The one sentence a person needs about a protection, large, with whether it is running. Heads a panel or a page.
+
+The title says what IS, not what the feature is called: "Privacy protection is on: High" rather than "Privacy". A person checking whether they are protected should not have to interpret a label.
+
+`live` pairs a dot with text. The dot alone would be decoration, and a safeguard that signals only in colour is a safeguard some readers cannot verify.
+
+Import: `import { ProtectionStatus } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `title` | `React.ReactNode` | yes |  |
+| `icon` | `React.ReactNode` | no |  |
+| `tone` | `'safe' \| 'warn' \| 'brand' \| 'plain'` | no | `safe` on, `warn` off or degraded, `brand` a feature in force, `plain` neutral. |
+| `size` | `'md' \| 'lg'` | no |  |
+| `live` | `string` | no | Text beside a live dot: what is running right now. |
+| `as` | `keyof React.JSX.IntrinsicElements` | no | Element for the title, when the card opens a section. |
+| `className` | `string` | no |  |
+| `children` | `React.ReactNode` | no |  |
+
 #### StatusCard
 
 The state of one safeguard, in a sentence somebody can act on.
@@ -1771,6 +1859,29 @@ Import: `import { MemoryScope } from '@redrob-labs/ui';`
 
 Exported types: `MemoryScopeOption`.
 
+#### CrossCheckSetting
+
+The panel behind Cross-check in the status line: two checks, Fact check and Challenge, each Off, When it matters or Always.
+
+Each check says what it does and how long it takes, and "When it matters" is defined in a sentence under them: answers a person will rely on or pass on, never quick questions or drafts. A safeguard whose trigger is vague gets switched off the first time it fires on something trivial.
+
+The checkers are named in every result, so the setting never has to promise more than it does. `CrossCheckSetting.value(checks)` gives the status line's word for a value: the shared level, "On", "1 of 2 on" or "Off".
+
+Import: `import { CrossCheckSetting } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `value` | `CrossCheckValue` | no |  |
+| `defaultValue` | `CrossCheckValue` | no |  |
+| `onChange` | `(value: CrossCheckValue, changed: string) => void` | no |  |
+| `checks` | `CrossCheckDefinition[]` | no |  |
+| `levels` | `Array<{ value: string; label: string }>` | no |  |
+| `title` | `React.ReactNode` | no |  |
+| `lede` | `React.ReactNode` | no |  |
+| `whenItMatters` | `React.ReactNode` | no | What When it matters means, under the checks. |
+| `foot` | `React.ReactNode` | no |  |
+| `className` | `string` | no |  |
+
 #### SecondOpinionSetting
 
 When two other AIs check the answer.
@@ -1840,6 +1951,144 @@ Import: `import { OpinionGrid } from '@redrob-labs/ui';`
 
 Exported types: `OpinionColumn`, `OpinionRow`.
 
+#### PlanQuestions
+
+What Plan asks before it writes: a few questions, each answered with a tap or in your own words.
+
+The options are buttons with `aria-pressed`, so a single tap answers, and the hint beside the submit button says a reply in the person's own words works too - the options are a shortcut, never a form to complete. Once answered it folds to a single line, so the thread reads as a conversation rather than a stack of forms.
+
+Import: `import { PlanQuestions } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `questions` | `PlanQuestion[]` | yes |  |
+| `value` | `PlanAnswers` | no |  |
+| `defaultValue` | `PlanAnswers` | no |  |
+| `onChange` | `(value: PlanAnswers) => void` | no |  |
+| `onSubmit` | `(value: PlanAnswers) => void` | no |  |
+| `done` | `boolean` | no | Folds to one line once answered. |
+| `summary` | `React.ReactNode` | no |  |
+| `submitLabel` | `string` | no |  |
+| `hint` | `React.ReactNode` | no |  |
+| `anyLabel` | `string` | no |  |
+| `label` | `string` | no |  |
+| `className` | `string` | no |  |
+
+Exported types: `PlanQuestion`, `PlanAnswers`.
+
+#### PlanDocument
+
+The plan, written out as a document rather than a list of steps: what was asked, what is known, how, what you get, the assumptions and the risks, and a To do list that ticks as the run goes.
+
+Any paragraph can be changed in place until it runs, and the status line says so the moment it is: a draft becomes "Edited by you". Once running, the text locks, because a plan that changes under a run is no longer the plan that was approved.
+
+The status names who approved it. A plan that runs is one a person said yes to, and the document keeps that on its face.
+
+Import: `import { PlanDocument } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `file` | `React.ReactNode` | no | The plan's file name: "Plan · Ending the Seorin MSA.md". |
+| `title` | `React.ReactNode` | no |  |
+| `summary` | `React.ReactNode` | no |  |
+| `sections` | `PlanSection[]` | no |  |
+| `todo` | `PlanTodo[]` | no |  |
+| `done` | `number` | no | How many To do items are done; overrides each item's `done`. |
+| `status` | `PlanStatus` | no | draft and kept can be edited in place; running and done are locked. Draft shows as edited once changed. |
+| `statusLabels` | `Partial<Record<PlanStatus, React.ReactNode>>` | no |  |
+| `note` | `React.ReactNode` | no | Which checks will run after, and why. |
+| `onRun` | `() => void` | no |  |
+| `onKeep` | `() => void` | no |  |
+| `onEdit` | `(e: unknown) => void` | no |  |
+| `runLabel` | `string` | no |  |
+| `keepLabel` | `string` | no |  |
+| `hint` | `React.ReactNode` | no |  |
+| `todoLabel` | `string` | no |  |
+| `label` | `string` | no |  |
+| `className` | `string` | no |  |
+
+Exported types: `PlanItem`, `PlanSection`, `PlanTodo`.
+
+#### FactCheckReport
+
+What Fact check found, in three parts: every cited source opened and judged, the reasoning read step by step, and what the answer missed. Named for the AI that ran it.
+
+Each source opens in place to the passage it was checked against, so a verdict of "Not in that source" can be verified by the reader rather than taken on trust. What the answer missed is added after it and marked as the checker's, never merged in.
+
+Fixing rewrites only the sentences flagged above, and says so beside the button.
+
+Import: `import { FactCheckReport } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `by` | `React.ReactNode` | no | The AI that ran the check. |
+| `took` | `React.ReactNode` | no |  |
+| `summary` | `React.ReactNode` | no |  |
+| `claims` | `FactClaim[]` | no |  |
+| `reasoning` | `FindingProps[]` | no |  |
+| `missed` | `Array<{ by?: string; label?: React.ReactNode; text: React.ReactNode }>` | no |  |
+| `fixed` | `boolean` | no |  |
+| `onFix` | `() => void` | no |  |
+| `onClose` | `() => void` | no |  |
+| `defaultOpen` | `string \| null` | no |  |
+| `verdicts` | `Partial<Record<FactVerdict, [NonNullable<BadgeProps['tone']> \| string, React.ReactNode]>>` | no |  |
+| `title` | `React.ReactNode` | no |  |
+| `label` | `string` | no |  |
+| `fixLabel` | `string` | no |  |
+| `fixHint` | `React.ReactNode` | no |  |
+| `claimLabel` | `string` | no |  |
+| `sourcesLabel` | `string` | no |  |
+| `reasoningLabel` | `string` | no |  |
+| `missedLabel` | `string` | no |  |
+| `missedItemLabel` | `string` | no |  |
+| `closeLabel` | `string` | no |  |
+| `className` | `string` | no |  |
+
+Exported types: `FactClaim`.
+
+#### ChallengeReport
+
+The answer's conclusion under pressure: one AI argues for it, one against, for a few rounds, and a third says what held up.
+
+Each side is named, and the rounds are shown in full rather than summarised, so a reader can see how a point broke instead of being told that it did. What nobody settled is said plainly, for a person to decide: a check that always reaches a verdict is a check pretending to know more than it does.
+
+While running, the rounds arrive one at a time under a Streaming line that can stop it.
+
+Import: `import { ChallengeReport } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `claim` | `React.ReactNode` | no | The conclusion under challenge, in the answer's words. |
+| `sides` | `{ for?: React.ReactNode; against?: React.ReactNode; judge?: React.ReactNode }` | no |  |
+| `rounds` | `Array<{ for: React.ReactNode; against: React.ReactNode }>` | no |  |
+| `state` | `'running' \| 'done'` | no |  |
+| `shown` | `number` | no | Rounds shown so far while running. |
+| `of` | `number` | no |  |
+| `took` | `React.ReactNode` | no |  |
+| `verdict` | `Array<{ kind: 'broke' \| 'held' \| 'changed' \| string; text: React.ReactNode }>` | no |  |
+| `unsettled` | `React.ReactNode` | no |  |
+| `applied` | `boolean` | no |  |
+| `onApply` | `() => void` | no |  |
+| `onRerun` | `() => void` | no |  |
+| `onClose` | `() => void` | no |  |
+| `onStop` | `() => void` | no |  |
+| `title` | `React.ReactNode` | no |  |
+| `label` | `string` | no |  |
+| `claimLabel` | `string` | no |  |
+| `forLabel` | `string` | no |  |
+| `againstLabel` | `string` | no |  |
+| `judgeLabel` | `string` | no |  |
+| `roundLabel` | `string` | no |  |
+| `verdictLabel` | `string` | no |  |
+| `unsettledLabel` | `string` | no |  |
+| `applyLabel` | `string` | no |  |
+| `appliedLabel` | `string` | no |  |
+| `rerunLabel` | `string` | no |  |
+| `runningLabel` | `string` | no |  |
+| `progressLabel` | `string` | no |  |
+| `kindLabels` | `Record<string, string>` | no |  |
+| `className` | `string` | no |  |
+
 ### Agent harness
 
 #### TaskStatus
@@ -1899,6 +2148,22 @@ Import: `import { AgentHandoff } from '@redrob-labs/ui';`
 | `carriedLabel` | `React.ReactNode` | no |  |
 | `className` | `string` | no |  |
 
+#### AccessList
+
+Everything an agent can reach, and whether it can change it. List refusals as well as grants.
+
+The mode is spelled out - "Can read", "Can read and write" - because read and write are a developer's words for somebody else's files. A person granting access should not have to translate.
+
+Every scope is listed, including the ones that are read-only or refused. A list that showed only the powerful grants would make the total reach impossible to judge.
+
+Import: `import { AccessList } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `scopes` | `Array<{ /** The five things a person actually pictures. */ kind?: 'files' \| 'apps' \| 'web' \| 'computer' \| 'memory'; /** Name the thing, not the path: 'Your Contracts folder'. */ label: string; /** Rendered as 'Can read', 'Can read and write', 'No access'. */ mode?: 'read' \| 'write' \| 'none'; }>` | no |  |
+| `label` | `string` | no |  |
+| `className` | `string` | no |  |
+
 #### ScopeBadge
 
 Everything an agent can reach, and whether it can change it.
@@ -1941,6 +2206,18 @@ Import: `import { Changes } from '@redrob-labs/ui';`
 | `onReject` | `() => void` | no |  |
 
 Exported types: `ChangeItem`.
+
+#### Meter
+
+What has been used against what there is, in one component with two shapes.
+
+With `segments` it is the working-memory bar: shares of one whole, with the room left as a segment of its own. Without, it is spend against a budget, escalating its tone at 75% and 90% on its own. The shape follows the data, so a caller never chooses a meter that cannot show what it has.
+
+Import: `import { Meter } from '@redrob-labs/ui';`
+
+Declares no own props.
+
+Also accepts: `CostMeterProps`, `MemoryMeterProps`.
 
 #### CostMeter
 
@@ -1986,6 +2263,27 @@ Import: `import { MemoryMeter } from '@redrob-labs/ui';`
 | `className` | `string` | no |  |
 
 Exported types: `MemorySegment`.
+
+#### ScheduleRow
+
+A recurring task: what it is, when it next runs, and how the last run went.
+
+A paused schedule stays visible and says "Paused". Hiding it would leave a task nobody remembers to turn back on, and the last run's state is what tells somebody whether the pause was deliberate.
+
+The switch's label names the task, so a page of schedules does not present a column of switches called "on".
+
+Import: `import { ScheduleRow } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `name` | `string` | no |  |
+| `cadence` | `string` | no | How often, in words, with the timezone: "Every weekday at 9:00, Seoul time". |
+| `nextRun` | `string` | no |  |
+| `lastRun` | `{ state?: TaskStatusProps['state']; at?: string; label?: string }` | no |  |
+| `enabled` | `boolean` | no | `false` reads as Paused rather than hiding the row. |
+| `onToggle` | `(event: React.ChangeEvent<HTMLInputElement>) => void` | no | Omit it and the schedule cannot be paused from here. Wired to the switch's `onChange`, so it receives the change event; `event.target.checked` is the next state. |
+| `switchLabel` | `string` | no | The switch's label: what is switched, not its state. Default "Runs on schedule: <name>". |
+| `className` | `string` | no |  |
 
 #### Schedule
 
@@ -2795,7 +3093,9 @@ Import: `import { LangSwitch } from '@redrob-labs/ui';`
 | `langs` | `LangOption[]` | no |  |
 | `current` | `string` | no |  |
 | `inlineUpTo` | `number` | no | Up to this many render inline; more become a disclosure. Three by default. |
-| `label` | `React.ReactNode` | no |  |
+| `placement` | `'down' \| 'up'` | no | `up` opens the menu above the trigger, for a switch at the foot of a sidebar. Default `down`. |
+| `align` | `'left' \| 'right'` | no | Which edge the menu lines up with. Default `right`. |
+| `label` | `string` | no | Accessible name for the control. |
 | `missingLabel` | `string` | no |  |
 | `className` | `string` | no |  |
 | `onChange` | `(lang: LangOption) => void` | no |  |
@@ -2881,20 +3181,20 @@ Exported types: `IndexTopic`.
 
 #### PostList
 
-An index of published stories: a lead, then the rest.
-
-Year grouping emits a real `section` per year with its own heading and `aria-labelledby`, and the items inside drop to `h3`. The grouping is therefore in the document rather than in the spacing, so an archive can be navigated by heading instead of by scrolling and guessing where one year ends.
-
-`lead={false}` exists because promotion is editorial. On a page where the newest item is not the most important one, a hard-coded lead would make that claim anyway.
-
-Renders null when empty rather than an empty list element.
+The list under an IndexHeader; `variant="section"` is the homepage's news band (a lead story, three headlines, a link to News), laid out across rather than down.
 
 Import: `import { PostList } from '@redrob-labs/ui';`
 
 | Prop | Type | Required | Notes |
 | --- | --- | --- | --- |
+| `variant` | `'index' \| 'section'` | no | `section` is the homepage's news band and takes NewsSectionProps: `lead` is then the newest story, `items` three headlines, `href` the News index. |
 | `items` | `PubStory[]` | no |  |
-| `lead` | `boolean` | no | Pass `false` on a page where the first item must not be promoted. |
+| `lead` | `boolean \| PubStory` | no | Pass `false` on a page where the first item must not be promoted. With variant `section`, the lead story. |
+| `title` | `string` | no |  |
+| `href` | `string` | no |  |
+| `allLabel` | `string` | no |  |
+| `id` | `string` | no |  |
+| `lang` | `'en' \| 'ko'` | no |  |
 | `group` | `'year'` | no | `'year'` breaks the rest into year sections with real headings. |
 | `className` | `string` | no |  |
 

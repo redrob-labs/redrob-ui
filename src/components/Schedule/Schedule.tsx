@@ -24,6 +24,8 @@ export interface ScheduleProps {
 }
 
 /**
+ * @deprecated Use ScheduleRow. Kept for 1.x.
+ *
  * One scheduled task: what it is, when it runs next, and how the last run went.
  *
  * A paused schedule stays visible and says "Paused". Hiding it would leave a task nobody remembers to turn back

@@ -1,6 +1,6 @@
 # @redrob-labs/ui - full reference
 
-Version 1.0.2. 135 React components on the Redrob Group Design System 2026, plus 252 icons.
+Version 1.1.0. 135 React components on the Redrob Group Design System 2026, plus 252 icons.
 
 ## Using the package
 
@@ -1245,6 +1245,8 @@ Import: `import { Avatar } from '@redrob-labs/ui';`
 
 #### AvatarMark
 
+@deprecated Use Avatar (AvatarMark is internal to it in the October 2026 delivery). Kept for 1.x.
+
 A generated mark for someone with no picture: the gateway, in one of nine accent families.
 
 The threshold sits at the same height on every mark, with the same three faces behind it. Only the colour family varies, derived from the name - a set of avatars whose diagonals sat at different angles would read as a rendering bug, not as a family.
@@ -1553,6 +1555,8 @@ Also accepts: `Omit<ModelSwitchProps, 'to'>`, `Omit<MemorySavedProps, 'children'
 
 #### Disputed
 
+@deprecated Use Opinion. Kept for 1.x.
+
 Marks a claim a second opinion disagrees with, inline, and shows both views.
 
 The disagreement stays attached to the sentence it is about rather than being collected into a footnote at the bottom. A reader who does not scroll should still know the claim under their eye is contested.
@@ -1580,6 +1584,8 @@ Exported types: `DisputedView`.
 
 #### OpinionAdded
 
+@deprecated Use Opinion with `kind="added"`. Kept for 1.x.
+
 Something a second opinion added that the first answer had missed.
 
 Marked as an addition rather than blended into the answer. A crosscheck that silently improves the text removes the reader's chance to weigh where a claim came from, which is the only reason to run one.
@@ -1594,6 +1600,8 @@ Import: `import { OpinionAdded } from '@redrob-labs/ui';`
 | `children` | `React.ReactNode` | no |  |
 
 #### ModelSwitch
+
+@deprecated Use ThreadNote. Kept for 1.x.
 
 Says the model changed mid-conversation, and that nothing was lost.
 
@@ -1612,6 +1620,8 @@ Import: `import { ModelSwitch } from '@redrob-labs/ui';`
 | `className` | `string` | no |  |
 
 #### MemorySaved
+
+@deprecated Use ThreadNote with `kind="memory"`. Kept for 1.x.
 
 Says something was written to memory, what it was, and how to take it back.
 
@@ -1786,11 +1796,7 @@ Import: `import { ProtectionStatus } from '@redrob-labs/ui';`
 
 #### StatusCard
 
-The state of one safeguard, in a sentence somebody can act on.
-
-The title says what IS, not what the feature is called: "Privacy protection is on: High" rather than "Privacy". A person checking whether they are protected should not have to interpret a label.
-
-`live` pairs a dot with text. The dot alone would be decoration, and a safeguard that signals only in colour is a safeguard some readers cannot verify.
+@deprecated Renamed `ProtectionStatus` in the October 2026 delivery. Same markup; this forwards to it.
 
 Import: `import { StatusCard } from '@redrob-labs/ui';`
 
@@ -1884,11 +1890,7 @@ Import: `import { CrossCheckSetting } from '@redrob-labs/ui';`
 
 #### SecondOpinionSetting
 
-When two other AIs check the answer.
-
-The explanation says what happens to their findings: disagreements are marked in the answer, additions are appended and attributed. A crosscheck whose output is silently merged is a crosscheck nobody can weigh.
-
-`always` states the real cost - about twenty seconds and a few cents per answer. A safeguard whose price is hidden gets switched off the first time somebody notices the bill, which is the worst moment to learn about it.
+@deprecated Replaced by `CrossCheckSetting` in the October 2026 delivery, which sets Fact check and Challenge separately; its old `rr-opset` styles are gone. This adapter keeps the one-value API: the value sets both checks, and changing either check reports that level as the new value.
 
 Import: `import { SecondOpinionSetting } from '@redrob-labs/ui';`
 
@@ -2166,11 +2168,7 @@ Import: `import { AccessList } from '@redrob-labs/ui';`
 
 #### ScopeBadge
 
-Everything an agent can reach, and whether it can change it.
-
-The mode is spelled out - "Can read", "Can read and write" - because read and write are a developer's words for somebody else's files. A person granting access should not have to translate.
-
-Every scope is listed, including the ones that are read-only. A list that showed only the powerful grants would make the total reach impossible to judge.
+@deprecated Renamed `AccessList` in the October 2026 delivery. Same markup; this forwards to it.
 
 Import: `import { ScopeBadge } from '@redrob-labs/ui';`
 
@@ -2221,6 +2219,8 @@ Also accepts: `CostMeterProps`, `MemoryMeterProps`.
 
 #### CostMeter
 
+@deprecated Use Meter (without `segments`). Kept for 1.x.
+
 What a run has spent against what it was allowed.
 
 The tone escalates at 75% and 90% on its own, so a budget approaching its limit changes appearance without anybody remembering to set a flag. That is the whole value: a meter that only goes red when told will be green on the run that overspends.
@@ -2244,6 +2244,8 @@ Import: `import { CostMeter } from '@redrob-labs/ui';`
 Exported types: `CostBreakdown`.
 
 #### MemoryMeter
+
+@deprecated Use Meter (with `segments`). Kept for 1.x.
 
 How full the working memory is, and what is taking up the room.
 
@@ -2286,6 +2288,8 @@ Import: `import { ScheduleRow } from '@redrob-labs/ui';`
 | `className` | `string` | no |  |
 
 #### Schedule
+
+@deprecated Use ScheduleRow. Kept for 1.x.
 
 One scheduled task: what it is, when it runs next, and how the last run went.
 
@@ -2869,6 +2873,8 @@ Import: `import { PriceTable } from '@redrob-labs/ui';`
 Exported types: `PricePlan`, `PriceRow`.
 
 #### NewsSection
+
+@deprecated Use PostList with `variant="section"`. Kept for 1.x.
 
 The newest few stories: one lead and up to three more.
 

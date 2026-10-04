@@ -20,6 +20,8 @@ export interface MemoryMeterProps {
 }
 
 /**
+ * @deprecated Use Meter (with `segments`). Kept for 1.x.
+ *
  * How full the working memory is, and what is taking up the room.
  *
  * "Room left" is a segment in the legend, not an absence. A meter that only shows what is used makes the reader do

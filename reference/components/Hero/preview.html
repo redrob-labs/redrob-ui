@@ -13,7 +13,7 @@
       { label:'Redrob Office',  href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
       { label:'Redrob Browser', href:'#', detail:'A browser that finishes the task you give it' },
       { label:'Redrob Design',  href:'#', detail:'Designs the whole product as one system, in the file' } ] },
-    { label:'Solutions', items:['For founders','For small teams','For engineers','For designers','For product managers','For marketers','For sales teams','For recruiters','For HR teams','For lawyers','For accountants','For consultants'].map(l => ({ label:l, href:'#' })) },
+    { label:'Solutions', items:['For founders','For small teams','For engineers','For designers','For product managers','For marketers','For sales teams','For recruiters','For HR teams','For lawyers','For accountants','For consultants','For investors'].map(l => ({ label:l, href:'#' })) },
     { label:'Research', href:'#' },
     { label:'News', href:'#' },
     { label:'Blog', href:'#' },
@@ -31,8 +31,8 @@
   /* System, Light, Dark: in the bar on every page, in the drawer on a phone. */
   const THEME = h(R.ThemeSwitch);
   /* 10-logo.md: Primary on a light ground, Primary White on a dark one; .rr-mark swaps them. */
-  const MARK_L = '/_blob/4acde94cf2db0da7cc2c123d4cafbb66';
-  const MARK_D = '/_blob/9d0341656bedf8aaacf9584371167cb2';
+  const MARK_L = '/_blob/ed76761a1e006c91b7a77078f8d82da9';
+  const MARK_D = '/_blob/290f8c4ecd34da668364dc8794df0e45';
   const mark = h('span', { className:'rr-mark' }, [
     h('img', { key:'l', className:'rr-mark__light', src:MARK_L, alt:'Redrob', style:{ height:'24px' } }),
     h('img', { key:'d', className:'rr-mark__dark',  src:MARK_D, alt:'',       style:{ height:'24px' } })

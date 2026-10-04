@@ -1,4 +1,4 @@
-/* @ds-bundle: {"format":4,"namespace":"Redrob","components":[{"name":"Mark"},{"name":"MarkReveal"},{"name":"Layer"},{"name":"Illustration"},{"name":"Diagram"},{"name":"Display"},{"name":"Statement"},{"name":"Quote"},{"name":"SectionMark"},{"name":"Button"},{"name":"IconButton"},{"name":"Menu"},{"name":"Form"},{"name":"Input"},{"name":"Textarea"},{"name":"Select"},{"name":"Combobox"},{"name":"Checkbox"},{"name":"Radio"},{"name":"Switch"},{"name":"DatePicker"},{"name":"TimePicker"},{"name":"TimeZonePicker"},{"name":"FileUpload"},{"name":"NameInput"},{"name":"AddressInput"},{"name":"PhoneInput"},{"name":"DateInput"},{"name":"Money"},{"name":"ConvertedAmount"},{"name":"Timestamp"},{"name":"Tabs"},{"name":"Breadcrumb"},{"name":"Pagination"},{"name":"Stepper"},{"name":"Accordion"},{"name":"Scroller"},{"name":"Alert"},{"name":"Toast"},{"name":"Modal"},{"name":"Drawer"},{"name":"Tooltip"},{"name":"Progress"},{"name":"Loader"},{"name":"Skeleton"},{"name":"EmptyState"},{"name":"Card"},{"name":"Table"},{"name":"Stat"},{"name":"Chart"},{"name":"Sparkline"},{"name":"Badge"},{"name":"Avatar"},{"name":"AvatarMark"},{"name":"AppShell"},{"name":"PageShell"},{"name":"SiteHeader"},{"name":"SiteFooter"},{"name":"Band"},{"name":"LangSwitch"},{"name":"ThemeSwitch"},{"name":"ConsentBar"},{"name":"Message"},{"name":"Composer"},{"name":"ModelPicker"},{"name":"ModelGuide"},{"name":"ComposerStatus"},{"name":"StatusCard"},{"name":"PrivacyProtection"},{"name":"MemoryScope"},{"name":"SecondOpinionSetting"},{"name":"AnswerReceipt"},{"name":"PrivateText"},{"name":"Disputed"},{"name":"OpinionAdded"},{"name":"ModelSwitch"},{"name":"MemorySaved"},{"name":"MemoryList"},{"name":"OpinionGrid"},{"name":"Streaming"},{"name":"PromptSuggestions"},{"name":"Citation"},{"name":"Confidence"},{"name":"AgentAction"},{"name":"AgentTimeline"},{"name":"ApprovalStep"},{"name":"TaskStatus"},{"name":"AgentRoster"},{"name":"AgentHandoff"},{"name":"ScopeBadge"},{"name":"Changes"},{"name":"CostMeter"},{"name":"MemoryMeter"},{"name":"Schedule"},{"name":"SchedulePicker"},{"name":"PlaybookRow"},{"name":"AppAccess"},{"name":"ConnectorCard"},{"name":"CheckIn"},{"name":"SourceSet"},{"name":"Evidence"},{"name":"Criteria"},{"name":"MatchBreakdown"},{"name":"ReviewGrid"},{"name":"Finding"},{"name":"Redline"},{"name":"Playbook"},{"name":"Shortlist"},{"name":"DecisionNotice"},{"name":"Hero"},{"name":"LogoRow"},{"name":"FeatureRow"},{"name":"Figure"},{"name":"CustomerStory"},{"name":"StoryHeader"},{"name":"PriceTable"},{"name":"NewsSection"},{"name":"Milestones"},{"name":"PeopleList"},{"name":"IndexHeader"},{"name":"PostList"},{"name":"ArticleLayout"},{"name":"LegalDoc"}]} */
+/* @ds-bundle: {"format":4,"namespace":"Redrob","components":[{"name":"Mark"},{"name":"MarkReveal"},{"name":"Layer"},{"name":"Illustration"},{"name":"Diagram"},{"name":"Display"},{"name":"Statement"},{"name":"Quote"},{"name":"SectionMark"},{"name":"Button"},{"name":"IconButton"},{"name":"Menu"},{"name":"Form"},{"name":"Input"},{"name":"Textarea"},{"name":"Select"},{"name":"Combobox"},{"name":"Checkbox"},{"name":"Radio"},{"name":"Switch"},{"name":"DatePicker"},{"name":"TimePicker"},{"name":"TimeZonePicker"},{"name":"FileUpload"},{"name":"NameInput"},{"name":"AddressInput"},{"name":"PhoneInput"},{"name":"DateInput"},{"name":"Money"},{"name":"ConvertedAmount"},{"name":"Timestamp"},{"name":"Tabs"},{"name":"Breadcrumb"},{"name":"Pagination"},{"name":"Stepper"},{"name":"Accordion"},{"name":"Scroller"},{"name":"Alert"},{"name":"Toast"},{"name":"Modal"},{"name":"Drawer"},{"name":"Tooltip"},{"name":"Progress"},{"name":"Loader"},{"name":"Skeleton"},{"name":"EmptyState"},{"name":"Card"},{"name":"Table"},{"name":"Stat"},{"name":"Chart"},{"name":"Sparkline"},{"name":"Badge"},{"name":"Avatar"},{"name":"AppShell"},{"name":"PageShell"},{"name":"SiteHeader"},{"name":"SiteFooter"},{"name":"Band"},{"name":"LangSwitch"},{"name":"ThemeSwitch"},{"name":"ConsentBar"},{"name":"Message"},{"name":"Composer"},{"name":"ComposerMode"},{"name":"ModelPicker"},{"name":"ModelGuide"},{"name":"ComposerStatus"},{"name":"ProtectionStatus"},{"name":"PrivacyProtection"},{"name":"MemoryScope"},{"name":"CrossCheckSetting"},{"name":"AnswerReceipt"},{"name":"PrivateText"},{"name":"Opinion"},{"name":"ThreadNote"},{"name":"MemoryList"},{"name":"OpinionGrid"},{"name":"PlanQuestions"},{"name":"PlanDocument"},{"name":"FactCheckReport"},{"name":"ChallengeReport"},{"name":"Streaming"},{"name":"PromptSuggestions"},{"name":"Citation"},{"name":"Confidence"},{"name":"AgentAction"},{"name":"AgentTimeline"},{"name":"ApprovalStep"},{"name":"TaskStatus"},{"name":"AgentRoster"},{"name":"AgentHandoff"},{"name":"AccessList"},{"name":"Changes"},{"name":"Meter"},{"name":"ScheduleRow"},{"name":"SchedulePicker"},{"name":"PlaybookRow"},{"name":"AppAccess"},{"name":"ConnectorCard"},{"name":"CheckIn"},{"name":"SourceSet"},{"name":"Evidence"},{"name":"Criteria"},{"name":"MatchBreakdown"},{"name":"ReviewGrid"},{"name":"Finding"},{"name":"Redline"},{"name":"Playbook"},{"name":"Shortlist"},{"name":"DecisionNotice"},{"name":"Hero"},{"name":"LogoRow"},{"name":"FeatureRow"},{"name":"Figure"},{"name":"CustomerStory"},{"name":"StoryHeader"},{"name":"PriceTable"},{"name":"Milestones"},{"name":"PeopleList"},{"name":"IndexHeader"},{"name":"PostList"},{"name":"ArticleLayout"},{"name":"LegalDoc"}]} */
 (function () {
   'use strict';
 
@@ -654,8 +654,8 @@
   function initials(name) {
     if (!name) return '';
     var parts = String(name).trim().split(/\s+/);
-    /* A Hangul name is one family syllable, not two letters: 김철수 is 김, as AvatarMark
-       and the Avatar README say. Taking two gave 김철, which reads as a different name. */
+    /* A Hangul name is one family syllable, not two letters: 김정우 is 김, as AvatarMark
+       and the Avatar README say. Taking two gave 김정, which reads as a different name. */
     if (/^[\uAC00-\uD7AF]/.test(parts[0])) return parts[0].charAt(0);
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
@@ -771,7 +771,7 @@
     ]);
   }
 
-  /* ---- ScopeBadge ---------------------------------------------------- */
+  /* ---- AccessList ---------------------------------------------------- */
 
   /* Plain kinds. A person granting access is not thinking about connectors,
      shells or network egress; they are thinking about their files, their apps,
@@ -779,7 +779,7 @@
   var SCOPE_ICON = { files: 'file', apps: 'link', web: 'globe', computer: 'tool', memory: 'passport' };
   var SCOPE_MODE = { read: 'Can read', write: 'Can read and write', none: 'No access' };
 
-  function ScopeBadge(props) {
+  function AccessList(props) {
     props = props || {};
     var scopes = props.scopes || [];
     return h('div', { className: cx('rr-scope', props.className), role: 'group',
@@ -887,9 +887,9 @@
     ]);
   }
 
-  /* ---- Schedule ------------------------------------------------------ */
+  /* ---- ScheduleRow ------------------------------------------------------ */
 
-  function Schedule(props) {
+  function ScheduleRow(props) {
     props = props || {};
     var last = props.lastRun;
     return h('div', { className: cx('rr-schedule', props.enabled === false && 'rr-schedule--off', props.className) }, [
@@ -1809,6 +1809,10 @@
     var close = React.useCallback(function () { setOpen(false); }, []);
     var ref = useDismiss(open, close);
     var actionable = items.filter(function (i) { return i.type !== 'separator' && !i.disabled; });
+    var iconOnly = !!props.icon && (props.label == null || props.label === '');
+    /* The accessible name. A label that is a node (an icon and text) has no string to give,
+       so it needs ariaLabel; a string label names itself. */
+    var name = props.ariaLabel || (typeof props.label === 'string' ? props.label : undefined);
     function onKeyDown(e) {
       if (!open) return;
       var nodes = ref.current ? ref.current.querySelectorAll('[role="menuitem"]:not([disabled])') : [];
@@ -1828,17 +1832,26 @@
         {
           type: 'button',
           key: 'trigger',
-          className: cx('rr-btn', 'rr-btn--' + (props.variant || 'secondary'), 'rr-btn--' + (props.size || 'md')),
+          /* An icon with no visible label is an icon button: same sizes as IconButton, and its
+             name comes from ariaLabel, because a node cannot be read out as a name. */
+          className: iconOnly
+            ? cx('rr-iconbtn', 'rr-iconbtn--' + (props.variant || 'ghost'), 'rr-iconbtn--' + (props.size || 'md'))
+            : cx('rr-btn', 'rr-btn--' + (props.variant || 'secondary'), 'rr-btn--' + (props.size || 'md')),
           'aria-haspopup': 'menu',
           'aria-expanded': String(open),
+          'aria-label': iconOnly || typeof props.label !== 'string' ? name : undefined,
+          title: iconOnly ? name : undefined,
           onClick: function () { setOpen(!open); }
         },
-        [h('span', { key: 'l' }, props.label), h('span', { key: 'c', className: 'rr-btn__icon' }, Icons.chevronDown({ width: 16, height: 16 }))]
+        iconOnly
+          ? h('span', { className: 'rr-btn__icon', style: { fontSize: props.size === 'sm' ? '14px' : '18px' } }, props.icon)
+          : [props.icon ? h('span', { key: 'i', className: 'rr-btn__icon' }, props.icon) : null,
+             h('span', { key: 'l' }, props.label), h('span', { key: 'c', className: 'rr-btn__icon' }, Icons.chevronDown({ width: 16, height: 16 }))]
       ),
       open
         ? h(
             'div',
-            { key: 'list', className: cx('rr-menu__list', props.align === 'right' && 'rr-menu__list--right'), role: 'menu', 'aria-label': props.label },
+            { key: 'list', className: cx('rr-menu__list', props.align === 'right' && 'rr-menu__list--right', props.placement === 'up' && 'rr-menu__list--up'), role: 'menu', 'aria-label': name },
             items.map(function (item, i) {
               if (item.type === 'separator') return h('div', { key: 's' + i, className: 'rr-menu__sep', role: 'separator' });
               return h(
@@ -2565,6 +2578,65 @@
     ]);
   }
 
+  function effortOrdinal(n) { var t = n % 100, u = n % 10; return n + (t > 10 && t < 14 ? 'th' : u === 1 ? 'st' : u === 2 ? 'nd' : u === 3 ? 'rd' : 'th'); }
+
+  /* Effort, set by the person on one pick: the maker's own scale as a radio group, the level it
+     was ranked at marked, and one line on the level chosen: its place on this task, or that it
+     has none, and what a month costs against the ranked price. Shared by ModelPicker and ModelGuide.
+     props: pick, place (the pick's place on the task), chosen (a level number, null for ranked),
+     onSelect(level), price(monthly), per, title, labels { effort, ranked, reset }, note(ctx), className. */
+  function EffortTune(props) {
+    var k = props.pick || {};
+    var levels = k.efforts || [];
+    var rankedLevel = (k.effort || {}).level;
+    var ranked = levels.filter(function (l) { return l.level === rankedLevel; })[0] || k.effort || {};
+    var chosen = props.chosen != null ? levels.filter(function (l) { return l.level === props.chosen; })[0] : null;
+    var custom = !!chosen && chosen.level !== rankedLevel;
+    var eff = custom ? chosen : ranked;
+    var L = props.labels || {};
+    var id = useStableId('rr-effort');
+    var per = props.per || '/mo';
+    function note() {
+      var l = eff;
+      var money = l.monthly == null ? null : props.price(l.monthly);
+      var times = custom && ranked.monthly ? l.monthly / ranked.monthly : null;
+      var ctx = { level: l, ranked: ranked, custom: custom, place: custom ? l.place : props.place, times: times, price: money, per: per };
+      if (props.note) return props.note(ctx);
+      if (!custom) return [l.label + ' is the effort it was ranked at' + (props.place ? ', ' + effortOrdinal(props.place) + ' for this task' : '') + '. ', money, money ? per + '.' : null];
+      var rel = times == null ? '' : times >= 1.05 ? ', ' + (Math.round(times * 10) / 10) + ' times the ranked price'
+        : times <= 0.95 ? ', ' + Math.round((1 - times) * 100) + '% less than the ranked price' : '';
+      return [l.place ? l.label + ' is ' + effortOrdinal(l.place) + ' for this task. ' : l.label + ' is not ranked for this task, so there is no score to go on. ',
+        money ? 'About ' : null, money, money ? per + rel + '.' : null];
+    }
+    return h('div', { className: cx('rr-effort', props.className) }, [
+      h('div', { key: 'h', className: 'rr-effort__head' }, [
+        h('p', { key: 't', id: id, className: 'rr-effort__title' }, [(L.effort || 'Effort') + ' ',
+          props.title ? h('span', { key: 's' }, props.title) : null]),
+        custom ? h('button', { key: 'r', type: 'button', className: 'rr-model__back', onClick: function () { props.onSelect(ranked); } }, (L.reset || 'Back to') + ' ' + ranked.label) : null
+      ]),
+      h('div', { key: 'l', className: 'rr-effort__levels', role: 'radiogroup', 'aria-labelledby': id,
+        onKeyDown: function (e) {
+          var d = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+          if (!d) return;
+          e.preventDefault();
+          var i = 0;
+          levels.forEach(function (l, j) { if (l.level === eff.level) i = j; });
+          var j = Math.max(0, Math.min(levels.length - 1, i + d));
+          props.onSelect(levels[j]);
+          var el = e.currentTarget.children[j]; if (el) el.focus();
+        } },
+        levels.map(function (l) {
+          var on = l.level === eff.level;
+          return h('button', { key: l.level, type: 'button', role: 'radio', 'aria-checked': String(on), tabIndex: on ? 0 : -1,
+            className: cx('rr-effort__level', on && 'is-on'), onClick: function () { props.onSelect(l); } }, [
+            h('span', { key: 'l' }, l.label),
+            l.level === rankedLevel ? h('span', { key: 'r', className: 'rr-effort__mark' }, L.ranked || 'Ranked') : null
+          ]);
+        })),
+      h('p', { key: 'n', className: 'rr-effort__note', 'aria-live': 'polite' }, note())
+    ]);
+  }
+
   function ModelPicker(props) {
     props = props || {};
     var professions = props.professions || [];
@@ -2595,6 +2667,9 @@
 
     var sv = React.useState(props.defaultValue !== undefined ? props.defaultValue : (auto ? null : picks[0] && picks[0].id));
     var value = props.value !== undefined ? props.value : sv[0];
+    /* The effort the person sets on a pinned model: a level on its own scale, or null for the ranked one. */
+    var se = React.useState(props.defaultEffort != null ? props.defaultEffort : null);
+    var effortSet = props.effort !== undefined ? props.effort : se[0];
 
     var all = [];
     professions.forEach(function (p) {
@@ -2603,6 +2678,10 @@
     var current = all.filter(function (k) { return k.id === value; })[0] || (auto ? null : picks[0]) || null;
     var isAuto = auto && !current;
     var cur = current || {};
+    var tunable = !!current && !!cur.efforts && cur.efforts.length > 1 && !away(cur);
+    var chosenEffort = tunable && effortSet != null ? cur.efforts.filter(function (l) { return l.level === effortSet; })[0] : null;
+    var custom = !!chosenEffort && chosenEffort.level !== (cur.effort || {}).level;
+    var eff = custom ? chosenEffort : (cur.effort || null);
 
     var close = React.useCallback(function () { setOpen(false); }, []);
     var ref = useDismiss(open, close);
@@ -2611,11 +2690,26 @@
     function choose(k) {
       if (away(k)) return;
       if (props.value === undefined) sv[1](k.id);
+      if (props.effort === undefined) se[1](null);
       if (props.onChange) props.onChange(k, { profession: prof, task: task, taskMode: taskMode });
       setOpen(false);
     }
+    /* A level on the pinned model's scale. A level that is itself a place in the list selects that place. */
+    function setEffort(l) {
+      var other = l.pick && l.pick !== cur.id ? picks.filter(function (k) { return k.id === l.pick; })[0] : null;
+      if (other && !away(other)) {
+        if (props.value === undefined) sv[1](other.id);
+        if (props.effort === undefined) se[1](null);
+        if (props.onChange) props.onChange(other, { profession: prof, task: task, taskMode: taskMode });
+        return;
+      }
+      var next = l.level === (cur.effort || {}).level ? null : l.level;
+      if (props.effort === undefined) se[1](next);
+      if (props.onEffortChange) props.onEffortChange(next == null ? null : l, cur);
+    }
     function chooseAuto() {
       if (props.value === undefined) sv[1](null);
+      if (props.effort === undefined) se[1](null);
       if (props.onChange) props.onChange(null, { profession: prof, task: task, taskMode: taskMode });
       setOpen(false);
     }
@@ -2638,6 +2732,13 @@
 
     var src = props.source || {};
     var meta = [src.name, src.edition].filter(Boolean).join(', ');
+    var tune = tunable
+      ? h(EffortTune, { key: 'e', className: 'rr-model__tune', pick: cur, place: picks.indexOf(current) + 1 || null, chosen: effortSet,
+          onSelect: setEffort, per: props.perLabel, note: props.effortNote,
+          price: function (m) { return guidePrice(m, shown, base, rates, locale, 'rr-effort__price'); },
+          title: 'for ' + (cur.short || cur.model) + ' on ' + cur.harness,
+          labels: { effort: props.effortLabel, ranked: props.rankedLabel, reset: props.resetEffortLabel } })
+      : null;
 
     var panel = open
       ? h('div', { key: 'p', className: 'rr-model__panel', role: 'dialog', 'aria-labelledby': titleId }, [
@@ -2690,12 +2791,16 @@
                     isAuto && autoPick && k.id === autoPick.id ? h('span', { key: 'a', className: 'rr-model__autotag' }, [h('span', { key: 'i', 'aria-hidden': 'true' }, Icons.sparkle({ width: 11, height: 11 })), props.autoPickLabel || 'Redrob Auto\u2019s pick']) : null,
                     on ? h('span', { key: 'c', className: 'rr-model__check', 'aria-label': 'Selected' }, Icons.check({ width: 14, height: 14 })) : null
                   ]),
-                  h(EffortMeter, { key: 'e', effort: k.effort }),
+                  on && custom
+                    ? h('span', { key: 'e', className: 'rr-model__effortrow' }, [h(EffortMeter, { key: 'm', effort: k.effort }),
+                        h('span', { key: 'y', className: 'rr-model__yours' }, (props.yoursLabel || 'you set') + ' ' + chosenEffort.label)])
+                    : h(EffortMeter, { key: 'e', effort: k.effort }),
                   k.why || off ? h('span', { key: 'w', className: 'rr-model__why' }, [off ? (props.awayLabel || 'Not in ' + here.replace(/^Redrob /, '') + '. ') : null, k.why]) : null
                 ]),
                 price(k)
               ]);
             })),
+          tune,
           here || (auto && current)
             ? h('div', { key: 'n', className: 'rr-model__foot' }, [
                 auto && current ? h('button', { key: 'b', type: 'button', className: 'rr-model__back', onClick: chooseAuto }, props.backLabel || 'Back to Redrob Auto') : null,
@@ -2725,13 +2830,13 @@
       h('button', {
         type: 'button', key: 't', className: 'rr-model__trigger',
         'aria-haspopup': 'dialog', 'aria-expanded': String(open),
-        'aria-label': (props.label || 'Model') + ': ' + (isAuto ? (props.autoLabel || 'Redrob Auto') + (taskMode !== 'auto' ? ', ' + task.label : '') : (cur.model || '') + (cur.effort ? ', ' + cur.effort.label + ' effort' : '') + (cur.harness ? ', on ' + cur.harness : '')),
+        'aria-label': (props.label || 'Model') + ': ' + (isAuto ? (props.autoLabel || 'Redrob Auto') + (taskMode !== 'auto' ? ', ' + task.label : '') : (cur.model || '') + (eff ? ', ' + eff.label + ' effort' + (custom ? ', ' + (props.yoursLabel || 'you set') + ' it' : '') : '') + (cur.harness ? ', on ' + cur.harness : '')),
         onClick: function () { setOpen(!open); }
       }, [
         isAuto ? h('span', { key: 'i', className: 'rr-model__trig-auto', 'aria-hidden': 'true' }, Icons.sparkle({ width: 15, height: 15 })) : null,
         h('span', { key: 'n', className: 'rr-model__trig-name' }, isAuto ? (props.autoLabel || 'Redrob Auto') : (cur.short || cur.model)),
         isAuto ? (taskMode !== 'auto' ? h('span', { key: 'e', className: 'rr-model__trig-effort' }, task.label) : null)
-          : cur.effort ? h('span', { key: 'e', className: 'rr-model__trig-effort' }, cur.effort.label) : null,
+          : eff ? h('span', { key: 'e', className: 'rr-model__trig-effort' }, eff.label) : null,
         h('span', { key: 'c', className: 'rr-model__trig-caret' }, Icons.chevronDown({ width: 14, height: 14 }))
       ]),
       panel
@@ -2800,6 +2905,14 @@
     var mode = props.mode !== undefined ? props.mode : sm[0];
     var sk = React.useState(null);
     var current = picks.filter(function (k) { return k.id === sk[0]; })[0] || picks[0];
+    /* A level the reader tries on the open pick, or null for the ranked one; reset when the pick changes. */
+    var sge = React.useState({ id: null, level: null });
+    var tryLevel = current && sge[0].id === current.id ? sge[0].level : null;
+    function tryEffort(l) {
+      var other = l.pick && current && l.pick !== current.id ? picks.filter(function (k) { return k.id === l.pick; })[0] : null;
+      if (other) { sk[1](other.id); sge[1]({ id: null, level: null }); return; }
+      sge[1]({ id: current.id, level: l.level === (current.effort || {}).level ? null : l.level });
+    }
     var w = task.weights || props.weights || { quality: 0.55, reliability: 0.25, speed: 0.05, cost: 0.15 };
     var headId = useStableId('rr-guide');
     var adv = mode === 'advanced';
@@ -2912,6 +3025,12 @@
           ])
         ]),
         k.why ? h('p', { key: 'w', className: 'rr-guide__why' }, k.why) : null,
+        k.efforts && k.efforts.length > 1
+          ? h(EffortTune, { key: 'e', className: 'rr-guide__tune', pick: k, place: i + 1, chosen: tryLevel, onSelect: tryEffort,
+              per: props.perLabel, note: props.effortNote, labels: { effort: props.effortLabel || 'Try another effort', ranked: props.rankedLabel, reset: props.resetEffortLabel },
+              price: function (m) { return guidePrice(m, shown, base, rates, locale, 'rr-effort__price'); },
+              title: props.effortHint || 'The sample below was written at the ranked effort.' })
+          : null,
         h('div', { key: 's', className: 'rr-guide__sample' }, [
           h('div', { key: 'q', className: 'rr-guide__turn' }, [
             h('p', { key: 'l', className: 'rr-guide__label' }, props.promptLabel || 'What it was asked'),
@@ -2930,7 +3049,9 @@
         ]),
         adv ? breakdown(k) : null,
         h('div', { key: 'c', className: 'rr-guide__actions' }, [
-          h(Button, { key: 'b', variant: 'primary', onClick: function () { if (props.onUse) props.onUse(k, { profession: prof, task: task }); } },
+          h(Button, { key: 'b', variant: 'primary', onClick: function () {
+              var lv = tryLevel != null && k.efforts ? k.efforts.filter(function (l) { return l.level === tryLevel; })[0] : null;
+              if (props.onUse) props.onUse(k, { profession: prof, task: task, effort: lv || null }); } },
             (props.useLabel || 'Use this in the chat')),
           k.runHref ? h('a', { key: 'a', className: 'rr-guide__runlink', href: k.runHref }, [props.runLabel || 'See the full run',
             h('span', { key: 'i', 'aria-hidden': 'true' }, Icons.arrowRight({ width: 14, height: 14 }))]) : null
@@ -3775,6 +3896,8 @@
     var current = props.current;
     var inlineUpTo = props.inlineUpTo == null ? 3 : props.inlineUpTo;
     var st = React.useState(false); var open = st[0]; var setOpen = st[1];
+    var close = React.useCallback(function () { setOpen(false); }, []);
+    var ref = useDismiss(open, close);
     var id = React.useRef(nextId('rr-lang')).current;
     var here = null;
     for (var k = 0; k < langs.length; k++) if (langs[k].code === current) here = langs[k];
@@ -3798,9 +3921,10 @@
     /* Two languages fit on a line. Twelve do not, and a site that will carry twelve should
        not be laid out as though it carries two. Past `inlineUpTo` this becomes a disclosure. */
     if (langs.length > inlineUpTo) {
-      return h('div', { className: cx('rr-lang', 'rr-lang--menu', props.className) }, [
+      /* placement 'up' for a switch at the foot of a sidebar or page; align 'left' when it sits at a left edge. */
+      return h('div', { ref: ref, className: cx('rr-lang', 'rr-lang--menu', props.placement === 'up' && 'rr-lang--up', props.align === 'left' && 'rr-lang--left', props.className) }, [
         h('button', { type: 'button', key: 'b', className: 'rr-lang__trigger',
-          'aria-expanded': String(open), 'aria-controls': id,
+          'aria-expanded': String(open), 'aria-controls': id, 'aria-label': props.label ? props.label + ', ' + ((here && here.label) || '') : undefined,
           onClick: function () { setOpen(!open); } }, [
           h('span', { key: 'i', className: 'rr-lang__icon', 'aria-hidden': 'true' }, Icons.translate({ width: 15, height: 15 })),
           h('span', { key: 'l', lang: here && here.code }, (here && here.label) || props.label || 'Language'),
@@ -4002,7 +4126,7 @@
       ]) : null,
       h('ul', { className: 'rr-logorow__marks', key: 'm', 'aria-label': props.label || 'Customers and partners' }, logos.map(function (l, i) {
         /* scale is an optical correction per mark, measured, not a ranking: a compact
-           symbol reads smaller than a long wordmark at the same height (15-optical.md). */
+           symbol reads smaller than a long wordmark at the same height (49-optical.md). */
         var img = h('img', { src: l.src, alt: l.alt || l.name || '', loading: 'lazy', decoding: 'async',
                              style: l.scale ? { '--logo-scale': l.scale } : undefined });
         return h('li', { key: l.name || i, className: 'rr-logorow__mark' },
@@ -5414,12 +5538,14 @@
 
   /* =====================================================================
      How Desk works for you. Redrob Auto lives in ModelPicker; these are
-     the other three things Desk does for every message, and the receipts
-     it leaves in the chat. Two rules run through all of them: nothing
-     happens while a person types (every check runs after Send), and the
-     product speaks in plain words. The feature names (AI Firewall,
-     Multi-Model Memory, Crosscheck, Expert Match) are for the website,
-     admin settings and sales, never for a label in the chat.
+     the other things Desk does for every message (privacy, memory, Plan
+     or Run, and Cross-check), and the receipts it leaves in the chat. Two
+     rules run through all of them: nothing happens while a person types
+     (every check runs after Send), and the product speaks in plain words.
+     The feature names (AI Firewall, Multi-Model Memory, Multi-Model
+     Crosscheck, Expert Match) are for the website, admin settings and
+     sales, never for a label in the chat, where the check is Cross-check,
+     made of Fact check and Challenge.
      ===================================================================== */
 
   /* ---- ComposerStatus -------------------------------------------------- */
@@ -5462,12 +5588,12 @@
     ]);
   }
 
-  /* ---- StatusCard ------------------------------------------------------ */
+  /* ---- ProtectionStatus ------------------------------------------------------ */
 
   /* The one sentence a person needs about a protection, large, with whether
      it is running. Heads a panel or a page. */
 
-  function StatusCard(props) {
+  function ProtectionStatus(props) {
     props = props || {};
     return h('div', { className: cx('rr-scard', 'rr-scard--' + (props.tone || 'safe'), props.size === 'lg' && 'rr-scard--lg', props.className) }, [
       props.icon ? h('span', { key: 'i', className: 'rr-scard__icon', 'aria-hidden': 'true' }, props.icon) : null,
@@ -5514,13 +5640,13 @@
     var lvl = levels.filter(function (l) { return l.id === (props.level || 'high'); })[0] || levels[1];
     if (props.state === 'off') {
       return h('div', { className: cx('rr-privacy', props.className) }, [
-        h(StatusCard, { key: 'c', tone: 'warn', icon: Icons.shield({ width: 28, height: 28 }), title: props.offTitle || 'Privacy protection is off here' },
+        h(ProtectionStatus, { key: 'c', tone: 'warn', icon: Icons.shield({ width: 28, height: 28 }), title: props.offTitle || 'Privacy protection is off here' },
           props.offText || 'It runs on your laptop, so it only works in the Redrob desktop app. On the web, what you send goes to the AI as written.'),
         props.foot ? h('div', { key: 'f', className: 'rr-panelfoot' }, props.foot) : null
       ]);
     }
     return h('div', { className: cx('rr-privacy', props.className) }, [
-      props.card !== false ? h(StatusCard, { key: 'c', tone: 'safe', icon: Icons.shieldCheck({ width: 28, height: 28 }),
+      props.card !== false ? h(ProtectionStatus, { key: 'c', tone: 'safe', icon: Icons.shieldCheck({ width: 28, height: 28 }),
         title: (props.onLabel || 'Privacy protection is on') + ': ' + lvl.label, live: props.running || 'Running on this laptop' }, props.summary) : null,
       props.lede !== false ? h('p', { key: 'l', className: 'rr-panellede' }, props.lede ||
         'A small privacy AI runs on your own laptop, not in the cloud. When you press Send, it reads the message first and swaps private details for placeholders, so the AI that answers never sees them. When the answer comes back, your laptop puts the real names back.') : null,
@@ -5547,7 +5673,7 @@
     var cur = options.filter(function (o) { return o.value === value; })[0] || {};
     var off = cur.off;
     return h('div', { className: cx('rr-memscope', props.className) }, [
-      h(StatusCard, { key: 'c', tone: off ? 'plain' : 'brand', icon: Icons.bookOpen({ width: 28, height: 28 }),
+      h(ProtectionStatus, { key: 'c', tone: off ? 'plain' : 'brand', icon: Icons.bookOpen({ width: 28, height: 28 }),
         title: off ? (props.offTitle || 'Memory is off for this chat') : (props.onTitle || 'Memory is on: one memory for every AI') },
         off ? (props.offText || 'Every AI starts from nothing, and nothing new is saved.') : (cur.summary || props.summary)),
       props.lede !== false ? h('p', { key: 'l', className: 'rr-panellede' }, props.lede ||
@@ -5563,30 +5689,306 @@
     ]);
   }
 
-  /* ---- SecondOpinionSetting -------------------------------------------- */
+  /* ---- ComposerMode ---------------------------------------------------- */
 
-  var OPINION_MODES = [
-    { value: 'off', label: 'Off', detail: 'Only one AI answers.' },
-    { value: 'auto', label: 'When it matters', detail: 'On for work where a missed point is costly, such as reviewing contracts or research. The answer says when it ran.' },
-    { value: 'always', label: 'Always', detail: 'Every answer is checked. Adds about 20 seconds and a few cents each time.' }
+  /* Plan or Run, in the composer bar beside the model. Plan asks what it
+     needs and writes a plan that runs only when you say so; Run starts at
+     once. A per-message choice, so it sits where the message is sent. */
+  var COMPOSER_MODES = [
+    { value: 'plan', label: 'Plan', icon: 'route', hint: 'Desk asks what it needs and writes a plan. Nothing runs until you say so.' },
+    { value: 'run', label: 'Run', icon: 'play', hint: 'Desk starts at once.' }
   ];
 
-  function SecondOpinionSetting(props) {
+  function ComposerMode(props) {
     props = props || {};
-    var modes = props.options || OPINION_MODES;
-    var sv = React.useState(props.defaultValue || 'auto');
+    var modes = props.options || COMPOSER_MODES;
+    var sv = React.useState(props.defaultValue || modes[0].value);
     var value = props.value !== undefined ? props.value : sv[0];
-    var cur = modes.filter(function (m) { return m.value === value; })[0] || modes[0];
-    return h('div', { className: cx('rr-opset', props.className) }, [
-      h('p', { key: 'h', className: 'rr-opset__title' }, props.title || 'A second opinion from two other AIs'),
-      h('p', { key: 'l', className: 'rr-panellede' }, props.lede ||
-        'After the answer arrives, two AIs from other companies read it. What they see differently is marked in the answer, and what they think is missing is added at the end, marked as theirs.'),
-      h('div', { key: 's', className: 'rr-seg', role: 'radiogroup', 'aria-label': props.label || 'Second opinion' }, modes.map(function (m) {
-        return h('button', { key: m.value, type: 'button', role: 'radio', 'aria-checked': String(value === m.value),
-          onClick: function () { if (props.value === undefined) sv[1](m.value); if (props.onChange) props.onChange(m.value, m); } }, m.label);
-      })),
-      h('p', { key: 'd', className: 'rr-opset__note' }, cur.detail),
+    return h('div', { className: cx('rr-cmode', props.compact && 'rr-cmode--compact', props.className), role: 'radiogroup', 'aria-label': props.label || 'How Desk works on this message' },
+      modes.map(function (m) {
+        var on = value === m.value;
+        var icon = m.icon && Icons[m.icon] ? Icons[m.icon]({ width: 13, height: 13, 'aria-hidden': 'true' }) : null;
+        return h('button', { key: m.value, type: 'button', role: 'radio', 'aria-checked': String(on), 'aria-label': m.label, title: m.hint,
+          className: 'rr-cmode__o',
+          onClick: function () { if (props.value === undefined) sv[1](m.value); if (props.onChange) props.onChange(m.value, m); } }, [
+          icon ? h(React.Fragment, { key: 'i' }, icon) : null,
+          h('span', { key: 'l', className: 'rr-cmode__l' }, m.label)
+        ]);
+      }));
+  }
+
+  /* ---- CrossCheckSetting ----------------------------------------------- */
+
+  /* The panel behind Cross-check in the status line: two checks, each Off,
+     When it matters or Always. The checkers are named in every result, so
+     the setting never has to promise more than it does. */
+  var CROSS_CHECK_LEVELS = [
+    { value: 'off', label: 'Off' },
+    { value: 'auto', label: 'When it matters' },
+    { value: 'always', label: 'Always' }
+  ];
+  var CROSS_CHECKS = [
+    { id: 'factCheck', name: 'Fact check', text: 'An AI from another company opens every source the answer cites, checks that each step of the reasoning follows, and adds anything the answer missed. About 40 seconds.' },
+    { id: 'challenge', name: 'Challenge', text: 'Puts the answer\'s conclusion under pressure: one AI argues for it, another against, for three rounds, and a third says what held up. About 2 minutes.' }
+  ];
+  var CROSS_CHECK_DEFAULT = { factCheck: 'auto', challenge: 'auto' };
+
+  /* What the status line says: the level when every check shares it, On when all run at
+     different levels, otherwise a count ("1 of 2 on"). */
+  function crossCheckValue(value, checks, levels) {
+    value = value || CROSS_CHECK_DEFAULT; checks = checks || CROSS_CHECKS; levels = levels || CROSS_CHECK_LEVELS;
+    var on = checks.filter(function (c) { return (value[c.id] || 'off') !== 'off'; });
+    if (!on.length) return levels[0].label;
+    var same = on.every(function (c) { return value[c.id] === value[on[0].id]; });
+    if (on.length === checks.length && same) return (levels.filter(function (l) { return l.value === value[on[0].id]; })[0] || levels[1]).label;
+    if (on.length === checks.length) return 'On';
+    return on.length + ' of ' + checks.length + ' on';
+  }
+
+  function CrossCheckSetting(props) {
+    props = props || {};
+    var checks = props.checks || CROSS_CHECKS;
+    var levels = props.levels || CROSS_CHECK_LEVELS;
+    var sv = React.useState(props.defaultValue || CROSS_CHECK_DEFAULT);
+    var value = props.value !== undefined ? props.value : sv[0];
+    function set(id, v) {
+      var next = Object.assign({}, value); next[id] = v;
+      if (props.value === undefined) sv[1](next);
+      if (props.onChange) props.onChange(next, id);
+    }
+    return h('div', { className: cx('rr-xcheck', props.className) }, [
+      props.title ? h('p', { key: 'h', className: 'rr-xcheck__title' }, props.title) : null,
+      h('p', { key: 'l', className: 'rr-panellede' }, props.lede || 'After Desk answers, AIs from other companies check its work. Every check says who ran it.'),
+      checks.map(function (c) {
+        var cur = value[c.id] || 'off';
+        return h('div', { key: c.id, className: 'rr-xcheck__row', role: 'group', 'aria-labelledby': 'rr-xc-' + c.id }, [
+          h('p', { key: 'n', id: 'rr-xc-' + c.id, className: 'rr-xcheck__name' }, c.name),
+          h('p', { key: 't', className: 'rr-xcheck__text' }, c.text),
+          h('div', { key: 's', className: 'rr-seg', role: 'radiogroup', 'aria-label': c.name }, levels.map(function (l) {
+            return h('button', { key: l.value, type: 'button', role: 'radio', 'aria-checked': String(cur === l.value), onClick: function () { set(c.id, l.value); } }, l.label);
+          }))
+        ]);
+      }),
+      h('p', { key: 'm', className: 'rr-xcheck__note' }, props.whenItMatters || 'When it matters means answers you will rely on or pass on: a decision, a number, a claim about a rule or a fact, or anything you will send to someone. Quick questions, drafts and brainstorming are left alone. The checkers are the next best AIs for the task, from other companies than the one that answered.'),
       props.foot ? h('div', { key: 'f', className: 'rr-panelfoot' }, props.foot) : null
+    ]);
+  }
+  CrossCheckSetting.value = crossCheckValue;
+
+  /* ---- PlanQuestions --------------------------------------------------- */
+
+  /* What Plan asks before it writes: a few questions, each answered with a
+     tap or in your own words. Once answered it folds to a single line. */
+  function PlanQuestions(props) {
+    props = props || {};
+    var qs = props.questions || [];
+    var init = {};
+    qs.forEach(function (q) { init[q.id] = q.defaultValue !== undefined ? q.defaultValue : (q.multi ? [] : null); });
+    var sv = React.useState(props.defaultValue || init);
+    var a = props.value !== undefined ? props.value : sv[0];
+    function on(q, i) { var v = a[q.id]; return q.multi ? (v || []).indexOf(i) >= 0 : v === i; }
+    function pick(q, i) {
+      var next = Object.assign({}, a), v = a[q.id];
+      if (q.multi) { v = (v || []).slice(); var at = v.indexOf(i); if (at >= 0) v.splice(at, 1); else v.push(i); next[q.id] = v; }
+      else next[q.id] = i;
+      if (props.value === undefined) sv[1](next);
+      if (props.onChange) props.onChange(next);
+    }
+    if (props.done) return h('p', { className: cx('rr-planq rr-planq--done', props.className) }, [
+      h('span', { key: 'i', className: 'rr-planq__tick', 'aria-hidden': 'true' }, Icons.check({ width: 14, height: 14 })),
+      h('span', { key: 't' }, props.summary || 'Answered.')
+    ]);
+    return h('div', { className: cx('rr-planq', props.className), role: 'group', 'aria-label': props.label || 'Questions before the plan' }, [
+      h('ol', { key: 'l', className: 'rr-planq__list' }, qs.map(function (q) {
+        return h('li', { key: q.id, className: 'rr-planq__q' }, [
+          h('p', { key: 'p', className: 'rr-planq__ask' }, [q.question, q.multi ? h('span', { key: 'm', className: 'rr-planq__any' }, ' ' + (props.anyLabel || 'Choose any')) : null]),
+          h('div', { key: 'c', className: 'rr-planq__opts' }, (q.options || []).map(function (o, i) {
+            var sel = on(q, i);
+            return h('button', { key: i, type: 'button', className: 'rr-planq__opt', 'aria-pressed': String(sel), onClick: function () { pick(q, i); } }, [
+              sel ? h(React.Fragment, { key: 'i' }, Icons.check({ width: 13, height: 13, 'aria-hidden': 'true' })) : null,
+              h('span', { key: 't' }, o)
+            ]);
+          }))
+        ]);
+      })),
+      h('div', { key: 'a', className: 'rr-planq__act' }, [
+        h(Button, { key: 'b', variant: 'primary', onClick: function () { if (props.onSubmit) props.onSubmit(a); } }, props.submitLabel || 'Write the plan'),
+        h('span', { key: 's', className: 'rr-planq__hint' }, props.hint || 'or reply in your own words')
+      ])
+    ]);
+  }
+
+  /* ---- PlanDocument ---------------------------------------------------- */
+
+  /* The plan, written out as a document rather than a list of steps: what
+     was asked, what is known, how, what you get, the assumptions and the
+     risks, and a To do list that ticks as the run goes. Any paragraph can be
+     changed in place until it runs. */
+  var PLAN_STATUS = { draft: 'Draft · not run yet', edited: 'Edited by you · not run yet', running: 'Approved by you · running', done: 'Approved by you · done', kept: 'Kept for later' };
+
+  function PlanText(props) {
+    if (!props.editable) return h(props.as || 'span', { className: props.className }, props.children);
+    return h(props.as || 'span', { className: cx('rr-plandoc__ed', props.className), contentEditable: true, suppressContentEditableWarning: true, spellCheck: false,
+      onInput: props.onEdit }, props.children);
+  }
+
+  function PlanDocument(props) {
+    props = props || {};
+    var st = props.status || 'draft';
+    var eo = React.useState(false);
+    var editable = st === 'draft' || st === 'edited' || st === 'kept';
+    function mark(e) { if (!eo[0]) eo[1](true); if (props.onEdit) props.onEdit(e); }
+    var shown = st === 'draft' && eo[0] ? 'edited' : st;
+    var todo = props.todo || [];
+    var ticked = props.done != null ? props.done : todo.filter(function (t) { return t.done; }).length;
+    function item(it, i, ordered) {
+      if (it == null) return null;
+      if (typeof it !== 'object' || React.isValidElement(it) || Array.isArray(it)) it = { text: it };
+      return h('li', { key: it.id || i }, [
+        it.lead ? h('b', { key: 'l' }, it.lead + ' ') : null,
+        h(PlanText, { key: 't', editable: editable && it.editable !== false, onEdit: mark }, it.text),
+        it.note ? h('span', { key: 'n', className: 'rr-plandoc__muted' }, ' ' + it.note) : null
+      ]);
+    }
+    return h('article', { className: cx('rr-plandoc', props.className), 'aria-label': props.label || 'Plan' }, [
+      h('header', { key: 'h', className: 'rr-plandoc__h' }, [
+        h('span', { key: 'f', className: 'rr-plandoc__file' }, [h(React.Fragment, { key: 'i' }, Icons.fileText({ width: 14, height: 14, 'aria-hidden': 'true' })), h('span', { key: 't' }, props.file || 'Plan.md')]),
+        h('span', { key: 's', className: cx('rr-plandoc__state', 'rr-plandoc__state--' + shown) }, (props.statusLabels || PLAN_STATUS)[shown] || shown)
+      ]),
+      h('div', { key: 'b', className: cx('rr-plandoc__b', !editable && 'rr-plandoc__b--locked') }, [
+        props.title ? h('h2', { key: 't', className: 'rr-plandoc__title' }, props.title) : null,
+        props.summary ? h(PlanText, { key: 's', as: 'p', editable: editable, onEdit: mark }, props.summary) : null,
+        (props.sections || []).map(function (s, si) {
+          var List = s.ordered ? 'ol' : 'ul';
+          return h('section', { key: s.id || si, className: 'rr-plandoc__sec' }, [
+            h('h3', { key: 'h' }, s.heading),
+            s.body ? h(PlanText, { key: 'p', as: 'p', editable: editable, onEdit: mark }, s.body) : null,
+            s.items ? h(List, { key: 'l' }, s.items.map(function (it, i) { return item(it, i, s.ordered); })) : null
+          ]);
+        }),
+        todo.length ? h('section', { key: 'todo', className: 'rr-plandoc__sec' }, [
+          h('h3', { key: 'h' }, props.todoLabel || 'To do'),
+          h('ul', { key: 'l', className: 'rr-plandoc__todo' }, todo.map(function (t, i) {
+            var done = i < ticked;
+            return h('li', { key: t.id || i, className: done ? 'is-done' : undefined }, [
+              h('span', { key: 'c', className: 'rr-plandoc__box', 'aria-hidden': 'true' }, done ? Icons.check({ width: 10, height: 10 }) : null),
+              h('span', { key: 't', className: 'rr-plandoc__task' }, [t.label, done ? h('span', { key: 'v', className: 'rr-visually-hidden' }, ' (done)') : null]),
+              t.who ? h('span', { key: 'w', className: 'rr-plandoc__who' }, t.who) : null
+            ]);
+          }))
+        ]) : null,
+        props.note ? h('p', { key: 'n', className: 'rr-plandoc__note' }, props.note) : null
+      ]),
+      editable && (props.onRun || props.onKeep) ? h('footer', { key: 'f', className: 'rr-plandoc__f' }, [
+        props.onRun ? h(Button, { key: 'r', variant: 'primary', iconLeft: Icons.play({ width: 14, height: 14 }), onClick: props.onRun }, props.runLabel || 'Run this plan') : null,
+        props.onKeep && st !== 'kept' ? h(Button, { key: 'k', variant: 'secondary', onClick: props.onKeep }, props.keepLabel || 'Keep it for later') : null,
+        h('span', { key: 's', className: 'rr-plandoc__hint' }, props.hint || 'Click any paragraph to change it, or reply below.')
+      ]) : null
+    ]);
+  }
+
+  /* ---- FactCheckReport ------------------------------------------------- */
+
+  /* What Fact check found, in three parts: every cited source opened and
+     judged, the reasoning read step by step, and what the answer missed.
+     Named for the AI that ran it. Only the flagged sentences are rewritten. */
+  var FACT_VERDICTS = {
+    holds: ['success', 'Holds up'], partly: ['warning', 'Partly'], wrong: ['danger', 'Not in that source'],
+    closed: ['neutral', 'Couldn\'t open'], fixed: ['success', 'Fixed']
+  };
+
+  function CheckHead(props) {
+    return h('div', { className: 'rr-check__h' }, [
+      h('span', { key: 'i', className: 'rr-check__icon', 'aria-hidden': 'true' }, props.icon),
+      h('p', { key: 'b', className: 'rr-check__name' }, props.name),
+      props.meta ? h('span', { key: 's', className: 'rr-check__meta' }, props.meta) : null,
+      props.onClose ? h(IconButton, { key: 'x', size: 'sm', label: props.closeLabel || 'Close', onClick: props.onClose }, Icons.close({ width: 14, height: 14 })) : null
+    ]);
+  }
+
+  function FactCheckReport(props) {
+    props = props || {};
+    var claims = props.claims || [];
+    var verdicts = Object.assign({}, FACT_VERDICTS, props.verdicts || {});
+    var so = React.useState(props.defaultOpen !== undefined ? props.defaultOpen : null);
+    var open = so[0];
+    var meta = [props.by, props.took].filter(Boolean).join(' · ');
+    var reasoning = props.reasoning || [];
+    var missed = props.missed || [];
+    return h('section', { className: cx('rr-check rr-factcheck', props.className), 'aria-label': props.label || 'Fact check' }, [
+      h(CheckHead, { key: 'h', icon: Icons.scan({ width: 16, height: 16 }), name: props.title || 'Fact check', meta: meta, onClose: props.onClose }),
+      props.summary ? h('p', { key: 's', className: 'rr-check__sum' }, props.summary) : null,
+      claims.length ? h('p', { key: 'k1', className: 'rr-check__key' }, props.sourcesLabel || 'Sources') : null,
+      claims.length ? h('ul', { key: 'c', className: 'rr-factcheck__claims' }, claims.map(function (c, i) {
+        var id = c.id || String(i);
+        var v = verdicts[c.verdict] || verdicts.holds;
+        var isOpen = open === id;
+        var pid = 'rr-fc-' + id;
+        return h('li', { key: id }, [
+          h('button', { key: 'b', type: 'button', className: 'rr-factcheck__claim', 'aria-expanded': String(isOpen), 'aria-controls': pid, onClick: function () { so[1](isOpen ? null : id); } }, [
+            h('span', { key: 'v', className: 'rr-factcheck__verdict' }, h(Badge, { tone: v[0], dot: true, size: 'sm' }, v[1])),
+            h('span', { key: 't', className: 'rr-factcheck__text' }, c.claim),
+            h('span', { key: 'c', className: 'rr-factcheck__chev', 'aria-hidden': 'true' }, (isOpen ? Icons.chevronUp : Icons.chevronDown)({ width: 14, height: 14 }))
+          ]),
+          isOpen ? h('div', { key: 'e', id: pid, className: 'rr-factcheck__ev' }, [
+            c.passage ? h(Evidence, { key: 'ev', claimLabel: props.claimLabel || 'The answer says', claim: c.claim, passage: c.passage, quote: c.quote, source: c.source }) : null,
+            c.note ? h('p', { key: 'n', className: 'rr-factcheck__note' }, c.note) : null
+          ]) : null
+        ]);
+      })) : null,
+      reasoning.length ? h('p', { key: 'k2', className: 'rr-check__key' }, props.reasoningLabel || 'Reasoning') : null,
+      reasoning.map(function (f, i) { return h(Finding, Object.assign({ key: 'f' + i }, f, props.fixed && f.state !== 'dismissed' ? { state: 'accepted' } : {})); }),
+      missed.length ? h('p', { key: 'k3', className: 'rr-check__key' }, props.missedLabel || 'Missed') : null,
+      missed.map(function (m, i) { return h(OpinionAdded, { key: 'm' + i, by: m.by || props.by, label: m.label || props.missedItemLabel }, m.text); }),
+      !props.fixed && props.onFix ? h('div', { key: 'a', className: 'rr-check__act' }, [
+        h(Button, { key: 'b', variant: 'primary', onClick: props.onFix }, props.fixLabel || 'Fix the answer'),
+        h('span', { key: 's', className: 'rr-check__hint' }, props.fixHint || 'Rewrites only the sentences flagged above.')
+      ]) : null
+    ]);
+  }
+
+  /* ---- ChallengeReport ------------------------------------------------- */
+
+  /* The answer's conclusion under pressure: one AI for it, one against, a
+     third that says what held up. Each side is named, the rounds are shown
+     in full, and what nobody settled is said plainly for a person to decide. */
+  var CHALLENGE_KINDS = { broke: 'Broke', held: 'Held', changed: 'Changed' };
+
+  function ChallengeReport(props) {
+    props = props || {};
+    var rounds = props.rounds || [];
+    var running = props.state === 'running';
+    var shown = props.shown != null ? Math.min(props.shown, rounds.length) : rounds.length;
+    var sides = props.sides || {};
+    var meta = running ? (props.progressLabel || ('Round ' + Math.min(shown + 1, rounds.length || 1) + ' of ' + (props.of || rounds.length || 3))) : props.took;
+    var kinds = Object.assign({}, CHALLENGE_KINDS, props.kindLabels || {});
+    function side(tone, label, who) { return who ? h('span', { key: label }, [h(Badge, { key: 'b', tone: tone, size: 'sm' }, label), ' ', who]) : null; }
+    return h('section', { className: cx('rr-check rr-challenge', props.className), 'aria-label': props.label || 'Challenge' }, [
+      h(CheckHead, { key: 'h', icon: Icons.scales({ width: 16, height: 16 }), name: props.title || 'Challenge', meta: meta, onClose: props.onClose }),
+      props.claim ? h('div', { key: 'c', className: 'rr-challenge__claim' }, [
+        h('p', { key: 'k', className: 'rr-check__key' }, props.claimLabel || 'The conclusion under challenge'),
+        h('p', { key: 'b', className: 'rr-challenge__motion' }, props.claim)
+      ]) : null,
+      h('p', { key: 's', className: 'rr-challenge__sides' }, [
+        side('info', props.forLabel || 'For', sides.for), side('warning', props.againstLabel || 'Against', sides.against), side('neutral', props.judgeLabel || 'Judge', sides.judge)
+      ]),
+      shown ? h('ol', { key: 'r', className: 'rr-challenge__rounds' }, rounds.slice(0, shown).map(function (r, i) {
+        return h('li', { key: i }, [
+          h('span', { key: 'n', className: 'rr-challenge__n' }, (props.roundLabel || 'Round') + ' ' + (i + 1)),
+          h('div', { key: 'f', className: 'rr-challenge__side rr-challenge__side--for' }, [h('span', { key: 'l', className: 'rr-visually-hidden' }, (props.forLabel || 'For') + ': '), r.for]),
+          h('div', { key: 'a', className: 'rr-challenge__side rr-challenge__side--against' }, [h('span', { key: 'l', className: 'rr-visually-hidden' }, (props.againstLabel || 'Against') + ': '), r.against])
+        ]);
+      })) : null,
+      running ? h(Streaming, { key: 'st', state: 'thinking', label: props.runningLabel || (shown < rounds.length ? 'Round ' + (shown + 1) + ': both sides are writing' : 'The judge is weighing the rounds'), onStop: props.onStop || props.onClose }) : null,
+      !running && props.verdict ? h('div', { key: 'v', className: 'rr-challenge__verdict' }, [
+        h('p', { key: 't', className: 'rr-challenge__vt' }, props.verdictLabel || 'What held up'),
+        h('ul', { key: 'l' }, props.verdict.map(function (v, i) { return h('li', { key: i }, [h('b', { key: 'b' }, (kinds[v.kind] || v.kind) + ': '), v.text]); })),
+        props.unsettled ? h('p', { key: 'u', className: 'rr-challenge__open' }, [h('b', { key: 'b' }, (props.unsettledLabel || 'Not settled') + ': '), props.unsettled]) : null
+      ]) : null,
+      !running && (props.onApply || props.applied) ? h('div', { key: 'a', className: 'rr-check__act' }, props.applied
+        ? [h('span', { key: 's', className: 'rr-check__done' }, [h(React.Fragment, { key: 'i' }, Icons.check({ width: 14, height: 14, 'aria-hidden': 'true' })), props.appliedLabel || 'Added to the answer'])]
+        : [h(Button, { key: 'p', variant: 'primary', onClick: props.onApply }, props.applyLabel || 'Add this to the answer'),
+           props.onRerun ? h(Button, { key: 'n', variant: 'ghost', onClick: props.onRerun }, props.rerunLabel || 'Run it again') : null]) : null
     ]);
   }
 
@@ -5631,7 +6033,7 @@
 
   /* ---- Disputed -------------------------------------------------------- */
 
-  /* A sentence in an answer that a second opinion sees differently. Only
+  /* A sentence in an answer that Fact check reads differently. Only
      these are marked; agreement is left plain, because two AIs agreeing is
      not proof. Opening it shows what each checker said, in place. Built of
      phrasing elements only, so it can sit inside the answer's paragraph. */
@@ -5644,14 +6046,14 @@
     var views = props.views || [];
     return h('span', { className: cx('rr-dispute', open && 'rr-dispute--open', props.className) }, [
       h('span', { key: 'q', role: 'button', tabIndex: 0, className: 'rr-dispute__mark', 'aria-expanded': String(open), 'aria-controls': pid,
-        title: props.hint || 'A second opinion sees this differently',
+        title: props.hint || 'Fact check reads this differently',
         onClick: function () { set(!open); },
         onKeyDown: function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); set(!open); } } }, [
         props.children,
         props.n != null ? h('sup', { key: 's' }, String(props.n)) : null
       ]),
-      open ? h('span', { key: 'p', id: pid, className: 'rr-dispute__panel', role: 'region', 'aria-label': props.title || 'What the second opinion said' }, [
-        h('span', { key: 'h', className: 'rr-dispute__title' }, props.title || 'The second opinion sees this differently'),
+      open ? h('span', { key: 'p', id: pid, className: 'rr-dispute__panel', role: 'region', 'aria-label': props.title || 'What Fact check found' }, [
+        h('span', { key: 'h', className: 'rr-dispute__title' }, props.title || 'Fact check reads this differently'),
         views.map(function (v, i) {
           return h('span', { key: i, className: 'rr-dispute__view' }, [
             h('span', { key: 'w', className: 'rr-dispute__who' }, v.who),
@@ -5668,14 +6070,14 @@
 
   /* ---- OpinionAdded ---------------------------------------------------- */
 
-  /* What a second opinion thinks the answer missed: added at the end of the
+  /* What Fact check thinks the answer missed: added at the end of the
      answer, never merged into it, and marked with whose it is. */
   function OpinionAdded(props) {
     props = props || {};
     return h('div', { className: cx('rr-opadd', props.className) }, [
       h('p', { key: 'h', className: 'rr-opadd__head' }, [
         h('span', { key: 'i', 'aria-hidden': 'true' }, Icons.plus({ width: 13, height: 13 })),
-        props.label || ('Added by the second opinion' + (props.by ? ' (' + props.by + ')' : ''))
+        props.label || ('The answer missed this' + (props.by ? ' (' + props.by + ')' : ''))
       ]),
       h('div', { key: 'b', className: 'rr-opadd__body' }, props.children)
     ]);
@@ -6199,18 +6601,36 @@
     ]);
   }
 
+  /* ---- Merged components ----------------------------------------------- */
+  /* Meter: what has been used against what there is. With `segments` it is the
+     working-memory bar (shares of one whole); without, used against a budget. */
+  function Meter(props) { props = props || {}; return props.segments ? h(MemoryMeter, props) : h(CostMeter, props); }
+  /* Opinion: what Fact check found, inside an answer. kind "differs" (the default) marks a
+     sentence another AI reads differently, opened in place; kind "added" is what it
+     thinks the answer missed, set after the answer and never merged into it. */
+  function Opinion(props) { props = props || {}; return props.kind === 'added' ? h(OpinionAdded, props) : h(Disputed, props); }
+  /* ThreadNote: a one-line note in the conversation. kind "model" (the default) when
+     a different AI takes over; kind "memory" when something is saved, with Undo. */
+  function ThreadNote(props) { props = props || {}; return props.kind === 'memory' ? h(MemorySaved, props) : h(ModelSwitch, props); }
+  /* PostList: the list under an IndexHeader; variant "section" is the homepage's
+     news band (lead story, three headlines, a link to News). */
+  function PostListAny(props) { return props && props.variant === 'section' ? h(NewsSection, props) : h(PostList, props); }
+
   window.Redrob = {
     ComposerStatus: ComposerStatus,
-    StatusCard: StatusCard,
+    ProtectionStatus: ProtectionStatus,
     PrivacyProtection: PrivacyProtection,
     MemoryScope: MemoryScope,
-    SecondOpinionSetting: SecondOpinionSetting,
+    CrossCheckSetting: CrossCheckSetting,
+    ComposerMode: ComposerMode,
+    PlanQuestions: PlanQuestions,
+    PlanDocument: PlanDocument,
+    FactCheckReport: FactCheckReport,
+    ChallengeReport: ChallengeReport,
     AnswerReceipt: AnswerReceipt,
     PrivateText: PrivateText,
-    Disputed: Disputed,
-    OpinionAdded: OpinionAdded,
-    ModelSwitch: ModelSwitch,
-    MemorySaved: MemorySaved,
+    Opinion: Opinion,
+    ThreadNote: ThreadNote,
     MemoryList: MemoryList,
     OpinionGrid: OpinionGrid,
     PlaybookRow: PlaybookRow,
@@ -6268,15 +6688,13 @@
     MarkReveal: MarkReveal,
     Loader: Loader,
     Changes: Changes,
-    CostMeter: CostMeter,
-    ScopeBadge: ScopeBadge,
+    Meter: Meter,
+    AccessList: AccessList,
     TaskStatus: TaskStatus,
     AgentRoster: AgentRoster,
     AgentHandoff: AgentHandoff,
-    Schedule: Schedule,
+    ScheduleRow: ScheduleRow,
     CheckIn: CheckIn,
-    MemoryMeter: MemoryMeter,
-    AvatarMark: AvatarMark,
     Statement: Statement,
     Quote: Quote,
     Criteria: Criteria,
@@ -6318,9 +6736,8 @@
     Form: Form,
     PriceTable: PriceTable,
     ArticleLayout: ArticleLayout,
-    PostList: PostList,
+    PostList: PostListAny,
     IndexHeader: IndexHeader,
-    NewsSection: NewsSection,
     Milestones: Milestones,
     PeopleList: PeopleList,
     StoryHeader: StoryHeader,

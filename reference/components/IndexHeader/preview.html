@@ -13,7 +13,7 @@
       { label:'Redrob Office',  href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
       { label:'Redrob Browser', href:'#', detail:'A browser that finishes the task you give it' },
       { label:'Redrob Design',  href:'#', detail:'Designs the whole product as one system, in the file' } ] },
-    { label:'Solutions', items:['For founders','For small teams','For engineers','For designers','For product managers','For marketers','For sales teams','For recruiters','For HR teams','For lawyers','For accountants','For consultants'].map(l => ({ label:l, href:'#' })) },
+    { label:'Solutions', items:['For founders','For small teams','For engineers','For designers','For product managers','For marketers','For sales teams','For recruiters','For HR teams','For lawyers','For accountants','For consultants','For investors'].map(l => ({ label:l, href:'#' })) },
     { label:'Research', href:'#' },
     { label:'News', href:'#' },
     { label:'Blog', href:'#' },
@@ -40,18 +40,18 @@
     blog: { src:'/_blob/f3ef20e54936926ab44d38c839baa830', webp:'/_blob/c06dff5afc8115b16d805d228bfd7efa 1200w, /_blob/cbc1837eec57f3fb75cd90d95398dd81 2400w',
       alt:'A jet engine on a test stand, three pipes driving water into the running fan.', caption:'Engine water ingestion test', label:LABEL, position:'60% 50%' }
   };
-  const DESK = { src:'/_blob/d0d62e97b9aaebaa5fe6dff5cd0e098e', generated:false, label:'Redrob Desk, as designed', position:'0% 0%' };
+  const DESK = { src:'/_blob/c9f7a1ca0f93453df21a0432cfdb1031', generated:false, label:'Redrob Desk, as designed', position:'0% 0%' };
   const RESEARCH = [
     { href:'#', kind:'Research', date:'22 September 2026', dateTime:'2026-09-22', title:'Which model wins which prompt, September 2026',
       summary:'Real prompts from real work, run through every model and harness Router can reach.',
-      authors:['Jane Poe','John Poe'], finding:{ value:'7 of 11', label:'task types have a different winner than in August', period:'September 2026' },
+      authors:['Min-seo Park','Arjun Mehta'], finding:{ value:'7 of 11', label:'task types have a different winner than in August', period:'September 2026' },
       paper:{ href:'#', label:'Method and data' } },
     { href:'#', kind:'Evaluation', date:'9 September 2026', dateTime:'2026-09-09', title:'An absence is not a negative',
-      authors:['Jane Stiles','Jane Poe'], finding:{ value:'1 in 6', label:'screening misses were an unread file, not a failed match', period:'Q3 2026' }, paper:{ href:'#' } },
+      authors:['Dana Whitfield','Min-seo Park'], finding:{ value:'1 in 6', label:'screening misses were an unread file, not a failed match', period:'Q3 2026' }, paper:{ href:'#' } },
     { href:'#', kind:'Routing', date:'28 August 2026', dateTime:'2026-08-28', title:'When a second model should disagree with the first',
-      authors:['John Poe'], finding:{ value:'1 in 9', label:'high-stakes answers changed after a second model disagreed', period:'July to August 2026' }, paper:{ href:'#' } },
+      authors:['Arjun Mehta'], finding:{ value:'1 in 9', label:'high-stakes answers changed after a second model disagreed', period:'July to August 2026' }, paper:{ href:'#' } },
     { href:'#', kind:'Language', date:'14 August 2026', dateTime:'2026-08-14', title:'What Redrob Browser does with a page it cannot read',
-      authors:['Jane Poe'], finding:{ value:'23%', label:'of pages in the test set had text only in an image', period:'August 2026' }, paper:{ href:'#' } }
+      authors:['Min-seo Park'], finding:{ value:'23%', label:'of pages in the test set had text only in an image', period:'August 2026' }, paper:{ href:'#' } }
   ];
   const NEWS = [
     { href:'#', kind:'Launch', date:'22 September 2026', dateTime:'2026-09-22', title:'Redrob Router opens to everyone',
@@ -65,12 +65,12 @@
   const BLOG = [
     { href:'#', kind:'Engineering', date:'24 September 2026', dateTime:'2026-09-24', reading:'8 min', title:'Switch models, not context',
       summary:'How Memory carries a conversation from one provider to the next without the next one starting cold.', authors:'Joon-ho Lee' },
-    { href:'#', kind:'Product', date:'17 September 2026', dateTime:'2026-09-17', reading:'5 min', title:'Why the Firewall runs before the prompt, not after', authors:'Mary Roe' },
-    { href:'#', kind:'Design', date:'3 September 2026', dateTime:'2026-09-03', reading:'11 min', title:'Korean at parity, from the first release', authors:['Mary Stiles','Mary Roe'] },
+    { href:'#', kind:'Product', date:'17 September 2026', dateTime:'2026-09-17', reading:'5 min', title:'Why the Firewall runs before the prompt, not after', authors:'Priya Nair' },
+    { href:'#', kind:'Design', date:'3 September 2026', dateTime:'2026-09-03', reading:'11 min', title:'Korean at parity, from the first release', authors:['Seo-yeon Kim','Priya Nair'] },
     { href:'#', kind:'Engineering', date:'21 August 2026', dateTime:'2026-08-21', reading:'6 min', title:'The harness matters as much as the model', authors:'Joon-ho Lee' }
   ];
-  const MARK_L = '/_blob/4acde94cf2db0da7cc2c123d4cafbb66';
-  const MARK_D = '/_blob/9d0341656bedf8aaacf9584371167cb2';
+  const MARK_L = '/_blob/ed76761a1e006c91b7a77078f8d82da9';
+  const MARK_D = '/_blob/290f8c4ecd34da668364dc8794df0e45';
   const mark = h('span', { className:'rr-mark' }, [
     h('img', { key:'l', className:'rr-mark__light', src:MARK_L, alt:'Redrob', style:{ height:'24px' } }),
     h('img', { key:'d', className:'rr-mark__dark',  src:MARK_D, alt:'',       style:{ height:'24px' } })

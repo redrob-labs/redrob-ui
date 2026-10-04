@@ -21,7 +21,8 @@ const SYSTEM = process.env.REDROB_DS_DIR || path.join(__dirname, '..', '..', 're
 const BUNDLE = path.join(SYSTEM, 'components', 'bundle.js');
 const OUT = path.join(__dirname, '..', '..', 'src', 'icons', 'index.tsx');
 
-const lines = fs.readFileSync(BUNDLE, 'utf8').split('\n');
+// `\r?` so a CRLF checkout of the reference matches the exact-line terminator below.
+const lines = fs.readFileSync(BUNDLE, 'utf8').split(/\r?\n/);
 
 const start = lines.findIndex((l) => l.trim() === 'var Icons = {');
 if (start === -1) throw new Error('icon table not found in the reference bundle');

@@ -180,7 +180,8 @@ function compare(name, reference, ours) {
 
 /** The 123 exported components, in the order the bundle declares them. */
 function exportedNames() {
-  const header = fs.readFileSync(REFERENCE_BUNDLE, 'utf8').split('\n', 1)[0];
+  // `\r?` because a CRLF checkout leaves a `\r` on the line, and JSON.parse then fails on it.
+  const header = fs.readFileSync(REFERENCE_BUNDLE, 'utf8').split(/\r?\n/, 1)[0];
   const json = header.replace(/^\/\* @ds-bundle:\s*/, '').replace(/\s*\*\/$/, '');
   return JSON.parse(json).components.map((c) => c.name);
 }
@@ -211,7 +212,31 @@ function compositionNames() {
   return fs
     .readdirSync(COMPONENTS_DIR)
     .filter((n) => fs.statSync(path.join(COMPONENTS_DIR, n)).isDirectory())
-    .filter((n) => !exported.has(n) && !STATIC_COMPOSITIONS.has(n))
+    .filter((n) => !exported.has(n) && !STATIC_COMPOSITIONS.has(n) && !loadsPrototype(n))
+    .sort();
+}
+
+/**
+ * Since the October 2026 delivery, the product screens (`ScreenDesk*`, `ScreenOffice*`, `ScreenCrew*`,
+ * `ScreenDesign*`) no longer carry their case inline. Each preview `fetch`es a whole prototype app
+ * (`../../prototypes/<product>/app.js`, 250 to 660 KB, with its own router and timers) and mounts it.
+ * That is a running product, not a case: it needs a real DOM and a network path this harness does not
+ * have, and its markup depends on timers. So these are reported by name as not compared.
+ *
+ * Detected by that exact loader, not by "has no inline case": a screen that loses its script
+ * altogether still fails as `no-case`.
+ */
+const PROTOTYPE_LOADER = /fetch\("\.\.\/\.\.\/prototypes\/[a-z]+\/app\.js"\)/;
+function loadsPrototype(name) {
+  const script = readCase(name);
+  return script !== null && PROTOTYPE_LOADER.test(script);
+}
+
+function prototypeCompositions() {
+  return fs
+    .readdirSync(COMPONENTS_DIR)
+    .filter((n) => fs.statSync(path.join(COMPONENTS_DIR, n)).isDirectory())
+    .filter((n) => loadsPrototype(n))
     .sort();
 }
 
@@ -223,6 +248,7 @@ module.exports = {
   compare,
   exportedNames,
   compositionNames,
+  prototypeCompositions,
   STATIC_COMPOSITIONS,
   normalise,
 };

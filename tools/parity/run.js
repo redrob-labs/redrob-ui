@@ -12,7 +12,15 @@
  * unverified component reaches a release.
  */
 
-const { loadReference, loadOurs, compare, exportedNames, compositionNames, STATIC_COMPOSITIONS } = require('./harness');
+const {
+  loadReference,
+  loadOurs,
+  compare,
+  exportedNames,
+  compositionNames,
+  prototypeCompositions,
+  STATIC_COMPOSITIONS,
+} = require('./harness');
 
 const args = process.argv.slice(2);
 const selfCheck = args.includes('--self');
@@ -66,6 +74,12 @@ console.log('');
 for (const line of lines) console.log(line);
 if (names.length === 0 && STATIC_COMPOSITIONS.size > 0) {
   console.log(`not compared: ${[...STATIC_COMPOSITIONS].join(', ')} (static page, no script to run)`);
+}
+if (names.length === 0) {
+  const prototypes = prototypeCompositions();
+  if (prototypes.length > 0) {
+    console.log(`not compared: ${prototypes.length} screens that load a whole prototype app (${prototypes.join(', ')})`);
+  }
 }
 
 if (failures > 0) {

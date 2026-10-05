@@ -29,6 +29,8 @@ export interface NewsSectionProps {
 }
 
 /**
+ * @deprecated Use PostList with `variant="section"`. Kept for 1.x.
+ *
  * The newest few stories: one lead and up to three more.
  *
  * Three is a cap, and the list is sliced. A home page news block that grows with the feed pushes everything below it

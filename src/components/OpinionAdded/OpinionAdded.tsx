@@ -11,6 +11,8 @@ export interface OpinionAddedProps {
 }
 
 /**
+ * @deprecated Use Opinion with `kind="added"`. Kept for 1.x.
+ *
  * Something a second opinion added that the first answer had missed.
  *
  * Marked as an addition rather than blended into the answer. A crosscheck that silently improves the text

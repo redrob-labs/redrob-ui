@@ -14,6 +14,8 @@ export interface MemorySavedProps {
 }
 
 /**
+ * @deprecated Use ThreadNote with `kind="memory"`. Kept for 1.x.
+ *
  * Says something was written to memory, what it was, and how to take it back.
  *
  * All three, together. A product that remembers silently is a product deciding what it knows about someone

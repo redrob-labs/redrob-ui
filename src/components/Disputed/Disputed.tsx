@@ -28,6 +28,8 @@ export interface DisputedProps {
 }
 
 /**
+ * @deprecated Use Opinion. Kept for 1.x.
+ *
  * Marks a claim a second opinion disagrees with, inline, and shows both views.
  *
  * The disagreement stays attached to the sentence it is about rather than being collected into a footnote at

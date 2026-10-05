@@ -1,6 +1,6 @@
 {
   "name": "@redrob-labs/ui",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "The Redrob Group Design System 2026, as typed React components",
   "keywords": [
     "react",
@@ -60,6 +60,7 @@
     "docs:check": "yarn build && node tools/docs/build.js --check",
     "assets:check": "node tools/check/assets.js",
     "exports:check": "node tools/check/exports.js",
+    "aliases:check": "node tools/check/aliases.js",
     "references:check": "node tools/check/references.js",
     "supersession:check": "node tools/check/supersession.js",
     "prepublishOnly": "npm run build"

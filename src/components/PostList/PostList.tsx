@@ -2,14 +2,38 @@ import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { nextId } from '../../internal/ids';
 import { PubItem, PubStory, pubYear } from '../../internal/publishing';
+import { NewsSection } from '../NewsSection/NewsSection';
 
 export interface PostListProps {
+  /**
+   * `section` is the homepage's news band and takes NewsSectionProps: `lead` is then the newest story, `items`
+   * three headlines, `href` the News index.
+   */
+  variant?: 'index' | 'section';
   items?: PubStory[];
-  /** Pass `false` on a page where the first item must not be promoted. */
-  lead?: boolean;
+  /** Pass `false` on a page where the first item must not be promoted. With variant `section`, the lead story. */
+  lead?: boolean | PubStory;
+  title?: string;
+  href?: string;
+  allLabel?: string;
+  id?: string;
+  lang?: 'en' | 'ko';
   /** `'year'` breaks the rest into year sections with real headings. */
   group?: 'year';
   className?: string;
+}
+/**
+ * The list under an IndexHeader; `variant="section"` is the homepage's news band (a lead story, three
+ * headlines, a link to News), laid out across rather than down.
+ */
+export function PostList(props: PostListProps): React.ReactElement {
+  if (props.variant === 'section') {
+    return React.createElement(NewsSection, {
+      ...props,
+      lead: typeof props.lead === 'object' ? props.lead : undefined,
+    });
+  }
+  return React.createElement(PostIndex, props);
 }
 
 /**
@@ -24,7 +48,7 @@ export interface PostListProps {
  *
  * Renders null when empty rather than an empty list element.
  */
-export function PostList(props: PostListProps): React.ReactElement | null {
+function PostIndex(props: PostListProps): React.ReactElement | null {
   const yid = React.useRef(nextId('rr-y')).current;
   const items = props.items || [];
   if (!items.length) return null;

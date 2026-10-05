@@ -71,6 +71,8 @@ jobs:
       # the difference shows before a consumer hits ERR_MODULE_NOT_FOUND on a published version.
       - name: Assert the package entry points resolve
         run: yarn exports:check
+      - name: Assert the deprecated 1.x names still export and render
+        run: yarn aliases:check
 
       # CSS has no compiler. `var(--x)` naming a property nothing declares is not a parse error - it
       # invalidates its own declaration at computed-value time and the cascade moves on. This caught 28

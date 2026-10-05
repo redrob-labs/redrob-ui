@@ -3,7 +3,9 @@ import { cx } from '../../internal/cx';
 import { nextId } from '../../internal/ids';
 import { docLocale } from '../../internal/datetime';
 import { useDismiss } from '../../internal/useDismiss';
-import { CURRENCY_STEP, currencyFor, Effort, EffortMeter } from '../../internal/model';
+import { CURRENCY_STEP, currencyFor, Effort, EffortLevel, EffortMeter, EffortNoteContext } from '../../internal/model';
+import { EffortTune } from '../../internal/effort';
+import { guidePrice } from '../../internal/guide';
 import { icons } from '../../icons';
 import { Money } from '../Money/Money';
 import { Select } from '../Select/Select';
@@ -15,7 +17,10 @@ export interface ModelPick {
   short?: string;
   /** Which product it runs in. */
   harness?: string;
+  /** The effort it was ranked at. */
   effort?: Effort;
+  /** Every level a person can set on it, the ranked one included. With two or more, a pinned pick shows the effort control. */
+  efforts?: EffortLevel[];
   /** Why it is ranked here, in one line. */
   why?: React.ReactNode;
   /** Price per month in the base currency. */
@@ -79,7 +84,7 @@ export interface ModelPickerProps {
   guideLabel?: React.ReactNode;
   guideHref?: string;
   basisLabel?: React.ReactNode;
-  perLabel?: React.ReactNode;
+  perLabel?: string;
   placement?: string;
   align?: string;
   className?: string;
@@ -89,6 +94,18 @@ export interface ModelPickerProps {
   ) => void;
   onTaskChange?: (id: string, profession: ModelProfession) => void;
   onOpenGuide?: (task: ModelTask, profession: ModelProfession) => void;
+  /** Effort set by the person on the pinned pick: a level number on its scale, `null` for the ranked one. Reset when the pick changes. */
+  effort?: number | null;
+  defaultEffort?: number | null;
+  /** `level` is `null` when the person goes back to the ranked effort. */
+  onEffortChange?: (level: EffortLevel | null, pick: ModelPick) => void;
+  effortLabel?: string;
+  rankedLabel?: string;
+  resetEffortLabel?: string;
+  /** "you set", beside the level the person chose. */
+  yoursLabel?: string;
+  /** Replaces the line under the effort control, e.g. for another language. */
+  effortNote?: (context: EffortNoteContext) => React.ReactNode;
 }
 
 /**
@@ -145,6 +162,11 @@ export function ModelPicker(props: ModelPickerProps): React.ReactElement {
     props.defaultValue !== undefined ? props.defaultValue : auto ? null : picks[0] && picks[0].id,
   );
   const value = props.value !== undefined ? props.value : valueHeld;
+  // The effort the person sets on a pinned model: a level on its own scale, or null for the ranked one.
+  const [effortHeld, setEffortHeld] = React.useState<number | null>(
+    props.defaultEffort != null ? props.defaultEffort : null,
+  );
+  const effortSet = props.effort !== undefined ? props.effort : effortHeld;
 
   const all: ModelPick[] = [];
   professions.forEach((p) => {
@@ -155,6 +177,11 @@ export function ModelPicker(props: ModelPickerProps): React.ReactElement {
   const current = all.filter((k) => k.id === value)[0] || (auto ? null : picks[0]) || null;
   const isAuto = auto && !current;
   const cur = current || ({} as ModelPick);
+  const levels = cur.efforts || [];
+  const tunable = !!current && levels.length > 1 && !away(cur);
+  const chosenEffort = tunable && effortSet != null ? levels.filter((l) => l.level === effortSet)[0] : null;
+  const custom = !!chosenEffort && chosenEffort.level !== (cur.effort || {}).level;
+  const eff = custom ? chosenEffort : cur.effort || null;
 
   const close = React.useCallback(() => setOpen(false), []);
   const ref = useDismiss<HTMLDivElement>(open, close);
@@ -163,11 +190,26 @@ export function ModelPicker(props: ModelPickerProps): React.ReactElement {
   function choose(k: ModelPick): void {
     if (away(k)) return;
     if (props.value === undefined) setValueHeld(k.id);
+    if (props.effort === undefined) setEffortHeld(null);
     if (props.onChange) props.onChange(k, { profession: prof, task, taskMode });
     setOpen(false);
   }
+  // A level on the pinned model's scale. A level that is itself a place in the list selects that place.
+  function setEffort(l: EffortLevel): void {
+    const other = l.pick && l.pick !== cur.id ? picks.filter((k) => k.id === l.pick)[0] : null;
+    if (other && !away(other)) {
+      if (props.value === undefined) setValueHeld(other.id);
+      if (props.effort === undefined) setEffortHeld(null);
+      if (props.onChange) props.onChange(other, { profession: prof, task, taskMode });
+      return;
+    }
+    const next = l.level == null || l.level === (cur.effort || {}).level ? null : l.level;
+    if (props.effort === undefined) setEffortHeld(next);
+    if (props.onEffortChange) props.onEffortChange(next == null ? null : l, cur);
+  }
   function chooseAuto(): void {
     if (props.value === undefined) setValueHeld(null);
+    if (props.effort === undefined) setEffortHeld(null);
     if (props.onChange) props.onChange(null, { profession: prof, task, taskMode });
     setOpen(false);
   }
@@ -197,6 +239,21 @@ export function ModelPicker(props: ModelPickerProps): React.ReactElement {
   const src = props.source || {};
   const meta = [src.name, src.edition].filter(Boolean).join(', ');
   const hereShort = here ? here.replace(/^Redrob /, '') : '';
+  const tune = tunable
+    ? React.createElement(EffortTune, {
+        key: 'e',
+        className: 'rr-model__tune',
+        pick: cur,
+        place: picks.indexOf(cur) + 1 || undefined,
+        chosen: effortSet,
+        onSelect: setEffort,
+        per: props.perLabel,
+        note: props.effortNote,
+        price: (m: number) => guidePrice(m, shown, base, rates, locale, 'rr-effort__price'),
+        title: `for ${cur.short || cur.model} on ${cur.harness}`,
+        labels: { effort: props.effortLabel, ranked: props.rankedLabel, reset: props.resetEffortLabel },
+      })
+    : null;
 
   const panel = open
     ? React.createElement(
@@ -326,7 +383,16 @@ export function ModelPicker(props: ModelPickerProps): React.ReactElement {
                           )
                         : null,
                     ]),
-                    React.createElement(EffortMeter, { key: 'e', effort: k.effort }),
+                    on && custom && chosenEffort
+                      ? React.createElement('span', { key: 'e', className: 'rr-model__effortrow' }, [
+                          React.createElement(EffortMeter, { key: 'm', effort: k.effort }),
+                          React.createElement(
+                            'span',
+                            { key: 'y', className: 'rr-model__yours' },
+                            `${props.yoursLabel || 'you set'} ${chosenEffort.label}`,
+                          ),
+                        ])
+                      : React.createElement(EffortMeter, { key: 'e', effort: k.effort }),
                     k.why || off
                       ? React.createElement('span', { key: 'w', className: 'rr-model__why' }, [
                           off ? props.awayLabel || `Not in ${hereShort}. ` : null,
@@ -339,6 +405,7 @@ export function ModelPicker(props: ModelPickerProps): React.ReactElement {
               );
             }),
           ),
+          tune,
           here || (auto && current)
             ? React.createElement('div', { key: 'n', className: 'rr-model__foot' }, [
                 auto && current
@@ -414,7 +481,9 @@ export function ModelPicker(props: ModelPickerProps): React.ReactElement {
             isAuto
               ? (props.autoLabel || 'Redrob Auto') + (taskMode !== 'auto' ? `, ${task.label}` : '')
               : (cur.model || '') +
-                (cur.effort ? `, ${cur.effort.label} effort` : '') +
+                (eff
+                  ? `, ${eff.label} effort${custom ? `, ${props.yoursLabel || 'you set'} it` : ''}`
+                  : '') +
                 (cur.harness ? `, on ${cur.harness}` : '')
           }`,
           onClick: () => setOpen(!open),
@@ -436,8 +505,8 @@ export function ModelPicker(props: ModelPickerProps): React.ReactElement {
             ? taskMode !== 'auto'
               ? React.createElement('span', { key: 'e', className: 'rr-model__trig-effort' }, task.label)
               : null
-            : cur.effort
-              ? React.createElement('span', { key: 'e', className: 'rr-model__trig-effort' }, cur.effort.label)
+            : eff
+              ? React.createElement('span', { key: 'e', className: 'rr-model__trig-effort' }, eff.label)
               : null,
           React.createElement(
             'span',

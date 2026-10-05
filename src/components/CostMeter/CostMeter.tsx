@@ -22,6 +22,8 @@ export interface CostMeterProps {
 }
 
 /**
+ * @deprecated Use Meter (without `segments`). Kept for 1.x.
+ *
  * What a run has spent against what it was allowed.
  *
  * The tone escalates at 75% and 90% on its own, so a budget approaching its limit changes appearance without

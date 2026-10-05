@@ -1,6 +1,6 @@
 # @redrob-labs/ui
 
-> React components for the Redrob Group Design System 2026. 135 components, 252 icons. Every component is rendered against the design system's own reference bundle and compared markup-for-markup, so its appearance is checked mechanically rather than by eye.
+> React components for the Redrob Group Design System 2026. 135 components, 260 icons. Every component is rendered against the design system's own reference bundle and compared markup-for-markup, so its appearance is checked mechanically rather than by eye.
 
 Version 1.1.0. Install `@redrob-labs/ui`. Import named exports from the package root. Ship `@redrob-labs/ui/tokens.css`, `@redrob-labs/ui/styles.css` and `@redrob-labs/ui/preflight.css`, in that order, or nothing is styled.
 

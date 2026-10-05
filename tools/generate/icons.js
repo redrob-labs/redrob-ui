@@ -3,7 +3,7 @@
 /**
  * Generates `src/icons/index.tsx` from the icon table in the design system's reference bundle.
  *
- * The table is 252 glyphs of path data. Retyping it by hand would introduce exactly the class of
+ * The table is 260 glyphs of path data. Retyping it by hand would introduce exactly the class of
  * error nobody reviews - one wrong coordinate in one path - so it is transcribed mechanically and
  * the parity harness renders every glyph against the reference.
  *

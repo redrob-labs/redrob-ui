@@ -49,7 +49,7 @@
     "dist/esm/styles/*.css"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc && tsc -p tsconfig.esm.json && node tools/build/esm-extensions.js && node tools/generate/tokens.js && mkdir -p dist/styles dist/fonts && cp src/styles/*.css src/styles/*.json dist/styles/ && cp src/fonts/*.woff2 dist/fonts/",
+    "build": "rm -rf dist && tsc && tsc -p tsconfig.esm.json && node tools/build/esm-extensions.js && node tools/generate/tokens.js && node tools/generate/native-icons.js && mkdir -p dist/styles dist/fonts && cp src/styles/*.css src/styles/*.json dist/styles/ && cp src/fonts/*.woff2 dist/fonts/",
     "test": "node tools/parity/run.js --quiet",
     "test:self": "node tools/parity/run.js --self --quiet",
     "icons": "node tools/generate/icons.js",

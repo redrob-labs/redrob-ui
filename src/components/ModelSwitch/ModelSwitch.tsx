@@ -14,6 +14,8 @@ export interface ModelSwitchProps {
 }
 
 /**
+ * @deprecated Use ThreadNote. Kept for 1.x.
+ *
  * Says the model changed mid-conversation, and that nothing was lost.
  *
  * The reassurance is the point. A person who sees the model change reasonably assumes the new one is starting

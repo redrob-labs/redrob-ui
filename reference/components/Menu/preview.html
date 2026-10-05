@@ -19,6 +19,7 @@
       h(R.Menu, { key: 2, label: 'Export', variant: 'ghost', size: 'sm', items: [
         { id: 'csv', label: 'CSV' }, { id: 'xlsx', label: 'Excel' }, { id: 'pdf', label: 'PDF' },
       ] }),
+      h(R.Menu, { key: 3, icon: h(R.icons.more, { width: 18, height: 18 }), ariaLabel: 'More actions for this role', items: items.slice(0, 3) }),
     ], { alignItems: 'flex-start' });
   }
   ReactDOM.createRoot(document.getElementById('root')).render(h(Demo));

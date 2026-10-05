@@ -99,3 +99,109 @@ export const OPINION_VERDICTS: Record<string, { label: string; icon?: string }> 
   added: { label: 'Added this', icon: 'plus' },
   quiet: { label: 'Didn’t comment' },
 };
+
+/* ---- How Desk works on a message ------------------------------------------------------------------- */
+
+/** Plan or Run, in the composer bar beside the ModelPicker. */
+export interface ComposerModeOption {
+  value: 'plan' | 'run' | string;
+  label: string;
+  /** An icon name from `icons`. */
+  icon?: string;
+  hint?: string;
+}
+/**
+ * Plan asks what it needs and writes a plan that runs only when you say so; Run starts at once.
+ *
+ * Each hint says what happens and what does not. "Nothing runs until you say so" is the promise that makes Plan
+ * worth choosing, so it is in the words rather than implied by the name.
+ */
+export const COMPOSER_MODES: ComposerModeOption[] = [
+  {
+    value: 'plan',
+    label: 'Plan',
+    icon: 'route',
+    hint: 'Desk asks what it needs and writes a plan. Nothing runs until you say so.',
+  },
+  { value: 'run', label: 'Run', icon: 'play', hint: 'Desk starts at once.' },
+];
+
+export type CrossCheckLevel = 'off' | 'auto' | 'always';
+/** One level per check, keyed by check id. The default checks are `factCheck` and `challenge`. */
+export type CrossCheckValue = Record<string, CrossCheckLevel | string>;
+export interface CrossCheckDefinition {
+  id: string;
+  name: React.ReactNode;
+  text: React.ReactNode;
+}
+/** Each check is Off, When it matters or Always. */
+export const CROSS_CHECK_LEVELS: Array<{ value: string; label: string }> = [
+  { value: 'off', label: 'Off' },
+  { value: 'auto', label: 'When it matters' },
+  { value: 'always', label: 'Always' },
+];
+/**
+ * The two checks Cross-check is made of, each with what it does and what it costs in time.
+ *
+ * The checkers are named in every result, so the setting never has to promise more than it does.
+ */
+export const CROSS_CHECKS: CrossCheckDefinition[] = [
+  {
+    id: 'factCheck',
+    name: 'Fact check',
+    text: 'An AI from another company opens every source the answer cites, checks that each step of the reasoning follows, and adds anything the answer missed. About 40 seconds.',
+  },
+  {
+    id: 'challenge',
+    name: 'Challenge',
+    text: 'Puts the answer\'s conclusion under pressure: one AI argues for it, another against, for three rounds, and a third says what held up. About 2 minutes.',
+  },
+];
+export const CROSS_CHECK_DEFAULT: CrossCheckValue = { factCheck: 'auto', challenge: 'auto' };
+/**
+ * What the status line says for a value: the level when every check shares it, On when all run at different
+ * levels, otherwise a count ("1 of 2 on").
+ */
+export function crossCheckValue(
+  value?: CrossCheckValue,
+  checks?: CrossCheckDefinition[],
+  levels?: Array<{ value: string; label: string }>,
+): string {
+  const v = value || CROSS_CHECK_DEFAULT;
+  const cs = checks || CROSS_CHECKS;
+  const ls = levels || CROSS_CHECK_LEVELS;
+  const on = cs.filter((c) => (v[c.id] || 'off') !== 'off');
+  if (!on.length) return ls[0].label;
+  const same = on.every((c) => v[c.id] === v[on[0].id]);
+  if (on.length === cs.length && same) return (ls.filter((l) => l.value === v[on[0].id])[0] || ls[1]).label;
+  if (on.length === cs.length) return 'On';
+  return `${on.length} of ${cs.length} on`;
+}
+
+export type PlanStatus = 'draft' | 'edited' | 'running' | 'done' | 'kept';
+/** Where a plan stands, said with who approved it: a plan that runs is one a person said yes to. */
+export const PLAN_STATUS: Record<PlanStatus, string> = {
+  draft: 'Draft · not run yet',
+  edited: 'Edited by you · not run yet',
+  running: 'Approved by you · running',
+  done: 'Approved by you · done',
+  kept: 'Kept for later',
+};
+
+export type FactVerdict = 'holds' | 'partly' | 'wrong' | 'closed' | 'fixed';
+/**
+ * What Fact check can say about a cited source, as a badge tone and a label.
+ *
+ * "Not in that source" rather than "false": the check opened the source and did not find the claim there, which
+ * is what it can actually know. "Couldn't open" is a verdict of its own, not a pass.
+ */
+export const FACT_VERDICTS: Record<FactVerdict, [string, React.ReactNode]> = {
+  holds: ['success', 'Holds up'],
+  partly: ['warning', 'Partly'],
+  wrong: ['danger', 'Not in that source'],
+  closed: ['neutral', 'Couldn\'t open'],
+  fixed: ['success', 'Fixed'],
+};
+
+/** What a Challenge round did to the conclusion. */
+export const CHALLENGE_KINDS: Record<string, string> = { broke: 'Broke', held: 'Held', changed: 'Changed' };

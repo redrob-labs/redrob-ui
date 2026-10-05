@@ -1,8 +1,8 @@
 # @redrob-labs/ui
 
-> React components for the Redrob Group Design System 2026. 123 components, 260 icons. Every component is rendered against the design system's own reference bundle and compared markup-for-markup, so its appearance is checked mechanically rather than by eye.
+> React components for the Redrob Group Design System 2026. 135 components, 260 icons. Every component is rendered against the design system's own reference bundle and compared markup-for-markup, so its appearance is checked mechanically rather than by eye.
 
-Version 1.0.2. Install `@redrob-labs/ui`. Import named exports from the package root. Ship `@redrob-labs/ui/tokens.css`, `@redrob-labs/ui/styles.css` and `@redrob-labs/ui/preflight.css`, in that order, or nothing is styled.
+Version 1.1.0. Install `@redrob-labs/ui`. Import named exports from the package root. Ship `@redrob-labs/ui/tokens.css`, `@redrob-labs/ui/styles.css` and `@redrob-labs/ui/preflight.css`, in that order, or nothing is styled.
 
 Read [llms-full.txt](https://redrob-labs.github.io/redrob-ui/llms-full.txt) instead of this file when you need props: it carries every component's description and full prop list in one fetch.
 
@@ -82,21 +82,24 @@ Read [llms-full.txt](https://redrob-labs.github.io/redrob-ui/llms-full.txt) inst
 - [Sparkline](https://redrob-labs.github.io/redrob-ui/components/Sparkline.html): A trend line the size of a word, for beside a number.
 - [Badge](https://redrob-labs.github.io/redrob-ui/components/Badge.html): A short piece of state on something else: a status, a count, a label.
 - [Avatar](https://redrob-labs.github.io/redrob-ui/components/Avatar.html): Stands in for a person: their picture, a generated mark, or their initials.
-- [AvatarMark](https://redrob-labs.github.io/redrob-ui/components/AvatarMark.html): A generated mark for someone with no picture: the gateway, in one of nine accent families.
+- [AvatarMark](https://redrob-labs.github.io/redrob-ui/components/AvatarMark.html): @deprecated Use Avatar (AvatarMark is internal to it in the October 2026 delivery).
 
 ## Agent chat
 
 - [Message](https://redrob-labs.github.io/redrob-ui/components/Message.html): One turn in a conversation.
 - [Composer](https://redrob-labs.github.io/redrob-ui/components/Composer.html): Where a person writes to the agent.
+- [ComposerMode](https://redrob-labs.github.io/redrob-ui/components/ComposerMode.html): Plan or Run, in the composer bar beside the model.
 - [ModelPicker](https://redrob-labs.github.io/redrob-ui/components/ModelPicker.html): Chooses which model answers, by asking what the person does and what they want.
 - [ModelGuide](https://redrob-labs.github.io/redrob-ui/components/ModelGuide.html): The full comparison behind the ranking: what each model was asked, what it wrote, and how it scored.
 - [ComposerStatus](https://redrob-labs.github.io/redrob-ui/components/ComposerStatus.html): What will happen to this message, shown above the composer, before Send.
 - [AnswerReceipt](https://redrob-labs.github.io/redrob-ui/components/AnswerReceipt.html): What happened to produce this answer: which model, what was checked, what was found.
 - [PrivateText](https://redrob-labs.github.io/redrob-ui/components/PrivateText.html): Text the person wrote that the model did not see, shown as what they wrote.
-- [Disputed](https://redrob-labs.github.io/redrob-ui/components/Disputed.html): Marks a claim a second opinion disagrees with, inline, and shows both views.
-- [OpinionAdded](https://redrob-labs.github.io/redrob-ui/components/OpinionAdded.html): Something a second opinion added that the first answer had missed.
-- [ModelSwitch](https://redrob-labs.github.io/redrob-ui/components/ModelSwitch.html): Says the model changed mid-conversation, and that nothing was lost.
-- [MemorySaved](https://redrob-labs.github.io/redrob-ui/components/MemorySaved.html): Says something was written to memory, what it was, and how to take it back.
+- [Opinion](https://redrob-labs.github.io/redrob-ui/components/Opinion.html): What Fact check found, inside an answer.
+- [ThreadNote](https://redrob-labs.github.io/redrob-ui/components/ThreadNote.html): A one-line note in the conversation, between turns rather than in one.
+- [Disputed](https://redrob-labs.github.io/redrob-ui/components/Disputed.html): @deprecated Use Opinion.
+- [OpinionAdded](https://redrob-labs.github.io/redrob-ui/components/OpinionAdded.html): @deprecated Use Opinion with `kind="added"`.
+- [ModelSwitch](https://redrob-labs.github.io/redrob-ui/components/ModelSwitch.html): @deprecated Use ThreadNote.
+- [MemorySaved](https://redrob-labs.github.io/redrob-ui/components/MemorySaved.html): @deprecated Use ThreadNote with `kind="memory"`.
 - [Streaming](https://redrob-labs.github.io/redrob-ui/components/Streaming.html): An answer arriving, with a way to stop it.
 - [PromptSuggestions](https://redrob-labs.github.io/redrob-ui/components/PromptSuggestions.html): A few things worth asking, for an empty chat.
 - [Citation](https://redrob-labs.github.io/redrob-ui/components/Citation.html): A reference to where something came from.
@@ -107,23 +110,32 @@ Read [llms-full.txt](https://redrob-labs.github.io/redrob-ui/llms-full.txt) inst
 
 ## Safeguards
 
-- [StatusCard](https://redrob-labs.github.io/redrob-ui/components/StatusCard.html): The state of one safeguard, in a sentence somebody can act on.
+- [ProtectionStatus](https://redrob-labs.github.io/redrob-ui/components/ProtectionStatus.html): The one sentence a person needs about a protection, large, with whether it is running.
+- [StatusCard](https://redrob-labs.github.io/redrob-ui/components/StatusCard.html): @deprecated Renamed `ProtectionStatus` in the October 2026 delivery.
 - [PrivacyProtection](https://redrob-labs.github.io/redrob-ui/components/PrivacyProtection.html): Whether the on-device privacy check is running, at what level, and what it does.
 - [MemoryScope](https://redrob-labs.github.io/redrob-ui/components/MemoryScope.html): Which memory this chat reads, including none.
-- [SecondOpinionSetting](https://redrob-labs.github.io/redrob-ui/components/SecondOpinionSetting.html): When two other AIs check the answer.
+- [CrossCheckSetting](https://redrob-labs.github.io/redrob-ui/components/CrossCheckSetting.html): The panel behind Cross-check in the status line: two checks, Fact check and Challenge, each Off, When it matters or Always.
+- [SecondOpinionSetting](https://redrob-labs.github.io/redrob-ui/components/SecondOpinionSetting.html): @deprecated Replaced by `CrossCheckSetting` in the October 2026 delivery, which sets Fact check and Challenge separately; its old `rr-opset` styles are gone.
 - [MemoryList](https://redrob-labs.github.io/redrob-ui/components/MemoryList.html): Everything the product remembers, each entry editable or removable.
 - [OpinionGrid](https://redrob-labs.github.io/redrob-ui/components/OpinionGrid.html): Every point in an answer against the AI that wrote it and the two that reviewed it.
+- [PlanQuestions](https://redrob-labs.github.io/redrob-ui/components/PlanQuestions.html): What Plan asks before it writes: a few questions, each answered with a tap or in your own words.
+- [PlanDocument](https://redrob-labs.github.io/redrob-ui/components/PlanDocument.html): The plan, written out as a document rather than a list of steps: what was asked, what is known, how, what you get, the assumptions and the risks, and a To do list that ticks as the run goes.
+- [FactCheckReport](https://redrob-labs.github.io/redrob-ui/components/FactCheckReport.html): What Fact check found, in three parts: every cited source opened and judged, the reasoning read step by step, and what the answer missed.
+- [ChallengeReport](https://redrob-labs.github.io/redrob-ui/components/ChallengeReport.html): The answer's conclusion under pressure: one AI argues for it, one against, for a few rounds, and a third says what held up.
 
 ## Agent harness
 
 - [TaskStatus](https://redrob-labs.github.io/redrob-ui/components/TaskStatus.html): What a run is doing, in a word and a dot.
 - [AgentRoster](https://redrob-labs.github.io/redrob-ui/components/AgentRoster.html): Every agent working right now, what each is doing, and how to stop one.
 - [AgentHandoff](https://redrob-labs.github.io/redrob-ui/components/AgentHandoff.html): One agent passing work to another, and what went with it.
-- [ScopeBadge](https://redrob-labs.github.io/redrob-ui/components/ScopeBadge.html): Everything an agent can reach, and whether it can change it.
+- [AccessList](https://redrob-labs.github.io/redrob-ui/components/AccessList.html): Everything an agent can reach, and whether it can change it.
+- [ScopeBadge](https://redrob-labs.github.io/redrob-ui/components/ScopeBadge.html): @deprecated Renamed `AccessList` in the October 2026 delivery.
 - [Changes](https://redrob-labs.github.io/redrob-ui/components/Changes.html): What an agent changed, before and after, with a way to undo it.
-- [CostMeter](https://redrob-labs.github.io/redrob-ui/components/CostMeter.html): What a run has spent against what it was allowed.
-- [MemoryMeter](https://redrob-labs.github.io/redrob-ui/components/MemoryMeter.html): How full the working memory is, and what is taking up the room.
-- [Schedule](https://redrob-labs.github.io/redrob-ui/components/Schedule.html): One scheduled task: what it is, when it runs next, and how the last run went.
+- [Meter](https://redrob-labs.github.io/redrob-ui/components/Meter.html): What has been used against what there is, in one component with two shapes.
+- [CostMeter](https://redrob-labs.github.io/redrob-ui/components/CostMeter.html): @deprecated Use Meter (without `segments`).
+- [MemoryMeter](https://redrob-labs.github.io/redrob-ui/components/MemoryMeter.html): @deprecated Use Meter (with `segments`).
+- [ScheduleRow](https://redrob-labs.github.io/redrob-ui/components/ScheduleRow.html): A recurring task: what it is, when it next runs, and how the last run went.
+- [Schedule](https://redrob-labs.github.io/redrob-ui/components/Schedule.html): @deprecated Use ScheduleRow.
 - [SchedulePicker](https://redrob-labs.github.io/redrob-ui/components/SchedulePicker.html): When something should run: once, on a repeat, or when a file arrives.
 - [PlaybookRow](https://redrob-labs.github.io/redrob-ui/components/PlaybookRow.html): One saved playbook, and how much of it runs without asking.
 - [AppAccess](https://redrob-labs.github.io/redrob-ui/components/AppAccess.html): What a playbook can reach: the project's files, its memory, and named apps with a read or write grant.
@@ -152,7 +164,7 @@ Read [llms-full.txt](https://redrob-labs.github.io/redrob-ui/llms-full.txt) inst
 - [CustomerStory](https://redrob-labs.github.io/redrob-ui/components/CustomerStory.html): A customer result: who, the number, and what it is measured over.
 - [StoryHeader](https://redrob-labs.github.io/redrob-ui/components/StoryHeader.html): The top of a customer story: who it is about, the claim, and the figures behind it.
 - [PriceTable](https://redrob-labs.github.io/redrob-ui/components/PriceTable.html): What each plan includes, and what it costs.
-- [NewsSection](https://redrob-labs.github.io/redrob-ui/components/NewsSection.html): The newest few stories: one lead and up to three more.
+- [NewsSection](https://redrob-labs.github.io/redrob-ui/components/NewsSection.html): @deprecated Use PostList with `variant="section"`.
 - [Milestones](https://redrob-labs.github.io/redrob-ui/components/Milestones.html): The company's own dates, in order.
 - [PeopleList](https://redrob-labs.github.io/redrob-ui/components/PeopleList.html): The people, with their titles.
 
@@ -170,6 +182,6 @@ Read [llms-full.txt](https://redrob-labs.github.io/redrob-ui/llms-full.txt) inst
 ## Publishing
 
 - [IndexHeader](https://redrob-labs.github.io/redrob-ui/components/IndexHeader.html): The top of an index: what this collection is, and how to narrow it.
-- [PostList](https://redrob-labs.github.io/redrob-ui/components/PostList.html): An index of published stories: a lead, then the rest.
+- [PostList](https://redrob-labs.github.io/redrob-ui/components/PostList.html): The list under an IndexHeader; `variant="section"` is the homepage's news band (a lead story, three headlines, a link to News), laid out across rather than down.
 - [ArticleLayout](https://redrob-labs.github.io/redrob-ui/components/ArticleLayout.html): A published piece: kicker, title, standfirst, byline, contents, body, tags.
 - [LegalDoc](https://redrob-labs.github.io/redrob-ui/components/LegalDoc.html): A policy or terms document: summary, numbered sections, and what has changed.

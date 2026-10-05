@@ -11,6 +11,8 @@ export interface OpinionAddedProps {
 }
 
 /**
+ * @deprecated Use Opinion with `kind="added"`. Kept for 1.x.
+ *
  * Something a second opinion added that the first answer had missed.
  *
  * Marked as an addition rather than blended into the answer. A crosscheck that silently improves the text
@@ -20,7 +22,7 @@ export function OpinionAdded(props: OpinionAddedProps): React.ReactElement {
   return React.createElement('div', { className: cx('rr-opadd', props.className) }, [
     React.createElement('p', { key: 'h', className: 'rr-opadd__head' }, [
       React.createElement('span', { key: 'i', 'aria-hidden': 'true' }, icons.plus({ width: 13, height: 13 })),
-      props.label || `Added by the second opinion${props.by ? ` (${props.by})` : ''}`,
+      props.label || `The answer missed this${props.by ? ` (${props.by})` : ''}`,
     ]),
     React.createElement('div', { key: 'b', className: 'rr-opadd__body' }, props.children),
   ]);

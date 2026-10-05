@@ -23,6 +23,8 @@ export interface AvatarMarkProps {
 }
 
 /**
+ * @deprecated Use Avatar (AvatarMark is internal to it in the October 2026 delivery). Kept for 1.x.
+ *
  * A generated mark for someone with no picture: the gateway, in one of nine accent families.
  *
  * The threshold sits at the same height on every mark, with the same three faces behind it. Only the colour

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { PRIVACY_LEVELS, PrivacyLevel, PrivacyLevels } from '../../internal/safeguards';
 import { icons } from '../../icons';
-import { StatusCard } from '../StatusCard/StatusCard';
+import { ProtectionStatus } from '../ProtectionStatus/ProtectionStatus';
 
 export interface PrivacyProtectionProps {
   /** `off` when the check cannot run here - on the web, or on a phone. */
@@ -45,7 +45,7 @@ export function PrivacyProtection(props: PrivacyProtectionProps): React.ReactEle
   if (props.state === 'off') {
     return React.createElement('div', { className: cx('rr-privacy', props.className) }, [
       React.createElement(
-        StatusCard,
+        ProtectionStatus,
         {
           key: 'c',
           tone: 'warn',
@@ -62,7 +62,7 @@ export function PrivacyProtection(props: PrivacyProtectionProps): React.ReactEle
   return React.createElement('div', { className: cx('rr-privacy', props.className) }, [
     props.card !== false
       ? React.createElement(
-          StatusCard,
+          ProtectionStatus,
           {
             key: 'c',
             tone: 'safe',

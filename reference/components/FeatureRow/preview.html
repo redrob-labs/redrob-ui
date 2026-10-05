@@ -1,10 +1,10 @@
-<!-- @dsCard group="Marketing" height=2021 width=1180 -->
+<!-- @dsCard group="Marketing" height=2067 width=1180 -->
 <div id="root" style="font-family: var(--font-sans); color: var(--ink-primary);"></div>
 <script>
   const h = React.createElement;
   const R = window.Redrob;
-  /* Real renders of ScreenDeskPlaybook, ScreenDeskConnectors and ScreenOfficeRenewals, not wireframes. See assets/Screens. */
-  const SHOTS = ['/_blob/eef156a181855d008b52a2a0800f17d5', '/_blob/1f2023dde5dd02d67bf4cbd4570e018b', '/_blob/c2716493fcd4b3abc2fa760f1688374b'];
+  /* Real renders of ScreenDeskPlaybook, ScreenDeskConnectors and the Office prototype (ScreenOfficeDocument), not wireframes. See assets/Screens. */
+  const SHOTS = ['/_blob/f506fd2a0eb2bb67b24f207b43d84da4', '/_blob/2acb1b5349c8e7a534808f04d799eb7d', '/_blob/b37bfd6193c8e7f4eadcc1b990d743b4'];
   const SHOT = (i) => SHOTS[i % SHOTS.length];
 
   function Demo() {
@@ -34,12 +34,12 @@
            is no Browser row: a marketing page that describes a product it cannot show is
            the thing 50-not-generated.md rules out, one level up from the layout. */
         title:'Redrob Office keeps the record, not just the document',
-        points:['A number opens at the sentence it came from',
-                'What could not be read is named, not dropped',
-                'Korean, Hindi and English in one list, each set its own way'],
+        points:['A figure opens at the cell it came from',
+                'Change it once, and every file that uses it waits for you',
+                'Nothing changes in another file until someone keeps it'],
         action: h(R.Button,{size:'sm',variant:'secondary'},'See how a figure is traced'),
-        media: h(R.Figure,{ src: SHOT(2), alt:'The renewals console: a table of contracts with their renewal dates, notice periods and annual value.', ratio:'8 / 5',
-          caption:'Nine of thirty-nine renew on their own inside sixty days. Two files could not be read and say so.', credit:'Redrob Office, as designed' }) }, 'Every figure in the list came out of a file somebody wrote. Open one and it says which file, which clause, and when it was last read. The two it could not read are named at the top rather than left out of the count.'))
+        media: h(R.Figure,{ src: SHOT(2), alt:'A figure in a board memo opened: its source cell, when it last changed, the four files that use it, and a box to change it everywhere.', ratio:'44 / 31',
+          caption:'Q3 revenue in the board memo: its source, when it last changed, and the four files that use it.', credit:'Redrob Office, as designed' }) }, 'Every figure in the memo came out of a sheet somebody wrote. Open one and it says which file, which cell, who changed it last and where else it is used. Change it there and every other file lines the change up for a person to keep.'))
     ]);
   }
   ReactDOM.createRoot(document.getElementById('root')).render(h(Demo));

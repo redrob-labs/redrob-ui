@@ -8,8 +8,8 @@
 
   const COLS = [
     { id: 'opus', model: 'Claude Opus 5.5', role: 'Wrote the answer', wrote: true },
-    { id: 'ds', model: 'DeepSeek V4 Pro', role: 'Second opinion' },
-    { id: 'gp', model: 'Gemini 3.1 Pro', role: 'Second opinion' }
+    { id: 'ds', model: 'DeepSeek V4 Pro', role: 'Fact check' },
+    { id: 'gp', model: 'Gemini 3.1 Pro', role: 'Challenge, against' }
   ];
   const ROWS = [
     { id: 'c1', label: 'Clause 8.2 makes our promise to cover their losses unlimited', where: 'Clause 8.2', cells: { ds: ['agree'], gp: ['agree'] } },
@@ -18,5 +18,5 @@
     { id: 'c4', label: 'Clause 6.3 renews for 12 months unless we cancel 90 days ahead', where: 'Clause 6.3', cells: { opus: ['quiet'], ds: ['agree'], gp: ['added', 'Our usual is 60 days.'] } }
   ];
 
-  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { maxWidth: '920px' } }, h(R.OpinionGrid, { columns: COLS, rows: ROWS, caption: 'Second opinion on the Seorin review' })));
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { maxWidth: '920px' } }, h(R.OpinionGrid, { columns: COLS, rows: ROWS, caption: 'Cross-check on the Seorin review' })));
 </script>

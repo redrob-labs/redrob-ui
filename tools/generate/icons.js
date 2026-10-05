@@ -3,7 +3,7 @@
 /**
  * Generates `src/icons/index.tsx` from the icon table in the design system's reference bundle.
  *
- * The table is 252 glyphs of path data. Retyping it by hand would introduce exactly the class of
+ * The table is 260 glyphs of path data. Retyping it by hand would introduce exactly the class of
  * error nobody reviews - one wrong coordinate in one path - so it is transcribed mechanically and
  * the parity harness renders every glyph against the reference.
  *
@@ -21,7 +21,8 @@ const SYSTEM = process.env.REDROB_DS_DIR || path.join(__dirname, '..', '..', 're
 const BUNDLE = path.join(SYSTEM, 'components', 'bundle.js');
 const OUT = path.join(__dirname, '..', '..', 'src', 'icons', 'index.tsx');
 
-const lines = fs.readFileSync(BUNDLE, 'utf8').split('\n');
+// `\r?` so a CRLF checkout of the reference matches the exact-line terminator below.
+const lines = fs.readFileSync(BUNDLE, 'utf8').split(/\r?\n/);
 
 const start = lines.findIndex((l) => l.trim() === 'var Icons = {');
 if (start === -1) throw new Error('icon table not found in the reference bundle');

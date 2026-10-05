@@ -28,6 +28,8 @@ export interface DisputedProps {
 }
 
 /**
+ * @deprecated Use Opinion. Kept for 1.x.
+ *
  * Marks a claim a second opinion disagrees with, inline, and shows both views.
  *
  * The disagreement stays attached to the sentence it is about rather than being collected into a footnote at
@@ -60,7 +62,7 @@ export function Disputed(props: DisputedProps): React.ReactElement {
           className: 'rr-dispute__mark',
           'aria-expanded': String(open),
           'aria-controls': pid,
-          title: props.hint || 'A second opinion sees this differently',
+          title: props.hint || 'Fact check reads this differently',
           onClick: () => set(!open),
           onKeyDown: (event: React.KeyboardEvent) => {
             if (event.key === 'Enter' || event.key === ' ') {
@@ -79,13 +81,13 @@ export function Disputed(props: DisputedProps): React.ReactElement {
               id: pid,
               className: 'rr-dispute__panel',
               role: 'region',
-              'aria-label': props.title || 'What the second opinion said',
+              'aria-label': props.title || 'What Fact check found',
             },
             [
               React.createElement(
                 'span',
                 { key: 'h', className: 'rr-dispute__title' },
-                props.title || 'The second opinion sees this differently',
+                props.title || 'Fact check reads this differently',
               ),
               views.map((v, i) =>
                 React.createElement('span', { key: i, className: 'rr-dispute__view' }, [

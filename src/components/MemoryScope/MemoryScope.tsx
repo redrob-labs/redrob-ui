@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { useStableId } from '../../internal/ids';
 import { icons } from '../../icons';
-import { StatusCard } from '../StatusCard/StatusCard';
+import { ProtectionStatus } from '../ProtectionStatus/ProtectionStatus';
 
 export interface MemoryScopeOption {
   value: string;
@@ -52,7 +52,7 @@ export function MemoryScope(props: MemoryScopeProps): React.ReactElement {
 
   return React.createElement('div', { className: cx('rr-memscope', props.className) }, [
     React.createElement(
-      StatusCard,
+      ProtectionStatus,
       {
         key: 'c',
         tone: off ? 'plain' : 'brand',

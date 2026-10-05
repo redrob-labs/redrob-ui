@@ -1,6 +1,6 @@
 {
   "name": "@redrob-labs/ui",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "The Redrob Group Design System 2026, as typed React components",
   "keywords": [
     "react",
@@ -49,7 +49,7 @@
     "dist/esm/styles/*.css"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc && tsc -p tsconfig.esm.json && node tools/build/esm-extensions.js && node tools/generate/tokens.js && mkdir -p dist/styles dist/fonts && cp src/styles/*.css src/styles/*.json dist/styles/ && cp src/fonts/*.woff2 dist/fonts/",
+    "build": "rm -rf dist && tsc && tsc -p tsconfig.esm.json && node tools/build/esm-extensions.js && node tools/generate/tokens.js && node tools/generate/native-icons.js && mkdir -p dist/styles dist/fonts && cp src/styles/*.css src/styles/*.json dist/styles/ && cp src/fonts/*.woff2 dist/fonts/",
     "test": "node tools/parity/run.js --quiet",
     "test:self": "node tools/parity/run.js --self --quiet",
     "icons": "node tools/generate/icons.js",
@@ -60,6 +60,7 @@
     "docs:check": "yarn build && node tools/docs/build.js --check",
     "assets:check": "node tools/check/assets.js",
     "exports:check": "node tools/check/exports.js",
+    "aliases:check": "node tools/check/aliases.js",
     "references:check": "node tools/check/references.js",
     "supersession:check": "node tools/check/supersession.js",
     "prepublishOnly": "npm run build"

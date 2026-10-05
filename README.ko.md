@@ -3,7 +3,7 @@
 English: [README.md](./README.md)
 
 **Redrob Group Design System 2026**을 타입이 붙은 React 컴포넌트로 옮긴 라이브러리입니다.
-컴포넌트 123개, 아이콘 252개. TypeScript로 작성하고, 디자인 토큰 위에 순수 CSS로 스타일을 입혔습니다.
+컴포넌트 123개, 아이콘 260개. TypeScript로 작성하고, 디자인 토큰 위에 순수 CSS로 스타일을 입혔습니다.
 
 `@redrob-labs/ui`
 

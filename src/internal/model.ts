@@ -38,6 +38,25 @@ export interface Effort {
   of?: number;
 }
 
+/** One level a person can set on a pick: only the levels its app runs, on the maker's scale. */
+export interface EffortLevel extends Effort {
+  /** A month of the task at this level, in `currency` (USD). */
+  monthly?: number;
+  /** Its place on this task when the Router ranked it too; absent means not ranked. */
+  place?: number;
+  /** The id of a pick in the same list that is this level, so choosing it selects that place. */
+  pick?: string;
+}
+/** What EffortTune says about the level chosen, for a custom `effortNote`. */
+export interface EffortNoteContext {
+  level: EffortLevel;
+  ranked: EffortLevel;
+  custom: boolean;
+  place?: number;
+  times?: number | null;
+  price: React.ReactNode;
+  per: string;
+}
 /**
  * How hard a model is set to think, on its maker's own scale.
  *

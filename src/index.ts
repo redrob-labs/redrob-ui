@@ -145,6 +145,8 @@ export { Message } from './components/Message/Message';
 export type { MessageProps } from './components/Message/Message';
 export { Composer } from './components/Composer/Composer';
 export type { ComposerProps } from './components/Composer/Composer';
+export { ComposerMode } from './components/ComposerMode/ComposerMode';
+export type { ComposerModeProps, ComposerModeOption } from './components/ComposerMode/ComposerMode';
 export { ModelPicker } from './components/ModelPicker/ModelPicker';
 export type {
   ModelPickerProps,
@@ -159,12 +161,17 @@ export type {
   GuideTask,
   GuideProfession,
 } from './components/ModelGuide/ModelGuide';
+export type { Effort, EffortLevel, EffortNoteContext } from './internal/model';
 export { ComposerStatus } from './components/ComposerStatus/ComposerStatus';
 export type { ComposerStatusProps, ComposerStatusItem } from './components/ComposerStatus/ComposerStatus';
 export { AnswerReceipt } from './components/AnswerReceipt/AnswerReceipt';
 export type { AnswerReceiptProps, AnswerReceiptItem } from './components/AnswerReceipt/AnswerReceipt';
 export { PrivateText } from './components/PrivateText/PrivateText';
 export type { PrivateTextProps } from './components/PrivateText/PrivateText';
+export { Opinion } from './components/Opinion/Opinion';
+export type { OpinionProps } from './components/Opinion/Opinion';
+export { ThreadNote } from './components/ThreadNote/ThreadNote';
+export type { ThreadNoteProps } from './components/ThreadNote/ThreadNote';
 export { Disputed } from './components/Disputed/Disputed';
 export type { DisputedProps, DisputedView } from './components/Disputed/Disputed';
 export { OpinionAdded } from './components/OpinionAdded/OpinionAdded';
@@ -189,12 +196,21 @@ export { ApprovalStep } from './components/ApprovalStep/ApprovalStep';
 export type { ApprovalStepProps } from './components/ApprovalStep/ApprovalStep';
 
 /* ---- Safeguards ---------------------------------------------------------- */
+export { ProtectionStatus } from './components/ProtectionStatus/ProtectionStatus';
+export type { ProtectionStatusProps } from './components/ProtectionStatus/ProtectionStatus';
 export { StatusCard } from './components/StatusCard/StatusCard';
 export type { StatusCardProps } from './components/StatusCard/StatusCard';
 export { PrivacyProtection } from './components/PrivacyProtection/PrivacyProtection';
 export type { PrivacyProtectionProps } from './components/PrivacyProtection/PrivacyProtection';
 export { MemoryScope } from './components/MemoryScope/MemoryScope';
 export type { MemoryScopeProps, MemoryScopeOption } from './components/MemoryScope/MemoryScope';
+export { CrossCheckSetting } from './components/CrossCheckSetting/CrossCheckSetting';
+export type {
+  CrossCheckSettingProps,
+  CrossCheckLevel,
+  CrossCheckValue,
+  CrossCheckDefinition,
+} from './components/CrossCheckSetting/CrossCheckSetting';
 export { SecondOpinionSetting } from './components/SecondOpinionSetting/SecondOpinionSetting';
 export type {
   SecondOpinionSettingProps,
@@ -204,7 +220,22 @@ export { MemoryList } from './components/MemoryList/MemoryList';
 export type { MemoryListProps, MemoryItem } from './components/MemoryList/MemoryList';
 export { OpinionGrid } from './components/OpinionGrid/OpinionGrid';
 export type { OpinionGridProps, OpinionColumn, OpinionRow } from './components/OpinionGrid/OpinionGrid';
-export { PRIVACY_LEVELS, OPINION_MODES, OPINION_VERDICTS } from './internal/safeguards';
+export { PlanQuestions } from './components/PlanQuestions/PlanQuestions';
+export type { PlanQuestionsProps, PlanQuestion } from './components/PlanQuestions/PlanQuestions';
+export { PlanDocument } from './components/PlanDocument/PlanDocument';
+export type { PlanDocumentProps, PlanItem, PlanSection, PlanTodo } from './components/PlanDocument/PlanDocument';
+export { FactCheckReport } from './components/FactCheckReport/FactCheckReport';
+export type { FactCheckReportProps, FactClaim, FactVerdict } from './components/FactCheckReport/FactCheckReport';
+export { ChallengeReport } from './components/ChallengeReport/ChallengeReport';
+export type { ChallengeReportProps } from './components/ChallengeReport/ChallengeReport';
+export {
+  PRIVACY_LEVELS,
+  OPINION_MODES,
+  OPINION_VERDICTS,
+  COMPOSER_MODES,
+  CROSS_CHECKS,
+  CROSS_CHECK_LEVELS,
+} from './internal/safeguards';
 
 /* ---- Agent harness ------------------------------------------------------- */
 export { TaskStatus } from './components/TaskStatus/TaskStatus';
@@ -213,14 +244,20 @@ export { AgentRoster } from './components/AgentRoster/AgentRoster';
 export type { AgentRosterProps, RosterAgent } from './components/AgentRoster/AgentRoster';
 export { AgentHandoff } from './components/AgentHandoff/AgentHandoff';
 export type { AgentHandoffProps } from './components/AgentHandoff/AgentHandoff';
+export { AccessList } from './components/AccessList/AccessList';
+export type { AccessListProps } from './components/AccessList/AccessList';
 export { ScopeBadge } from './components/ScopeBadge/ScopeBadge';
 export type { ScopeBadgeProps, Scope } from './components/ScopeBadge/ScopeBadge';
 export { Changes } from './components/Changes/Changes';
 export type { ChangesProps, ChangeItem } from './components/Changes/Changes';
+export { Meter } from './components/Meter/Meter';
+export type { MeterProps } from './components/Meter/Meter';
 export { CostMeter } from './components/CostMeter/CostMeter';
 export type { CostMeterProps, CostBreakdown } from './components/CostMeter/CostMeter';
 export { MemoryMeter } from './components/MemoryMeter/MemoryMeter';
 export type { MemoryMeterProps, MemorySegment } from './components/MemoryMeter/MemoryMeter';
+export { ScheduleRow } from './components/ScheduleRow/ScheduleRow';
+export type { ScheduleRowProps } from './components/ScheduleRow/ScheduleRow';
 export { Schedule } from './components/Schedule/Schedule';
 export type { ScheduleProps, ScheduleLastRun } from './components/Schedule/Schedule';
 export { SchedulePicker } from './components/SchedulePicker/SchedulePicker';

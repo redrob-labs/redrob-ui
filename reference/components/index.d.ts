@@ -299,7 +299,14 @@ export interface MenuItem {
 }
 
 export interface MenuProps extends Common {
-  label: ReactNode;
+  /** Visible label. Omit it and pass `icon` for an icon-only trigger. */
+  label?: ReactNode;
+  /** An icon before the label, or the whole trigger when there is no label. */
+  icon?: ReactNode;
+  /** Accessible name. Required when the label is not a string or there is no label. */
+  ariaLabel?: string;
+  /** 'up' opens the list above the trigger, for a menu at the foot of a panel. Default 'down'. */
+  placement?: 'down' | 'up';
   items: MenuItem[];
   onSelect?: (item: MenuItem) => void;
   align?: 'left' | 'right';
@@ -530,6 +537,21 @@ export interface Effort {
   of: number;
 }
 
+/** One level a person can set on a pick: only the levels its app runs, on the maker's scale. */
+export interface EffortLevel extends Effort {
+  /** A month of the task at this level, in `currency` (USD) */
+  monthly?: number;
+  /** Its place on this task when the Router ranked it too; absent means not ranked */
+  place?: number;
+  /** The id of a pick in the same list that is this level, so choosing it selects that place */
+  pick?: string;
+}
+
+/** What EffortTune says about the level chosen, for a custom `effortNote` */
+export interface EffortNoteContext {
+  level: EffortLevel; ranked: EffortLevel; custom: boolean; place?: number; times?: number | null; price: ReactNode; per: string;
+}
+
 /** One ranked combination: a model, how hard it thinks, and where it runs. */
 export interface ModelPick {
   id: string;
@@ -539,7 +561,10 @@ export interface ModelPick {
   short?: string;
   /** Where the model runs, e.g. "Redrob Desk", "Claude Cowork", "ChatGPT Work" */
   harness: string;
+  /** The effort it was ranked at */
   effort: Effort;
+  /** Every level a person can set on it, the ranked one included. With two or more, a pinned pick shows the effort control. */
+  efforts?: EffortLevel[];
   /** One plain sentence on why it ranks here, about the work */
   why?: string;
   /** Estimated monthly cost in `currency` (USD) */
@@ -634,6 +659,14 @@ export interface ModelPickerProps extends Common {
   guideHref?: string;
   onOpenGuide?: (task: ModelTask, profession: ModelProfession) => void;
   guideLabel?: string;
+  /** Effort set by the person on the pinned pick: a level number on its scale, null for the ranked one. Reset when the pick changes. */
+  effort?: number | null;
+  defaultEffort?: number | null;
+  /** level is null when the person goes back to the ranked effort */
+  onEffortChange?: (level: EffortLevel | null, pick: ModelPick) => void;
+  effortLabel?: string; rankedLabel?: string; resetEffortLabel?: string; yoursLabel?: string;
+  /** Replace the line under the control, e.g. for another language */
+  effortNote?: (context: EffortNoteContext) => ReactNode;
 }
 
 export interface ModelGuideProps extends Common {
@@ -648,12 +681,16 @@ export interface ModelGuideProps extends Common {
   defaultMode?: 'simple' | 'advanced';
   onModeChange?: (mode: 'simple' | 'advanced') => void;
   /** "Use this in the chat" */
-  onUse?: (pick: ModelPick, context: { profession: ModelProfession; task: ModelTask }) => void;
+  /** effort is the level the reader tried on the pick, or null for the ranked one */
+  onUse?: (pick: ModelPick, context: { profession: ModelProfession; task: ModelTask; effort: EffortLevel | null }) => void;
   source?: { name: string; edition?: string; note?: string };
   currency?: string;
   rates?: Record<string, number>;
   locale?: string;
   currencyByLang?: Record<string, string>;
+  /** "Try another effort" in the detail; `effortHint` is the line beside it */
+  effortLabel?: string; effortHint?: string; rankedLabel?: string; resetEffortLabel?: string;
+  effortNote?: (context: EffortNoteContext) => ReactNode;
   /** How Redrob tests and ranks: opens by default in advanced mode */
   method?: ReactNode;
   /** Default weights when a task gives none */
@@ -679,7 +716,7 @@ export interface ComposerProps extends Common {
   /** Left of the bar. Defaults to an Add files button; pass null for none. */
   leading?: ReactNode;
   onAdd?: () => void;
-  /** Right of the bar, before Send: the ModelPicker */
+  /** Right of the bar, before Send: a ComposerMode (Plan or Run), then the ModelPicker */
   tools?: ReactNode;
   /** The agent is working: Send becomes Stop */
   busy?: boolean;
@@ -747,7 +784,7 @@ export interface ComposerStatusItem {
   icon?: ReactNode;
   /** 'safe' green, 'on' brand, 'warn' amber (a protection that is off here), 'plain' */
   tone?: 'safe' | 'on' | 'warn' | 'plain';
-  /** "Privacy", "Memory", "Second opinion": hidden below 720px, where the icon carries it */
+  /** "Privacy", "Memory", "Cross-check": hidden below 720px, where the icon carries it */
   name: ReactNode;
   /** "High", "On for every AI", "When it matters", "Off on the web" */
   value: ReactNode;
@@ -759,7 +796,7 @@ export interface ComposerStatusItem {
   onClick?: () => void;
 }
 export interface ComposerStatusProps extends Common { items: ComposerStatusItem[]; label?: string; open?: string | null; defaultOpen?: string | null; onOpenChange?: (id: string | null) => void; }
-export interface StatusCardProps extends Common { title: ReactNode; icon?: ReactNode; tone?: 'safe' | 'warn' | 'brand' | 'plain'; size?: 'md' | 'lg'; live?: string; as?: string; children?: ReactNode; }
+export interface ProtectionStatusProps extends Common { title: ReactNode; icon?: ReactNode; tone?: 'safe' | 'warn' | 'brand' | 'plain'; size?: 'md' | 'lg'; live?: string; as?: string; children?: ReactNode; }
 export interface PrivacyLevel { id: string; label: string; n: number; detail: string; }
 export interface PrivacyProtectionProps extends Common {
   /** 'off' where the check cannot run: the web and phones */
@@ -780,14 +817,62 @@ export interface PrivacyProtectionProps extends Common {
 }
 export interface MemoryScopeOption { value: string; label: ReactNode; detail?: ReactNode; summary?: ReactNode; off?: boolean; }
 export interface MemoryScopeProps extends Common { options: MemoryScopeOption[]; value?: string; defaultValue?: string; onChange?: (value: string, option: MemoryScopeOption) => void; summary?: ReactNode; lede?: ReactNode | false; foot?: ReactNode; label?: string; onTitle?: string; offTitle?: string; offText?: ReactNode; }
-export interface SecondOpinionMode { value: 'off' | 'auto' | 'always' | string; label: string; detail: ReactNode; }
-export interface SecondOpinionSettingProps extends Common { value?: string; defaultValue?: string; onChange?: (value: string, mode: SecondOpinionMode) => void; options?: SecondOpinionMode[]; title?: ReactNode; lede?: ReactNode; foot?: ReactNode; label?: string; }
+/** Plan or Run, in the composer bar beside the ModelPicker. */
+export interface ComposerModeOption { value: 'plan' | 'run' | string; label: string; /** An icon name from `icons` */ icon?: string; hint?: string; }
+export interface ComposerModeProps extends Common { value?: string; defaultValue?: string; onChange?: (value: string, option: ComposerModeOption) => void; options?: ComposerModeOption[]; /** Icons only, labels kept for screen readers. Automatic below 560px. */ compact?: boolean; label?: string; }
+export type CrossCheckLevel = 'off' | 'auto' | 'always';
+/** One level per check, keyed by check id. The default checks are `factCheck` and `challenge`. */
+export type CrossCheckValue = Record<string, CrossCheckLevel | string>;
+export interface CrossCheckDefinition { id: string; name: ReactNode; text: ReactNode; }
+export interface CrossCheckSettingProps extends Common { value?: CrossCheckValue; defaultValue?: CrossCheckValue; onChange?: (value: CrossCheckValue, changed: string) => void; checks?: CrossCheckDefinition[]; levels?: Array<{ value: string; label: string }>; title?: ReactNode; lede?: ReactNode; /** What When it matters means, under the checks */ whenItMatters?: ReactNode; foot?: ReactNode; }
+export interface PlanQuestion { id: string; question: ReactNode; options: ReactNode[]; /** Several answers allowed */ multi?: boolean; /** An option index, or indexes when multi */ defaultValue?: number | number[]; }
+export interface PlanQuestionsProps extends Common { questions: PlanQuestion[]; value?: Record<string, number | number[] | null>; defaultValue?: Record<string, number | number[] | null>; onChange?: (value: Record<string, number | number[] | null>) => void; onSubmit?: (value: Record<string, number | number[] | null>) => void; /** Folds to one line once answered */ done?: boolean; summary?: ReactNode; submitLabel?: string; hint?: ReactNode; anyLabel?: string; label?: string; }
+export type PlanItem = ReactNode | { id?: string; /** Bold words that open the item */ lead?: ReactNode; text: ReactNode; note?: ReactNode; editable?: boolean };
+export interface PlanSection { id?: string; heading: ReactNode; body?: ReactNode; items?: PlanItem[]; ordered?: boolean; }
+export interface PlanTodo { id?: string; label: ReactNode; /** The AI that will do it */ who?: ReactNode; done?: boolean; }
+export interface PlanDocumentProps extends Common {
+  /** The plan's file name: "Plan · Ending the Seorin MSA.md" */
+  file?: ReactNode; title?: ReactNode; summary?: ReactNode; sections?: PlanSection[]; todo?: PlanTodo[];
+  /** How many To do items are done; overrides each item's `done` */
+  done?: number;
+  /** draft and kept can be edited in place; running and done are locked. Draft shows as edited once changed. */
+  status?: 'draft' | 'edited' | 'running' | 'done' | 'kept';
+  statusLabels?: Partial<Record<'draft' | 'edited' | 'running' | 'done' | 'kept', ReactNode>>;
+  /** Which checks will run after, and why */ note?: ReactNode;
+  onRun?: () => void; onKeep?: () => void; onEdit?: (e: unknown) => void;
+  runLabel?: string; keepLabel?: string; hint?: ReactNode; todoLabel?: string; label?: string;
+}
+export type FactVerdict = 'holds' | 'partly' | 'wrong' | 'closed' | 'fixed';
+export interface FactClaim { id?: string; verdict: FactVerdict; claim: ReactNode; source?: ReactNode; passage?: ReactNode; quote?: string; note?: ReactNode; }
+export interface FactCheckReportProps extends Common {
+  /** The AI that ran the check */ by?: ReactNode; took?: ReactNode; summary?: ReactNode;
+  claims?: FactClaim[]; reasoning?: FindingProps[]; missed?: Array<{ by?: string; label?: ReactNode; text: ReactNode }>;
+  fixed?: boolean; onFix?: () => void; onClose?: () => void; defaultOpen?: string | null;
+  verdicts?: Partial<Record<FactVerdict, [BadgeTone | string, ReactNode]>>;
+  title?: ReactNode; label?: string; fixLabel?: string; fixHint?: ReactNode; claimLabel?: string; sourcesLabel?: string; reasoningLabel?: string; missedLabel?: string; missedItemLabel?: string; closeLabel?: string;
+}
+export interface ChallengeReportProps extends Common {
+  /** The conclusion under challenge, in the answer's words */ claim?: ReactNode;
+  sides?: { for?: ReactNode; against?: ReactNode; judge?: ReactNode };
+  rounds?: Array<{ for: ReactNode; against: ReactNode }>;
+  state?: 'running' | 'done'; /** Rounds shown so far while running */ shown?: number; of?: number; took?: ReactNode;
+  verdict?: Array<{ kind: 'broke' | 'held' | 'changed' | string; text: ReactNode }>; unsettled?: ReactNode;
+  applied?: boolean; onApply?: () => void; onRerun?: () => void; onClose?: () => void; onStop?: () => void;
+  title?: ReactNode; label?: string; claimLabel?: string; forLabel?: string; againstLabel?: string; judgeLabel?: string; roundLabel?: string; verdictLabel?: string; unsettledLabel?: string; applyLabel?: string; appliedLabel?: string; rerunLabel?: string; runningLabel?: string; progressLabel?: string; kindLabels?: Record<string, string>;
+}
 export interface AnswerReceiptItem { id: string; icon?: ReactNode; tone?: 'plain' | 'agree' | 'differ'; label: ReactNode; sub?: ReactNode; detail?: ReactNode; /** Still working: shows a loader and the label */ busy?: boolean; }
 export interface AnswerReceiptProps extends Common { items: Array<AnswerReceiptItem | null | false>; }
 export interface PrivateTextProps extends Common { /** What the AI saw instead: "Person 1" */ as?: string; /** Left out altogether (ID and bank numbers) */ out?: boolean; outLabel?: string; children?: ReactNode; }
 export interface DisputedProps extends Common { n?: number; views: Array<{ who: ReactNode; said: ReactNode }>; open?: boolean; defaultOpen?: boolean; onOpenChange?: (open: boolean) => void; onSettle?: () => void; settleLabel?: string; closeLabel?: string; title?: string; hint?: string; children?: ReactNode; }
 export interface OpinionAddedProps extends Common { by?: string; label?: ReactNode; children?: ReactNode; }
 export interface ModelSwitchProps extends Common { to: ReactNode; /** 'auto' (Redrob Auto switched) or 'you' */ by?: 'auto' | 'you'; reason?: string; note?: ReactNode; }
+/** What Fact check found, inside an answer. `kind="differs"` (default) marks a sentence another AI reads
+ * differently, opened in place, and takes the DisputedProps fields; `kind="added"` is what it thinks
+ * the answer missed, set after the answer, and takes `by` and `label`. */
+export interface OpinionProps extends Omit<DisputedProps, 'views'>, OpinionAddedProps { kind?: 'differs' | 'added'; views?: Array<{ who: ReactNode; said: ReactNode }>; }
+/** A one-line note in the conversation. `kind="model"` (default) when a different AI takes over
+ * (ModelSwitchProps); `kind="memory"` when something is saved, with Undo (MemorySavedProps). */
+export interface ThreadNoteProps extends Omit<ModelSwitchProps, 'to'>, Omit<MemorySavedProps, 'children'> { kind?: 'model' | 'memory'; to?: ReactNode; children?: ReactNode; }
 export interface MemorySavedProps extends Common { children: ReactNode; onUndo?: () => void; label?: ReactNode; note?: ReactNode; undoLabel?: string; }
 export interface MemoryNote { id?: string; text: ReactNode; source?: ReactNode; readBy?: ReactNode; locked?: boolean; lockedLabel?: string; }
 export interface MemoryListProps extends Common { items: MemoryNote[]; onEdit?: (note: MemoryNote, i: number) => void; onForget?: (note: MemoryNote, i: number) => void; readByLabel?: string; editLabel?: string; forgetLabel?: string; }
@@ -798,29 +883,30 @@ export interface OpinionGridProps extends Common {
   pointLabel?: string; caption?: string;
 }
 export declare const ComposerStatus: ComponentType<ComposerStatusProps>;
-export declare const StatusCard: ComponentType<StatusCardProps>;
+export declare const ProtectionStatus: ComponentType<ProtectionStatusProps>;
 export declare const PrivacyProtection: ComponentType<PrivacyProtectionProps>;
 export declare const MemoryScope: ComponentType<MemoryScopeProps>;
-export declare const SecondOpinionSetting: ComponentType<SecondOpinionSettingProps>;
+export declare const CrossCheckSetting: ComponentType<CrossCheckSettingProps> & { /** What the status line says for a value: the shared level, "On", "1 of 2 on" or "Off" */ value: (value?: CrossCheckValue) => string };
+export declare const ComposerMode: ComponentType<ComposerModeProps>;
+export declare const PlanQuestions: ComponentType<PlanQuestionsProps>;
+export declare const PlanDocument: ComponentType<PlanDocumentProps>;
+export declare const FactCheckReport: ComponentType<FactCheckReportProps>;
+export declare const ChallengeReport: ComponentType<ChallengeReportProps>;
 export declare const AnswerReceipt: ComponentType<AnswerReceiptProps>;
 export declare const PrivateText: ComponentType<PrivateTextProps>;
-export declare const Disputed: ComponentType<DisputedProps>;
-export declare const OpinionAdded: ComponentType<OpinionAddedProps>;
-export declare const ModelSwitch: ComponentType<ModelSwitchProps>;
-export declare const MemorySaved: ComponentType<MemorySavedProps>;
+export declare const Opinion: ComponentType<OpinionProps>;
+export declare const ThreadNote: ComponentType<ThreadNoteProps>;
 export declare const MemoryList: ComponentType<MemoryListProps>;
 export declare const OpinionGrid: ComponentType<OpinionGridProps>;
 export declare const ModelGuide: ComponentType<ModelGuideProps>;
 export declare const Changes: ComponentType<ChangesProps>;
-export declare const CostMeter: ComponentType<CostMeterProps>;
-export declare const ScopeBadge: ComponentType<ScopeBadgeProps>;
+export declare const Meter: ComponentType<MeterProps>;
+export declare const AccessList: ComponentType<AccessListProps>;
 export declare const TaskStatus: ComponentType<TaskStatusProps>;
 export declare const AgentRoster: ComponentType<AgentRosterProps>;
 export declare const AgentHandoff: ComponentType<AgentHandoffProps>;
-export declare const Schedule: ComponentType<ScheduleProps>;
+export declare const ScheduleRow: ComponentType<ScheduleRowProps>;
 export declare const CheckIn: ComponentType<CheckInProps>;
-export declare const MemoryMeter: ComponentType<MemoryMeterProps>;
-export declare const AvatarMark: ComponentType<AvatarMarkProps>;
 export declare const Scroller: ComponentType<ScrollerProps>;
 export declare const MarkReveal: ComponentType<MarkRevealProps>;
 export declare const Loader: ComponentType<LoaderProps>;
@@ -851,7 +937,11 @@ export interface ChangesProps {
   className?: string;
 }
 
-/** What this run has spent, against what it was given. */
+/** What has been used against what there is. Pass `segments` for the working-memory bar
+ * (shares of one whole, MemoryMeterProps); otherwise `used` against `budget` (CostMeterProps). */
+export interface MeterProps extends CostMeterProps, MemoryMeterProps {}
+
+/** Meter without segments: what this run has spent, against what it was given. */
 export interface CostMeterProps {
   used?: number;
   budget?: number;
@@ -870,7 +960,7 @@ export interface CostMeterProps {
 }
 
 /** Everything this agent can reach. List refusals as well as grants. */
-export interface ScopeBadgeProps {
+export interface AccessListProps {
   scopes?: Array<{
     /** The five things a person actually pictures. */
     kind?: 'files' | 'apps' | 'web' | 'computer' | 'memory';
@@ -935,7 +1025,7 @@ export interface AgentHandoffProps {
 }
 
 /** A recurring task: what it is, when it next runs, how it went last time. */
-export interface ScheduleProps {
+export interface ScheduleRowProps {
   name?: string;
   /** In words, with the timezone. */
   cadence?: string;
@@ -2006,6 +2096,10 @@ export interface LangSwitchProps {
   current?: string;
   /** Up to this many languages render inline; more collapse into a menu. Default 3. */
   inlineUpTo?: number;
+  /** 'up' opens the menu above the trigger, for a switch at the foot of a sidebar. Default 'down'. */
+  placement?: 'down' | 'up';
+  /** Which edge the menu lines up with. Default 'right'. */
+  align?: 'left' | 'right';
   /** Accessible name for the control. */
   label?: string;
   missingLabel?: string;
@@ -2319,9 +2413,17 @@ export interface PubStory {
  * the rest are hairlines - which is the rule that stops an index becoming a grid of
  * identical boxes. Pair it with `Pagination`. */
 export interface PostListProps {
+  /** 'section' is the homepage's news band and takes NewsSectionProps: `lead` is then the
+   * newest story, `items` three headlines, `href` the News index. */
+  variant?: 'index' | 'section';
   items?: PubStory[];
-  /** false treats every item the same, for page two onward. */
-  lead?: boolean;
+  /** false treats every item the same, for page two onward. With variant 'section', the lead story. */
+  lead?: boolean | PubStory;
+  title?: string;
+  href?: string;
+  allLabel?: string;
+  id?: string;
+  lang?: 'en' | 'ko';
   /** 'year' sets everything after the lead under year headings - the News archive. */
   group?: 'year';
   className?: string;
@@ -2343,8 +2445,8 @@ export interface IndexHeaderProps {
   className?: string;
 }
 
-/** News on the company homepage: the lead story with its own picture, three dated
- * headlines, and a link to the News page. Laid out across, unlike an IndexHeader. */
+/** PostList variant 'section': news on the company homepage, the lead story with its own
+ * picture, three dated headlines, and a link to the News page. */
 export interface NewsSectionProps {
   /** Defaults to "News". The section's h2. */
   title?: string;
@@ -2435,7 +2537,6 @@ export declare const PriceTable: ComponentType<PriceTableProps>;
 export declare const ArticleLayout: ComponentType<ArticleLayoutProps>;
 export declare const PostList: ComponentType<PostListProps>;
 export declare const IndexHeader: ComponentType<IndexHeaderProps>;
-export declare const NewsSection: ComponentType<NewsSectionProps>;
 export declare const Milestones: ComponentType<MilestonesProps>;
 export declare const PeopleList: ComponentType<PeopleListProps>;
 export declare const StoryHeader: ComponentType<StoryHeaderProps>;

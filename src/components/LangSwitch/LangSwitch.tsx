@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { nextId } from '../../internal/ids';
+import { useDismiss } from '../../internal/useDismiss';
 import { icons } from '../../icons';
 
 export interface LangOption {
@@ -18,7 +19,12 @@ export interface LangSwitchProps {
   current?: string;
   /** Up to this many render inline; more become a disclosure. Three by default. */
   inlineUpTo?: number;
-  label?: React.ReactNode;
+  /** `up` opens the menu above the trigger, for a switch at the foot of a sidebar. Default `down`. */
+  placement?: 'down' | 'up';
+  /** Which edge the menu lines up with. Default `right`. */
+  align?: 'left' | 'right';
+  /** Accessible name for the control. */
+  label?: string;
   missingLabel?: string;
   className?: string;
   onChange?: (lang: LangOption) => void;
@@ -42,6 +48,8 @@ export function LangSwitch(props: LangSwitchProps): React.ReactElement {
   const current = props.current;
   const inlineUpTo = props.inlineUpTo == null ? 3 : props.inlineUpTo;
   const [open, setOpen] = React.useState(false);
+  const close = React.useCallback(() => setOpen(false), []);
+  const ref = useDismiss<HTMLDivElement>(open, close);
   const id = React.useRef(nextId('rr-lang')).current;
 
   let here: LangOption | null = null;
@@ -84,7 +92,20 @@ export function LangSwitch(props: LangSwitchProps): React.ReactElement {
   }
 
   if (langs.length > inlineUpTo) {
-    return React.createElement('div', { className: cx('rr-lang', 'rr-lang--menu', props.className) }, [
+    // placement 'up' for a switch at the foot of a sidebar or page; align 'left' when it sits at a left edge.
+    return React.createElement(
+      'div',
+      {
+        ref,
+        className: cx(
+          'rr-lang',
+          'rr-lang--menu',
+          props.placement === 'up' && 'rr-lang--up',
+          props.align === 'left' && 'rr-lang--left',
+          props.className,
+        ),
+      },
+      [
       React.createElement(
         'button',
         {
@@ -93,6 +114,7 @@ export function LangSwitch(props: LangSwitchProps): React.ReactElement {
           className: 'rr-lang__trigger',
           'aria-expanded': String(open),
           'aria-controls': id,
+          'aria-label': props.label ? `${props.label}, ${(here && here.label) || ''}` : undefined,
           onClick: () => setOpen(!open),
         },
         [

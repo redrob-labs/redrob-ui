@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- Console, the eighth product. `AppShell product="Console"` (or "Redrob Console") now sets `data-product="console"` instead of being dropped, and `Band product="console"` wears its grounds. Console is the Group's own product, so it takes Redrob Blue rather than an eighth hue: `--product-console-1..10` reference `--blue-1..10`, with the same wash/fill/line roles (steps 1/2/3 light, 10/9/8 dark) and `beyond` gradients as every other product. `tokens.json` and the native headers carry the 17 new tokens. The suite spectrum seam is unchanged: it already opens on the brand's own teal and blue.
 - `AppShell`: `windowInset` (`top`, `end`, `endHeight`) keeps a frameless desktop window's own controls off the page - the macOS traffic lights above the sidebar brand, the Windows caption buttons at the top-right of the header (or the rail) - and `dragRegion` makes the brand row and header drag the window while their controls stay clickable. Both are off by default; a shell without them renders no new class or inline style.
 - `AppShell`: `asideFolded`, what stays at the bottom of the sidebar when it is folded (or narrower than 900px) in place of `aside`, e.g. the account as an avatar-only menu button. Without it the folded shell renders as before.
 - `ModelGuide`: `harnessLabel`, `rankLabel` and `effortUnit`, so the "on <harness>", "#1 for <task>" and "<level> effort" text can be translated. Without them the English defaults render as before.

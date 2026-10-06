@@ -54,3 +54,12 @@ const noInset = render({ collapsed: false });
 ok(!/rr-shell--inset|rr-shell--drag|style=/.test(noInset.split('>')[0]), 'no windowInset/dragRegion: no class, no inline style on the root');
 const css = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'dist', 'styles', 'system.css'), 'utf8');
 ok(/\.rr-shell--drag \.rr-shell__brand[^{]*\{[^}]*app-region: drag/.test(css) && /app-region: no-drag/.test(css), 'drag region keeps its controls clickable');
+
+// Console is the eighth product. It wears the brand ramp, so its wash must resolve to Redrob Blue's
+// steps rather than to an undeclared property that would silently drop the rail's identity.
+const consoleShell = render({ product: 'Redrob Console', collapsed: false });
+ok(/data-product="console"/.test(consoleShell), 'product="Redrob Console" sets data-product="console"');
+ok(!/data-product=/.test(render({ product: 'Nonesuch', collapsed: false })), 'an unknown product is still dropped');
+ok(/\.rr-shell\[data-product="console"\][^{]*\{[^}]*--product-wash: var\(--product-console-wash\)/.test(css), 'console shell maps its wash');
+const tokensCss = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'dist', 'styles', 'tokens.css'), 'utf8');
+ok(/--product-console-1: var\(--blue-1\)/.test(tokensCss) && /--product-console-wash: var\(--product-console-10\)/.test(tokensCss), 'console ramp is the brand ramp, with a dark wash');

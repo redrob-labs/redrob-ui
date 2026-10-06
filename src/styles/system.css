@@ -2810,6 +2810,7 @@ a.rr-evidence__source:focus-visible { outline: var(--focus-ring-width) solid var
 .rr-band--p-office { --pg-1: #FFF4F2; --pg-3: #FFC8C0; --pg-4: #FFA193; --pg-5: #FF6C5B; --pg-mark: #FE4D3E; --pg-7: #B81610; }
 .rr-band--p-browser { --pg-1: #FFF3F8; --pg-3: #FFC4DE; --pg-4: #FF98CA; --pg-5: #FF58B4; --pg-mark: #F14AA8; --pg-7: #AD1373; }
 .rr-band--p-design { --pg-1: #FAF4FF; --pg-3: #EAC9FF; --pg-4: #DCA2FF; --pg-5: #CD72FF; --pg-mark: #C162F4; --pg-7: #8832B2; }
+.rr-band--p-console { --pg-1: #EEF4FF; --pg-3: #BAD2FF; --pg-4: #8AAFFF; --pg-5: #507FFF; --pg-mark: #2B52FF; --pg-7: #1733D5; }
 /* Section tick in the product's mark: the one place the page names where you are. */
 .rr-band--product .rr-tick { background: var(--pg-mark); }
 /* Light ground: the field stays white, the far side of the cut is lit in the product,
@@ -3754,6 +3755,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-shell[data-product="office"]  { --product-mark: var(--product-office);  --product-wash: var(--product-office-wash);  --product-fill: var(--product-office-fill);  --product-line: var(--product-office-line); }
 .rr-shell[data-product="browser"] { --product-mark: var(--product-browser); --product-wash: var(--product-browser-wash); --product-fill: var(--product-browser-fill); --product-line: var(--product-browser-line); }
 .rr-shell[data-product="design"]  { --product-mark: var(--product-design);  --product-wash: var(--product-design-wash);  --product-fill: var(--product-design-fill);  --product-line: var(--product-design-line); }
+.rr-shell[data-product="console"] { --product-mark: var(--product-console); --product-wash: var(--product-console-wash); --product-fill: var(--product-console-fill); --product-line: var(--product-console-line); }
 .rr-shell[data-product] .rr-shell__side {
   background-image: linear-gradient(180deg, var(--product-wash) 0, transparent 132px);
 }

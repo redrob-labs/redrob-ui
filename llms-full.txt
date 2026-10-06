@@ -2957,7 +2957,7 @@ The product frame: sidebar, the work, an optional rail.
 
 The lockup goes through `Mark` rather than a bare `img`, so it follows the theme. A bare img here is how the first screen lost its wordmark in dark.
 
-`product` is validated against the seven real products and dropped otherwise. The component knows only the attribute; the colours are the `product-<p>-wash` tokens. An unrecognised name would set an attribute that matches no token and silently render no wash, so it is rejected instead.
+`product` is validated against the eight real products and dropped otherwise. The component knows only the attribute; the colours are the `product-<p>-wash` tokens. An unrecognised name would set an attribute that matches no token and silently render no wash, so it is rejected instead.
 
 `main` holds the page heading, not just the body, so the skip link lands on the one `h1` rather than above it. `tabIndex={-1}` is what lets focus actually arrive.
 

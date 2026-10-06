@@ -73,7 +73,7 @@ export interface AppShellProps {
  * The lockup goes through `Mark` rather than a bare `img`, so it follows the theme. A bare img here is how the
  * first screen lost its wordmark in dark.
  *
- * `product` is validated against the seven real products and dropped otherwise. The component knows only the
+ * `product` is validated against the eight real products and dropped otherwise. The component knows only the
  * attribute; the colours are the `product-<p>-wash` tokens. An unrecognised name would set an attribute that
  * matches no token and silently render no wash, so it is rejected instead.
  *
@@ -88,7 +88,7 @@ export function AppShell(props: AppShellProps): React.ReactElement {
   const railId = 'rr-shell-rail';
 
   let pkey = props.product ? String(props.product).toLowerCase().replace(/^redrob\s+/, '') : null;
-  if (pkey && !/^(router|chat|code|desk|office|browser|design)$/.test(pkey)) pkey = null;
+  if (pkey && !/^(router|chat|code|desk|office|browser|design|console)$/.test(pkey)) pkey = null;
 
   const foldControlled = props.collapsed !== undefined;
   const [heldFold, setHeldFold] = React.useState<boolean>(() => {

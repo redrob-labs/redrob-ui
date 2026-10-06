@@ -100,8 +100,11 @@
   --shadow-sm: 0 1px 2px rgba(10, 11, 12, 0.08); /* Resting cards and inputs. */
   --shadow-md: 0 4px 12px rgba(10, 11, 12, 0.10); /* Menus, popovers and hovered cards. */
   --shadow-lg: 0 16px 40px rgba(10, 11, 12, 0.14); /* Modals and dialogs. */
-  /* Product colours. Seven products, each a mark (step 6), a 10-step ramp, three themed roles and
-     three `beyond` grounds -- 119 declarations, transcribed from the delivery's tokens.json.
+  /* Product colours. Eight products, each a mark (step 6), a 10-step ramp, three themed roles and
+     three `beyond` grounds -- 136 declarations. The first seven are transcribed from the delivery's
+     tokens.json. Console is the Group's own product (the control plane every other product signs in
+     to), so it wears Redrob Blue rather than an eighth hue: its ramp IS the brand ramp, referenced
+     rather than copied so the two can never drift.
 
      They are here because system.css REFERENCES them and the delivery's own tokens.css never
      declared them: `.rr-shell[data-product="browser"] { --product-wash: var(--product-browser-wash) }`
@@ -144,6 +147,11 @@
   --product-design-6: #c162f4; --product-design-7: #8832b2; --product-design-8: #6e1a94; --product-design-9: #540075; --product-design-10: #35004b;
   --product-design-wash: var(--product-design-1); --product-design-fill: var(--product-design-2); --product-design-line: var(--product-design-3);
   --product-design-beyond-light: linear-gradient(130deg, #cd72ff 75%, #eac9ff 89%, #faf4ff 100%); --product-design-beyond-brand: linear-gradient(130deg, #dca2ff 75%, #cd72ff 89%, #c162f4 100%); --product-design-beyond-deep: linear-gradient(130deg, #c162f4 75%, #8832b2 100%);
+  --product-console: var(--blue-6);
+  --product-console-1: var(--blue-1); --product-console-2: var(--blue-2); --product-console-3: var(--blue-3); --product-console-4: var(--blue-4); --product-console-5: var(--blue-5);
+  --product-console-6: var(--blue-6); --product-console-7: var(--blue-7); --product-console-8: var(--blue-8); --product-console-9: var(--blue-9); --product-console-10: var(--blue-10);
+  --product-console-wash: var(--product-console-1); --product-console-fill: var(--product-console-2); --product-console-line: var(--product-console-3);
+  --product-console-beyond-light: linear-gradient(130deg, #507fff 75%, #bad2ff 89%, #eef4ff 100%); --product-console-beyond-brand: linear-gradient(130deg, #8aafff 75%, #507fff 89%, #2b52ff 100%); --product-console-beyond-deep: linear-gradient(130deg, #2b52ff 75%, #1733d5 100%);
 }
 [data-theme="dark"] {
   --surface-base: var(--redrob-black);
@@ -185,6 +193,7 @@
   --product-office-wash: var(--product-office-10); --product-office-fill: var(--product-office-9); --product-office-line: var(--product-office-8);
   --product-browser-wash: var(--product-browser-10); --product-browser-fill: var(--product-browser-9); --product-browser-line: var(--product-browser-8);
   --product-design-wash: var(--product-design-10); --product-design-fill: var(--product-design-9); --product-design-line: var(--product-design-8);
+  --product-console-wash: var(--product-console-10); --product-console-fill: var(--product-console-9); --product-console-line: var(--product-console-8);
 }
 :root {
   --space-1: 4px; /* Icon-to-label gap, hairline insets. */

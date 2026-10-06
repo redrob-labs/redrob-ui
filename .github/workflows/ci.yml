@@ -74,6 +74,13 @@ jobs:
       - name: Assert the deprecated 1.x names still export and render
         run: yarn aliases:check
 
+      # The parity gate compares against the reference delivery's preview, which passes none of the
+      # ModelGuide language/chain/evidence props. So parity is blind to them in both directions: it
+      # cannot see them work, and it cannot see them break. This renders them and asserts their
+      # markup, plus that a guide given none of them renders none of it.
+      - name: Assert the ModelGuide language, chain and evidence props render
+        run: yarn guide:check
+
       # CSS has no compiler. `var(--x)` naming a property nothing declares is not a parse error - it
       # invalidates its own declaration at computed-value time and the cascade moves on. This caught 28
       # of them: the delivery's tokens.json defines 119 product tokens and its tokens.css declared

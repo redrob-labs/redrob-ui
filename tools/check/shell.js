@@ -63,3 +63,31 @@ ok(!/data-product=/.test(render({ product: 'Nonesuch', collapsed: false })), 'an
 ok(/\.rr-shell\[data-product="console"\][^{]*\{[^}]*--product-wash: var\(--product-console-wash\)/.test(css), 'console shell maps its wash');
 const tokensCss = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'dist', 'styles', 'tokens.css'), 'utf8');
 ok(/--product-console-1: var\(--blue-1\)/.test(tokensCss) && /--product-console-wash: var\(--product-console-10\)/.test(tokensCss), 'console ramp is the brand ramp, with a dark wash');
+
+// onNavigate: plain clicks go to the app's router; modified clicks stay with the browser.
+{
+  const calls = [];
+  // Hooks need a render in progress, so the tree is captured from inside one.
+  const tree = (p) => {
+    let out = null;
+    const Probe = () => { out = AppShell(p); return null; };
+    renderToStaticMarkup(React.createElement(Probe));
+    return out;
+  };
+  const el = tree({ nav, onNavigate: (href, e) => { calls.push(href); e.preventDefault(); } });
+  const find = (n, pred) => {
+    if (!n || typeof n !== 'object') return null;
+    if (Array.isArray(n)) { for (const c of n) { const r = find(c, pred); if (r) return r; } return null; }
+    if (pred(n)) return n;
+    return find(n.props && n.props.children, pred);
+  };
+  const a = find(el, (n) => n.type === 'a' && n.props && n.props.href === '/runs');
+  let prevented = false;
+  const ev = (o) => Object.assign({ defaultPrevented: false, button: 0, metaKey: false, ctrlKey: false, shiftKey: false, altKey: false, preventDefault() { prevented = true; } }, o);
+  a && a.props.onClick(ev({}));
+  ok(calls[0] === '/runs' && prevented, 'onNavigate receives a plain click and can take it over');
+  a && a.props.onClick(ev({ metaKey: true }));
+  ok(calls.length === 1, 'a modified click is left to the browser');
+  const none = find(tree({ nav }), (n) => n.type === 'a' && n.props && n.props.href === '/runs');
+  ok(none && none.props.onClick === undefined, 'without onNavigate the links carry no handler');
+}

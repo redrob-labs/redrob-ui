@@ -65,6 +65,12 @@ export interface AppShellProps {
   className?: string;
   children?: React.ReactNode;
   onCollapsedChange?: (collapsed: boolean) => void;
+  /**
+   * Called when a nav link is followed with a plain click, for an app with a client-side router. Call
+   * `event.preventDefault()` and route to `href` yourself; leave it alone and the browser navigates. A click
+   * with a modifier key or another button is never passed here, so "open in new tab" keeps working.
+   */
+  onNavigate?: (href: string, event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 /**
@@ -213,6 +219,13 @@ export function AppShell(props: AppShellProps): React.ReactElement {
                   {
                     key: tip ? 'a' : key,
                     href: it.href || '#',
+                    onClick:
+                      props.onNavigate && it.href
+                        ? (e: React.MouseEvent<HTMLAnchorElement>) => {
+                            if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                            props.onNavigate!(it.href as string, e);
+                          }
+                        : undefined,
                     className: it.icon ? undefined : 'rr-shell__navitem--text',
                     'aria-current': it.current ? 'page' : undefined,
                   },

@@ -2994,6 +2994,7 @@ Import: `import { AppShell } from '@redrob-labs/ui';`
 | `className` | `string` | no |  |
 | `children` | `React.ReactNode` | no |  |
 | `onCollapsedChange` | `(collapsed: boolean) => void` | no |  |
+| `onNavigate` | `(href: string, event: React.MouseEvent<HTMLAnchorElement>) => void` | no | Called when a nav link is followed with a plain click, for an app with a client-side router. Call `event.preventDefault()` and route to `href` yourself; leave it alone and the browser navigates. A click with a modifier key or another button is never passed here, so "open in new tab" keeps working. |
 
 Exported types: `AppShellNavItem`.
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { icons } from '../../icons';
 import { Mark } from '../Mark/Mark';
+import { Tooltip } from '../Tooltip/Tooltip';
 
 export interface AppShellNavItem {
   id?: string | number;
@@ -26,6 +27,12 @@ export interface AppShellProps {
   navLabel?: string;
   /** Extra content at the bottom of the sidebar. */
   aside?: React.ReactNode;
+  /**
+   * What stays at the bottom of the sidebar when it is folded (or the window is narrower than 900px),
+   * in place of `aside` - typically the account as an avatar-only button that opens the same menu.
+   * Without it the aside is hidden while folded, as before, and anything only it held is out of reach.
+   */
+  asideFolded?: React.ReactNode;
   theme?: React.ReactNode;
   title?: React.ReactNode;
   /** A line under the title: what this screen is showing. */
@@ -168,16 +175,17 @@ export function AppShell(props: AppShellProps): React.ReactElement {
                     it.heading,
                   );
                 }
-                return React.createElement(
+                const key = it.id != null ? it.id : i;
+                const tip =
+                  folded && typeof it.label === 'string'
+                    ? it.label + (it.meta != null && it.meta !== '' ? ` (${it.meta})` : '')
+                    : null;
+                const link = React.createElement(
                   'a',
                   {
-                    key: it.id != null ? it.id : i,
+                    key: tip ? 'a' : key,
                     href: it.href || '#',
                     className: it.icon ? undefined : 'rr-shell__navitem--text',
-                    title:
-                      folded && typeof it.label === 'string'
-                        ? it.label + (it.meta != null && it.meta !== '' ? ` (${it.meta})` : '')
-                        : undefined,
                     'aria-current': it.current ? 'page' : undefined,
                   },
                   [
@@ -190,10 +198,27 @@ export function AppShell(props: AppShellProps): React.ReactElement {
                       : null,
                   ],
                 );
+                // Folded, the label is visually gone. A native `title` waits a second and is clipped
+                // by nothing, but looks like the OS rather than this system; the DS tooltip is placed
+                // against the window, so the narrow sidebar cannot cut it off.
+                return tip
+                  ? React.createElement(
+                      Tooltip,
+                      { key, content: tip, placement: 'right', focusable: false, className: 'rr-shell__navtip' },
+                      link,
+                    )
+                  : link;
               }),
             )
           : null,
         props.aside ? React.createElement('div', { className: 'rr-shell__aside', key: 'a' }, props.aside) : null,
+        props.asideFolded
+          ? React.createElement(
+              'div',
+              { className: 'rr-shell__aside rr-shell__aside--folded', key: 'af' },
+              props.asideFolded,
+            )
+          : null,
         props.theme ? React.createElement('div', { className: 'rr-shell__theme', key: 'th' }, props.theme) : null,
       ]),
 

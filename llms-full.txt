@@ -2974,6 +2974,7 @@ Import: `import { AppShell } from '@redrob-labs/ui';`
 | `nav` | `AppShellNavItem[]` | no |  |
 | `navLabel` | `string` | no |  |
 | `aside` | `React.ReactNode` | no | Extra content at the bottom of the sidebar. |
+| `asideFolded` | `React.ReactNode` | no | What stays at the bottom of the sidebar when it is folded (or the window is narrower than 900px), in place of `aside` - typically the account as an avatar-only button that opens the same menu. Without it the aside is hidden while folded, as before, and anything only it held is out of reach. |
 | `theme` | `React.ReactNode` | no |  |
 | `title` | `React.ReactNode` | no |  |
 | `meta` | `React.ReactNode` | no | A line under the title: what this screen is showing. |

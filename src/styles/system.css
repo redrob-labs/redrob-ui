@@ -3790,6 +3790,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-shell__navlabel { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rr-shell__navmeta { flex: none; font-size: 12px; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
 .rr-shell__aside { padding: var(--space-4) var(--space-2) var(--space-4); min-width: 0; }
+.rr-shell__aside--folded { display: none; }
 
 .rr-shell__main { display: flex; flex-direction: column; min-width: 0; }
 .rr-shell__top {
@@ -4739,6 +4740,17 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-shell--folded .rr-shell__navhead { height: 1px; margin: var(--space-2) var(--space-2); padding: 0; overflow: hidden; color: transparent; background: var(--border-subtle); }
 .rr-shell--folded .rr-shell__theme { padding-inline: var(--space-2); display: flex; justify-content: center; }
 .rr-shell--folded .rr-shell__theme > * { flex-direction: column; }
+/* The aside goes, but what the consumer keeps for the folded state stays, centred:
+   folding the menu must not take Settings with it. */
+.rr-shell--folded .rr-shell__aside.rr-shell__aside--folded { display: flex; justify-content: center; padding-inline: var(--space-2); }
+/* A folded nav link sits inside its tooltip; the wrappers take the full row so the hit
+   area and the hover ground are the same as an unwrapped link. */
+.rr-shell__nav .rr-shell__navtip, .rr-shell__nav .rr-shell__navtip > span:first-child { display: flex !important; }
+.rr-shell__nav .rr-shell__navtip > span:first-child > a { flex: 1 1 auto; }
+/* A resting tooltip bubble is still laid out beside its link, past the 64px column, and
+   would give the folded sidebar a horizontal scrollbar. An open one is position: fixed,
+   which this does not clip. */
+.rr-shell--folded .rr-shell__side { overflow-x: hidden; }
 @media (max-width: 900px) {
   .rr-shell__navlabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; display: inline !important; }
   .rr-shell__navitem--text { display: none; }
@@ -4747,6 +4759,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
   .rr-shell__symbol { display: block; }
   .rr-shell__theme { padding-inline: var(--space-2); display: flex; justify-content: center; }
   .rr-shell__theme > * { flex-direction: column; }
+  .rr-shell__aside.rr-shell__aside--folded { display: flex; justify-content: center; padding-inline: var(--space-2); }
 }
 @media (prefers-reduced-motion: reduce) { .rr-shell { transition: none; } }
 

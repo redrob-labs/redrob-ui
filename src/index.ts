@@ -158,6 +158,10 @@ export { ModelGuide } from './components/ModelGuide/ModelGuide';
 export type {
   ModelGuideProps,
   GuidePick,
+  GuideKind,
+  GuideStep,
+  GuideSource,
+  GuideTool,
   GuideTask,
   GuideProfession,
 } from './components/ModelGuide/ModelGuide';

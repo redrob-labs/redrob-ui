@@ -1463,8 +1463,19 @@ Import: `import { ModelGuide } from '@redrob-labs/ui';`
 | `rankedLabel` | `string` | no |  |
 | `resetEffortLabel` | `string` | no |  |
 | `effortNote` | `(context: EffortNoteContext) => React.ReactNode` | no |  |
+| `languages` | `Array<{ value: string; label: string }>` | no | The language the work is done in, which re-ranks the picks. Shown as a third select when two or more. |
+| `language` | `string` | no |  |
+| `defaultLanguage` | `string` | no |  |
+| `onLanguageChange` | `(language: string) => void` | no |  |
+| `languageLabel` | `string` | no |  |
+| `kindLabels` | `Partial<Record<GuideKind, string>>` | no |  |
+| `comingSoonLabel` | `React.ReactNode` | no |  |
+| `missingLabel` | `React.ReactNode` | no | Beside a tool the harness has no equivalent for. Sits with `comingSoonLabel`, not hardcoded. |
+| `toolsLabel` | `React.ReactNode` | no |  |
+| `sourcesLabel` | `React.ReactNode` | no |  |
+| `rangeLabel` | `string` | no | "Likely between" before the monthly range. |
 
-Exported types: `GuidePick`, `GuideTask`, `GuideProfession`.
+Exported types: `GuideKind`, `GuideStep`, `GuideSource`, `GuideTool`, `GuidePick`, `GuideTask`, `GuideProfession`.
 
 #### ComposerStatus
 

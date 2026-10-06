@@ -1470,6 +1470,7 @@ Import: `import { ModelGuide } from '@redrob-labs/ui';`
 | `languageLabel` | `string` | no |  |
 | `kindLabels` | `Partial<Record<GuideKind, string>>` | no |  |
 | `comingSoonLabel` | `React.ReactNode` | no |  |
+| `missingLabel` | `React.ReactNode` | no | Beside a tool the harness has no equivalent for. Sits with `comingSoonLabel`, not hardcoded. |
 | `toolsLabel` | `React.ReactNode` | no |  |
 | `sourcesLabel` | `React.ReactNode` | no |  |
 | `rangeLabel` | `string` | no | "Likely between" before the monthly range. |

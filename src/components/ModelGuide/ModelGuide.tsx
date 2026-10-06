@@ -157,6 +157,8 @@ export interface ModelGuideProps {
   languageLabel?: string;
   kindLabels?: Partial<Record<GuideKind, string>>;
   comingSoonLabel?: React.ReactNode;
+  /** Beside a tool the harness has no equivalent for. Sits with `comingSoonLabel`, not hardcoded. */
+  missingLabel?: React.ReactNode;
   toolsLabel?: React.ReactNode;
   sourcesLabel?: React.ReactNode;
   /** "Likely between" before the monthly range. */
@@ -219,7 +221,10 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
   );
   const lang = props.language !== undefined ? props.language : langHeld;
   const byLang = task.picksByLanguage && lang ? task.picksByLanguage[lang] : undefined;
-  const picks = (byLang || task.picks || []).slice(0, limit);
+  // A language that is keyed but holds no ranking yet falls back as an absent key does. Truthiness
+  // would not: `[]` is truthy, so "ranked for Korean, not yet for Hindi" would render the empty
+  // state instead of the language-neutral picks.
+  const picks = ((byLang && byLang.length ? byLang : task.picks) || []).slice(0, limit);
 
   const [modeHeld, setModeHeld] = React.useState<'simple' | 'advanced'>(props.defaultMode || 'simple');
   const mode = props.mode !== undefined ? props.mode : modeHeld;
@@ -260,7 +265,9 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
 
   /** "A → B" for a pick that runs models in sequence; the model's own name otherwise. */
   function pickName(k: GuidePick): string | undefined {
-    return k.steps && k.steps.length > 1 ? k.steps.map((st) => st.model).join(' \u2192 ') : k.model;
+    // Length, not length > 1: `steps` makes `model` optional, so a one-step pick would otherwise
+    // render an empty name here and in the output pane's aria-label.
+    return k.steps && k.steps.length ? k.steps.map((st) => st.model).join(' \u2192 ') : k.model;
   }
 
   function kindBadge(kind: GuideKind | undefined, key: string): React.ReactElement | null {
@@ -308,7 +315,9 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
                   t.soon
                     ? React.createElement('span', { key: 's' }, ` \u00b7 ${props.comingSoonLabel || 'Coming soon'}`)
                     : null,
-                  t.missing ? React.createElement('span', { key: 'x' }, ' \u00b7 not available') : null,
+                  t.missing
+                    ? React.createElement('span', { key: 'x' }, ` \u00b7 ${props.missingLabel || 'not available'}`)
+                    : null,
                 ],
               ),
             ),
@@ -567,10 +576,14 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             : null,
         ]),
         React.createElement('div', { key: 'p', className: 'rr-guide__cost' }, [
-          React.createElement('span', { key: 'v', className: 'rr-guide__costv' }, [
-            guidePrice(k.monthly, shown, base, rates, locale),
-            React.createElement('span', { key: 'u', className: 'rr-model__per' }, props.perLabel || '/mo'),
-          ]),
+          // A pick carrying only `monthlyRange` has no single figure, so the unit is suppressed with
+          // it; printing "/mo" alone reads as a missing number.
+          k.monthly != null
+            ? React.createElement('span', { key: 'v', className: 'rr-guide__costv' }, [
+                guidePrice(k.monthly, shown, base, rates, locale),
+                React.createElement('span', { key: 'u', className: 'rr-model__per' }, props.perLabel || '/mo'),
+              ])
+            : null,
           task.usage
             ? React.createElement('span', { key: 'u', className: 'rr-guide__costu' }, task.usage)
             : null,

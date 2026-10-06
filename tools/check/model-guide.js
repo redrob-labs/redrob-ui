@@ -37,3 +37,22 @@ const hi = renderToStaticMarkup(React.createElement(ModelGuide, { professions, l
 ok(hi.includes('BASE'), 'missing language falls back to picks');
 const plain = renderToStaticMarkup(React.createElement(ModelGuide, { professions: [{ id: 'x', label: 'X', tasks: [{ id: 't', label: 'T', picks: [pick('p')] }] }] }));
 ok(!/rr-guide__(badges|steps|tools|sources|costr|ask--lang)/.test(plain), 'no new markup without new props');
+
+// A keyed language holding no ranking yet falls back as an absent key does; `[]` is truthy.
+const blank = [{ id: 'lawyer', label: 'Lawyer', tasks: [{ id: 'review', label: 'Review contracts', emptyText: 'Nothing ranked yet', picks: [pick('base')], picksByLanguage: { en: [], ko: [pick('ko1')] } }] }];
+const emptyLang = renderToStaticMarkup(React.createElement(ModelGuide, { professions: blank, languages: langs }));
+ok(emptyLang.includes('BASE') && !emptyLang.includes('rr-guide__empty'), 'empty language array falls back to picks');
+
+// `steps` makes `model` optional, so a one-step pick must still be named.
+const one = renderToStaticMarkup(React.createElement(ModelGuide, { professions: [{ id: 'p', label: 'P', tasks: [{ id: 't', label: 'T',
+  picks: [{ id: 's', harness: 'Redrob Desk', monthly: 9, effort: { label: 'High', level: 3, of: 4 }, steps: [{ model: 'Muse Spark 1.3', role: 'Only step' }] }] }] }] }));
+ok(/rr-guide__dname[^>]*>Muse Spark 1\.3/.test(one), 'one-step pick is named from its step');
+
+// A pick carrying only a range has no single figure, so the unit goes with it.
+const rangeOnly = renderToStaticMarkup(React.createElement(ModelGuide, { professions: [{ id: 'p', label: 'P', tasks: [{ id: 't', label: 'T',
+  picks: [{ id: 'r', model: 'R', harness: 'H', effort: { label: 'High', level: 3, of: 4 }, monthlyRange: [6, 25], monthlyKind: 'estimate' }] }] }] }));
+ok(!rangeOnly.includes('rr-guide__costv') && rangeOnly.includes('Likely between'), 'no bare unit without a monthly figure');
+
+// Every string beside a tool tag takes a prop.
+const ko2 = renderToStaticMarkup(React.createElement(ModelGuide, { professions, languages: langs, language: 'ko', comingSoonLabel: '곧 지원', missingLabel: '지원 안 함' }));
+ok(ko2.includes('지원 안 함') && !ko2.includes('not available'), 'missingLabel replaces the hardcoded English');

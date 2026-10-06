@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { useStableId } from '../../internal/ids';
+import { useFloating } from '../../internal/useFloating';
 
 export interface TooltipProps {
   /** The text. Short - a tooltip is a label, not documentation. */
@@ -31,10 +32,29 @@ export interface TooltipProps {
 export function Tooltip(props: TooltipProps): React.ReactElement {
   const placement = props.placement || 'top';
   const id = useStableId('rr-tip');
+  const root = React.useRef<HTMLSpanElement | null>(null);
+  const [hot, setHot] = React.useState(false);
+  // The bubble still shows on :hover and :focus-within in CSS; this only places it against the window
+  // while it shows, so a tip on a control at the edge of a clipped panel is not cut off.
+  useFloating(
+    hot || !!props.open,
+    () => [
+      root.current && root.current.querySelector<HTMLElement>(':scope > span:first-child'),
+      root.current && root.current.querySelector<HTMLElement>(':scope > .rr-tooltip__bubble'),
+    ],
+    { side: placement, align: 'center' },
+  );
 
   return React.createElement(
     'span',
-    { className: cx('rr-tooltip', props.open && 'rr-tooltip--open', props.className) },
+    {
+      className: cx('rr-tooltip', props.open && 'rr-tooltip--open', props.className),
+      ref: root,
+      onMouseEnter: () => setHot(true),
+      onMouseLeave: () => setHot(false),
+      onFocus: () => setHot(true),
+      onBlur: () => setHot(false),
+    },
     [
       React.createElement(
         'span',

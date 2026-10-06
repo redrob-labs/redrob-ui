@@ -6,6 +6,7 @@
 - `ModelGuide`: `harnessLabel`, `rankLabel` and `effortUnit`, so the "on <harness>", "#1 for <task>" and "<level> effort" text can be translated. Without them the English defaults render as before.
 
 ### Fixed
+- Overlays are no longer cut off by the container they sit in. `Menu`, `ComposerStatus`, `ModelPicker`, `Select`, `Combobox`, `DatePicker`, `TimePicker`, `LangSwitch` and `Tooltip` now place their open overlay against the window (`position: fixed`), flip to the side with more room, slide back inside the edges and cap their height to the space they have. A `ComposerStatus` panel above a composer in the middle of an empty chat used to run off the top of its column. Closed components render the same markup as before; the placement is inline style added only while open. `yarn floating:check` covers the placement.
 - `ModelGuide`: a pick with no sample run (no `task.prompt`, `sample.prompt` or `sample.output`) no longer shows empty "What it was asked" and "What it wrote" boxes.
 
 ## 1.2.0

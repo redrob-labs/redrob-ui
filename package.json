@@ -64,6 +64,7 @@
     "references:check": "node tools/check/references.js",
     "supersession:check": "node tools/check/supersession.js",
     "guide:check": "node tools/check/model-guide.js",
+    "floating:check": "yarn build && node tools/check/floating.js",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {

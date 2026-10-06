@@ -10,10 +10,53 @@ import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
 import { Select } from '../Select/Select';
 
+/** Where a figure comes from: run by the ranker, stated by the vendor, computed from those, or extrapolated. */
+export type GuideKind = 'measured' | 'published' | 'derived' | 'estimate';
+
+/** One model in a pick that runs more than one model in sequence, e.g. analysis then translation. */
+export interface GuideStep {
+  model: string;
+  effort?: Effort;
+  /** What this step does, e.g. "Legal analysis" or "Korean drafting". */
+  role?: React.ReactNode;
+}
+
+/** One cited figure behind a pick. */
+export interface GuideSource {
+  label: React.ReactNode;
+  value?: React.ReactNode;
+  kind?: GuideKind;
+  url?: string;
+  /** When the figure was read, e.g. 2026-10-06. */
+  date?: string;
+}
+
+/** A tool the task needs and whether this pick's harness has it. */
+export interface GuideTool {
+  label: React.ReactNode;
+  /** Planned for the harness, not shipped yet. */
+  soon?: boolean;
+  /** The harness has no such tool. */
+  missing?: boolean;
+}
+
 export interface GuidePick {
   id: string;
   model?: string;
+  /** Two or more models in sequence. The name reads "A → B"; `model` is then optional. */
+  steps?: GuideStep[];
   harness?: string;
+  /** Kind of the ranking itself: `estimate` when any score behind it was extrapolated. */
+  kind?: GuideKind;
+  /** Kind of `monthly`, and the range it may fall in. */
+  monthlyKind?: GuideKind;
+  monthlyRange?: [number, number];
+  /** The harness runs this pick only once a planned tool ships. */
+  comingSoon?: boolean;
+  tools?: GuideTool[];
+  sources?: GuideSource[];
+  /** Short caveats beside the name, e.g. "Data policy unverified". */
+  flags?: React.ReactNode[];
   /** The effort it was ranked at. */
   effort?: Effort;
   /** Every level a reader can try on it, the ranked one included. With two or more, the detail shows the effort control. */
@@ -43,6 +86,8 @@ export interface GuideTask {
   weights?: GuideWeights;
   emptyText?: React.ReactNode;
   picks?: GuidePick[];
+  /** The top five per working language, keyed like `languages`. Falls back to `picks`. */
+  picksByLanguage?: Record<string, GuidePick[]>;
 }
 
 export interface GuideProfession {
@@ -104,7 +149,32 @@ export interface ModelGuideProps {
   rankedLabel?: string;
   resetEffortLabel?: string;
   effortNote?: (context: EffortNoteContext) => React.ReactNode;
+  /** The language the work is done in, which re-ranks the picks. Shown as a third select when two or more. */
+  languages?: Array<{ value: string; label: string }>;
+  language?: string;
+  defaultLanguage?: string;
+  onLanguageChange?: (language: string) => void;
+  languageLabel?: string;
+  kindLabels?: Partial<Record<GuideKind, string>>;
+  comingSoonLabel?: React.ReactNode;
+  toolsLabel?: React.ReactNode;
+  sourcesLabel?: React.ReactNode;
+  /** "Likely between" before the monthly range. */
+  rangeLabel?: string;
 }
+
+const KIND_LABEL: Record<GuideKind, string> = {
+  measured: 'Measured',
+  published: 'Published',
+  derived: 'Derived',
+  estimate: 'Estimate',
+};
+const KIND_TONE: Record<GuideKind, 'success' | 'info' | 'neutral' | 'warning'> = {
+  measured: 'success',
+  published: 'info',
+  derived: 'neutral',
+  estimate: 'warning',
+};
 
 /**
  * The full comparison behind the ranking: what each model was asked, what it wrote, and how it scored.
@@ -143,7 +213,13 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
   );
   const taskId = props.task !== undefined ? props.task : taskHeld;
   const task = tasks.filter((t) => t.id === taskId)[0] || tasks[0] || ({} as GuideTask);
-  const picks = (task.picks || []).slice(0, limit);
+  const langs = props.languages || [];
+  const [langHeld, setLangHeld] = React.useState<string | undefined>(
+    props.defaultLanguage || (langs[0] && langs[0].value),
+  );
+  const lang = props.language !== undefined ? props.language : langHeld;
+  const byLang = task.picksByLanguage && lang ? task.picksByLanguage[lang] : undefined;
+  const picks = (byLang || task.picks || []).slice(0, limit);
 
   const [modeHeld, setModeHeld] = React.useState<'simple' | 'advanced'>(props.defaultMode || 'simple');
   const mode = props.mode !== undefined ? props.mode : modeHeld;
@@ -174,6 +250,101 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
     if (props.task === undefined) setTaskHeld(tid);
     setPickId(null);
     if (props.onTaskChange) props.onTaskChange(tid, pid);
+  }
+
+  function chooseLang(l: string): void {
+    if (props.language === undefined) setLangHeld(l);
+    setPickId(null);
+    if (props.onLanguageChange) props.onLanguageChange(l);
+  }
+
+  /** "A → B" for a pick that runs models in sequence; the model's own name otherwise. */
+  function pickName(k: GuidePick): string | undefined {
+    return k.steps && k.steps.length > 1 ? k.steps.map((st) => st.model).join(' \u2192 ') : k.model;
+  }
+
+  function kindBadge(kind: GuideKind | undefined, key: string): React.ReactElement | null {
+    if (!kind) return null;
+    const label = (props.kindLabels && props.kindLabels[kind]) || KIND_LABEL[kind];
+    return React.createElement(Badge, { key, tone: KIND_TONE[kind], size: 'sm' }, label);
+  }
+
+  function soonBadge(k: GuidePick, key: string): React.ReactElement | null {
+    return k.comingSoon
+      ? React.createElement(Badge, { key, tone: 'info', size: 'sm' }, props.comingSoonLabel || 'Coming soon')
+      : null;
+  }
+
+  function evidence(k: GuidePick): React.ReactNode[] {
+    const out: React.ReactNode[] = [];
+    if (k.steps && k.steps.length > 1) {
+      out.push(
+        React.createElement(
+          'ol',
+          { key: 'steps', className: 'rr-guide__steps' },
+          k.steps.map((st, j) =>
+            React.createElement('li', { key: j }, [
+              React.createElement('span', { key: 'm', className: 'rr-guide__stepname' }, st.model),
+              st.role ? React.createElement('span', { key: 'r', className: 'rr-guide__steprole' }, st.role) : null,
+              st.effort ? React.createElement(EffortMeter, { key: 'e', effort: st.effort }) : null,
+            ]),
+          ),
+        ),
+      );
+    }
+    if (k.tools && k.tools.length) {
+      out.push(
+        React.createElement('div', { key: 'tools', className: 'rr-guide__tools' }, [
+          React.createElement('p', { key: 'l', className: 'rr-guide__label' }, props.toolsLabel || 'Tools it uses'),
+          React.createElement(
+            'ul',
+            { key: 'u', className: 'rr-guide__tags' },
+            k.tools.map((t, j) =>
+              React.createElement(
+                'li',
+                { key: j, className: cx('rr-guide__tag', t.soon && 'is-soon', t.missing && 'is-missing') },
+                [
+                  t.label,
+                  t.soon
+                    ? React.createElement('span', { key: 's' }, ` \u00b7 ${props.comingSoonLabel || 'Coming soon'}`)
+                    : null,
+                  t.missing ? React.createElement('span', { key: 'x' }, ' \u00b7 not available') : null,
+                ],
+              ),
+            ),
+          ),
+        ]),
+      );
+    }
+    return out;
+  }
+
+  function sources(k: GuidePick): React.ReactElement | null {
+    if (!k.sources || !k.sources.length) return null;
+    return React.createElement('details', { key: 'src', className: 'rr-guide__sources' }, [
+      React.createElement('summary', { key: 's' }, [
+        props.sourcesLabel || 'Sources',
+        React.createElement('span', { key: 'n', className: 'rr-guide__srcn' }, ` (${k.sources.length})`),
+      ]),
+      React.createElement(
+        'ul',
+        { key: 'u' },
+        k.sources.map((src, j) =>
+          React.createElement('li', { key: j }, [
+            kindBadge(src.kind, 'k'),
+            React.createElement(
+              'span',
+              { key: 'l', className: 'rr-guide__srcl' },
+              src.url
+                ? React.createElement('a', { href: src.url, target: '_blank', rel: 'noopener noreferrer' }, src.label)
+                : src.label,
+            ),
+            src.value != null ? React.createElement('span', { key: 'v', className: 'rr-guide__srcv' }, src.value) : null,
+            src.date ? React.createElement('span', { key: 'd', className: 'rr-guide__srcd' }, src.date) : null,
+          ]),
+        ),
+      ),
+    ]);
   }
 
   function setMode(m: 'simple' | 'advanced'): void {
@@ -226,8 +397,9 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
           React.createElement('span', { key: 'r', className: 'rr-model__rank' }, String(i + 1)),
           React.createElement('span', { key: 'b', className: 'rr-model__body' }, [
             React.createElement('span', { key: 'n', className: 'rr-model__name' }, [
-              React.createElement('span', { key: 'm' }, k.model),
+              React.createElement('span', { key: 'm' }, pickName(k)),
               React.createElement('span', { key: 'o', className: 'rr-model__on' }, `on ${k.harness}`),
+              soonBadge(k, 'c'),
             ]),
             React.createElement(EffortMeter, { key: 'e', effort: k.effort }),
             !adv && k.why ? React.createElement('span', { key: 'w', className: 'rr-model__why' }, k.why) : null,
@@ -380,10 +552,19 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
               : null,
           ]),
           React.createElement('h3', { key: 'n', className: 'rr-guide__dname' }, [
-            k.model,
+            pickName(k),
             React.createElement('span', { key: 'o' }, ` on ${k.harness}`),
           ]),
           React.createElement(EffortMeter, { key: 'e', effort: k.effort }),
+          k.kind || k.comingSoon || (k.flags && k.flags.length)
+            ? React.createElement('p', { key: 'k', className: 'rr-guide__badges' }, [
+                kindBadge(k.kind, 'k'),
+                soonBadge(k, 'c'),
+                ...(k.flags || []).map((f, j) =>
+                  React.createElement(Badge, { key: `f${j}`, tone: 'neutral', size: 'sm' }, f),
+                ),
+              ])
+            : null,
         ]),
         React.createElement('div', { key: 'p', className: 'rr-guide__cost' }, [
           React.createElement('span', { key: 'v', className: 'rr-guide__costv' }, [
@@ -393,9 +574,27 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
           task.usage
             ? React.createElement('span', { key: 'u', className: 'rr-guide__costu' }, task.usage)
             : null,
+          k.monthlyRange
+            ? React.createElement('span', { key: 'r', className: 'rr-guide__costr' }, [
+                `${props.rangeLabel || 'Likely between'} `,
+                React.createElement(
+                  'span',
+                  { key: 'a' },
+                  guidePrice(k.monthlyRange[0], shown, base, rates, locale),
+                ),
+                ' \u2013 ',
+                React.createElement(
+                  'span',
+                  { key: 'b' },
+                  guidePrice(k.monthlyRange[1], shown, base, rates, locale),
+                ),
+              ])
+            : null,
+          k.monthlyKind ? kindBadge(k.monthlyKind, 'mk') : null,
         ]),
       ]),
       k.why ? React.createElement('p', { key: 'w', className: 'rr-guide__why' }, k.why) : null,
+      ...evidence(k),
       k.efforts && k.efforts.length > 1
         ? React.createElement(EffortTune, {
             key: 'e',
@@ -446,7 +645,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
               className: 'rr-guide__output',
               tabIndex: 0,
               role: 'region',
-              'aria-label': `${props.outputLabel || 'What it wrote'}: ${k.model}`,
+              'aria-label': `${props.outputLabel || 'What it wrote'}: ${pickName(k)}`,
             },
             sample.output,
           ),
@@ -454,6 +653,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
         ]),
       ]),
       adv ? breakdown(k) : null,
+      sources(k),
       React.createElement('div', { key: 'c', className: 'rr-guide__actions' }, [
         React.createElement(
           Button,
@@ -498,7 +698,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
         ]),
         modeSwitch(),
       ]),
-      React.createElement('div', { key: 'ask', className: 'rr-guide__ask' }, [
+      React.createElement('div', { key: 'ask', className: cx('rr-guide__ask', langs.length > 1 && 'rr-guide__ask--lang') }, [
         React.createElement(Select, {
           key: 'p',
           size: 'sm',
@@ -526,6 +726,16 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             choose(prof.id, target.value);
           },
         }),
+        langs.length > 1
+          ? React.createElement(Select, {
+              key: 'g',
+              size: 'sm',
+              label: props.languageLabel || 'In',
+              value: lang,
+              options: langs.map((l) => ({ value: l.value, label: l.label })),
+              onChange: (event: unknown) => chooseLang((event as { target: { value: string } }).target.value),
+            })
+          : null,
       ]),
       React.createElement('div', { key: 'head', className: 'rr-guide__head' }, [
         React.createElement(

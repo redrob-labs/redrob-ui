@@ -44,3 +44,13 @@ const plain = render({ collapsed: false });
 ok(!plain.includes('rr-shell__aside--folded'), 'no asideFolded prop: no folded aside markup');
 const plainFolded = render({ collapsed: true });
 ok(!plainFolded.includes('rr-shell__aside--folded'), 'folded without asideFolded: as before, nothing extra');
+
+// windowInset / dragRegion: custom properties and classes only when asked for.
+const inset = render({ collapsed: false, windowInset: { top: 28, end: 140 }, dragRegion: true });
+ok(inset.includes('rr-shell--inset') && inset.includes('--rr-shell-inset-top:28px') && inset.includes('--rr-shell-inset-end:140px') && inset.includes('--rr-shell-inset-end-h:40px'),
+  'windowInset sets the inset custom properties (endHeight defaults to 40)');
+ok(inset.includes('rr-shell--drag'), 'dragRegion marks the shell');
+const noInset = render({ collapsed: false });
+ok(!/rr-shell--inset|rr-shell--drag|style=/.test(noInset.split('>')[0]), 'no windowInset/dragRegion: no class, no inline style on the root');
+const css = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'dist', 'styles', 'system.css'), 'utf8');
+ok(/\.rr-shell--drag \.rr-shell__brand[^{]*\{[^}]*app-region: drag/.test(css) && /app-region: no-drag/.test(css), 'drag region keeps its controls clickable');

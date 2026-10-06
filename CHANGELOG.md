@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- `AppShell`: `windowInset` (`top`, `end`, `endHeight`) keeps a frameless desktop window's own controls off the page - the macOS traffic lights above the sidebar brand, the Windows caption buttons at the top-right of the header (or the rail) - and `dragRegion` makes the brand row and header drag the window while their controls stay clickable. Both are off by default; a shell without them renders no new class or inline style.
 - `AppShell`: `asideFolded`, what stays at the bottom of the sidebar when it is folded (or narrower than 900px) in place of `aside`, e.g. the account as an avatar-only menu button. Without it the folded shell renders as before.
 - `ModelGuide`: `harnessLabel`, `rankLabel` and `effortUnit`, so the "on <harness>", "#1 for <task>" and "<level> effort" text can be translated. Without them the English defaults render as before.
 

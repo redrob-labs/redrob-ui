@@ -2989,6 +2989,8 @@ Import: `import { AppShell } from '@redrob-labs/ui';`
 | `collapseLabel` | `string` | no |  |
 | `expandLabel` | `string` | no |  |
 | `skipLabel` | `React.ReactNode` | no |  |
+| `windowInset` | `{ top?: number; end?: number; endHeight?: number }` | no | Space the desktop window's own controls take over the page, for a frameless window. `top` is reserved above the sidebar brand (the macOS traffic lights of `titleBarStyle: 'hiddenInset'`); `end` is the width and `endHeight` (default 40) the height of the strip at the top-right corner (the Windows caption buttons of `titleBarOverlay`), kept clear in the header, or in the rail when there is one. Pixels. Omit in a browser. |
+| `dragRegion` | `boolean` | no | Makes the brand row and the header drag the window, for a frameless desktop window. Controls inside them stay clickable. Ignored by browsers, which have no `app-region`. |
 | `className` | `string` | no |  |
 | `children` | `React.ReactNode` | no |  |
 | `onCollapsedChange` | `(collapsed: boolean) => void` | no |  |

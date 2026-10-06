@@ -4781,6 +4781,24 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 }
 @media (prefers-reduced-motion: reduce) { .rr-shell { transition: none; } }
 
+/* A frameless desktop window draws its own controls over the page. The insets keep them
+   off the brand, the header actions and the rail; set only through AppShell's windowInset,
+   so a browser page is untouched. */
+.rr-shell--inset .rr-shell__brand { padding-top: calc(var(--space-5) + var(--rr-shell-inset-top, 0px)); }
+.rr-shell--inset .rr-shell__top {
+  min-height: var(--rr-shell-inset-end-h, 0px);
+  padding-inline-end: calc(var(--space-6) + var(--rr-shell-inset-end, 0px));
+}
+.rr-shell--inset:not(.rr-shell--norail) .rr-shell__top { padding-inline-end: var(--space-6); }
+.rr-shell--inset .rr-shell__rail { padding-top: calc(var(--space-5) + var(--rr-shell-inset-end-h, 0px)); }
+@media (max-width: 1180px) {
+  /* The rail is gone at this width, so the header is the top-right corner again. */
+  .rr-shell--inset:not(.rr-shell--norail) .rr-shell__top { padding-inline-end: calc(var(--space-6) + var(--rr-shell-inset-end, 0px)); }
+}
+.rr-shell--drag .rr-shell__brand, .rr-shell--drag .rr-shell__top { -webkit-app-region: drag; app-region: drag; -webkit-user-select: none; user-select: none; }
+.rr-shell--drag .rr-shell__brand :is(a, button, input, select, textarea, [role], [tabindex]),
+.rr-shell--drag .rr-shell__top :is(a, button, input, select, textarea, [role], [tabindex]) { -webkit-app-region: no-drag; app-region: no-drag; }
+
 /* ==========================================================================
    Playbooks, scheduling and connectors
    ========================================================================== */

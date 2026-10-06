@@ -1474,6 +1474,9 @@ Import: `import { ModelGuide } from '@redrob-labs/ui';`
 | `toolsLabel` | `React.ReactNode` | no |  |
 | `sourcesLabel` | `React.ReactNode` | no |  |
 | `rangeLabel` | `string` | no | "Likely between" before the monthly range. |
+| `harnessLabel` | `(harness: string) => React.ReactNode` | no | Where a pick runs, e.g. `(h) => \`on ${h}\`` (the default). |
+| `rankLabel` | `(place: number, task: string) => React.ReactNode` | no | The detail's rank line, e.g. `(place, task) => \`#${place} for ${task}\`` (the default). |
+| `effortUnit` | `string` | no | The word after an effort level, `effort` by default; `''` shows the level alone. |
 
 Exported types: `GuideKind`, `GuideStep`, `GuideSource`, `GuideTool`, `GuidePick`, `GuideTask`, `GuideProfession`.
 

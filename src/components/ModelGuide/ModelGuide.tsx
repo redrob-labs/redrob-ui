@@ -163,6 +163,12 @@ export interface ModelGuideProps {
   sourcesLabel?: React.ReactNode;
   /** "Likely between" before the monthly range. */
   rangeLabel?: string;
+  /** Where a pick runs, e.g. `(h) => \`on ${h}\`` (the default). */
+  harnessLabel?: (harness: string) => React.ReactNode;
+  /** The detail's rank line, e.g. `(place, task) => \`#${place} for ${task}\`` (the default). */
+  rankLabel?: (place: number, task: string) => React.ReactNode;
+  /** The word after an effort level, `effort` by default; `''` shows the level alone. */
+  effortUnit?: string;
 }
 
 const KIND_LABEL: Record<GuideKind, string> = {
@@ -198,6 +204,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
   const locale = props.locale || docLocale();
   const base = props.currency || 'USD';
   const rates = props.rates || {};
+  const onHarness = (h?: string): React.ReactNode => (props.harnessLabel && h ? props.harnessLabel(h) : `on ${h}`);
   let shown = currencyFor(
     props.locale || (typeof document !== 'undefined' && document.documentElement.lang) || locale,
     props.currencyByLang,
@@ -293,7 +300,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             React.createElement('li', { key: j }, [
               React.createElement('span', { key: 'm', className: 'rr-guide__stepname' }, st.model),
               st.role ? React.createElement('span', { key: 'r', className: 'rr-guide__steprole' }, st.role) : null,
-              st.effort ? React.createElement(EffortMeter, { key: 'e', effort: st.effort }) : null,
+              st.effort ? React.createElement(EffortMeter, { key: 'e', effort: st.effort, unit: props.effortUnit }) : null,
             ]),
           ),
         ),
@@ -407,10 +414,10 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
           React.createElement('span', { key: 'b', className: 'rr-model__body' }, [
             React.createElement('span', { key: 'n', className: 'rr-model__name' }, [
               React.createElement('span', { key: 'm' }, pickName(k)),
-              React.createElement('span', { key: 'o', className: 'rr-model__on' }, `on ${k.harness}`),
+              React.createElement('span', { key: 'o', className: 'rr-model__on' }, onHarness(k.harness)),
               soonBadge(k, 'c'),
             ]),
-            React.createElement(EffortMeter, { key: 'e', effort: k.effort }),
+            React.createElement(EffortMeter, { key: 'e', effort: k.effort, unit: props.effortUnit }),
             !adv && k.why ? React.createElement('span', { key: 'w', className: 'rr-model__why' }, k.why) : null,
             adv && k.score
               ? React.createElement(
@@ -551,7 +558,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
       React.createElement('div', { key: 'h', className: 'rr-guide__dhead' }, [
         React.createElement('div', { key: 'a' }, [
           React.createElement('p', { key: 'r', className: 'rr-guide__rank' }, [
-            `#${i + 1} for ${(task.label || '').toLowerCase()}`,
+            props.rankLabel ? props.rankLabel(i + 1, task.label || '') : `#${i + 1} for ${(task.label || '').toLowerCase()}`,
             i === 0
               ? React.createElement(
                   Badge,
@@ -562,9 +569,9 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
           ]),
           React.createElement('h3', { key: 'n', className: 'rr-guide__dname' }, [
             pickName(k),
-            React.createElement('span', { key: 'o' }, ` on ${k.harness}`),
+            React.createElement('span', { key: 'o' }, [' ', onHarness(k.harness)]),
           ]),
-          React.createElement(EffortMeter, { key: 'e', effort: k.effort }),
+          React.createElement(EffortMeter, { key: 'e', effort: k.effort, unit: props.effortUnit }),
           k.kind || k.comingSoon || (k.flags && k.flags.length)
             ? React.createElement('p', { key: 'k', className: 'rr-guide__badges' }, [
                 kindBadge(k.kind, 'k'),
@@ -627,7 +634,8 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             title: props.effortHint || 'The sample below was written at the ranked effort.',
           })
         : null,
-      React.createElement('div', { key: 's', className: 'rr-guide__sample' }, [
+      // No run to show (a guide ranked from published benchmarks): no empty prompt and output boxes.
+      !(task.prompt || sample.prompt || sample.output) ? null : React.createElement('div', { key: 's', className: 'rr-guide__sample' }, [
         React.createElement('div', { key: 'q', className: 'rr-guide__turn' }, [
           React.createElement(
             'p',

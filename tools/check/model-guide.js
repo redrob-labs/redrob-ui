@@ -56,3 +56,13 @@ ok(!rangeOnly.includes('rr-guide__costv') && rangeOnly.includes('Likely between'
 // Every string beside a tool tag takes a prop.
 const ko2 = renderToStaticMarkup(React.createElement(ModelGuide, { professions, languages: langs, language: 'ko', comingSoonLabel: '곧 지원', missingLabel: '지원 안 함' }));
 ok(ko2.includes('지원 안 함') && !ko2.includes('not available'), 'missingLabel replaces the hardcoded English');
+
+// 1.2.1: labels a consumer translates, and no empty sample boxes when a pick has no run.
+const lab = renderToStaticMarkup(React.createElement(ModelGuide, { professions, languages: langs,
+  harnessLabel: (h) => `(${h})`, rankLabel: (n, t) => `${t} ${n}위`, effortUnit: '' }));
+ok(lab.includes('(Redrob Desk)') && !lab.includes('on Redrob Desk'), 'harnessLabel replaces "on <harness>"');
+ok(lab.includes('Review contracts 1위') && !lab.includes('#1 for'), 'rankLabel replaces "#1 for <task>"');
+ok(!lab.includes('High effort') && lab.includes('High'), "effortUnit '' shows the level alone");
+ok(!lab.includes('rr-guide__sample'), 'no prompt/output boxes without a run');
+const run = renderToStaticMarkup(React.createElement(ModelGuide, { professions: [{ id: 'x', label: 'X', tasks: [{ id: 't', label: 'T', prompt: 'Ask', picks: [pick('p', { sample: { output: 'Out' } })] }] }] }));
+ok(run.includes('rr-guide__sample') && run.includes('High effort') && run.includes('on Redrob Desk'), 'defaults unchanged with a run');

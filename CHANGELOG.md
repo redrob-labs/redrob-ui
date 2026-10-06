@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- `ModelGuide`: `harnessLabel`, `rankLabel` and `effortUnit`, so the "on <harness>", "#1 for <task>" and "<level> effort" text can be translated. Without them the English defaults render as before.
+
+### Fixed
+- `ModelGuide`: a pick with no sample run (no `task.prompt`, `sample.prompt` or `sample.output`) no longer shows empty "What it was asked" and "What it wrote" boxes.
+
 ## 1.2.0
 
 ### Added

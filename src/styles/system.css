@@ -4492,6 +4492,24 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
   .rr-guide__grid, .rr-guide__ask { grid-template-columns: minmax(0, 1fr); }
   .rr-guide__detail { padding: var(--space-4); }
 }
+/* The guide reflows on its own width, not the window's: in a product frame with a menu and
+   a side panel the column can be 600px on a 1440px screen, and the viewport query above never
+   fires. The query stays for browsers without container queries. */
+.rr-guide { container: rr-guide / inline-size; }
+.rr-guide__detail { container: rr-guide-detail / inline-size; }
+@container rr-guide (max-width: 880px) {
+  .rr-guide__grid, .rr-guide__ask, .rr-guide__ask--lang { grid-template-columns: minmax(0, 1fr); }
+  .rr-guide__detail { padding: var(--space-4); }
+}
+@container rr-guide (min-width: 560px) and (max-width: 880px) {
+  .rr-guide__ask--lang { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .rr-guide__ask--lang > :first-child { grid-column: 1 / -1; }
+}
+@container rr-guide-detail (max-width: 480px) {
+  .rr-guide__dhead { flex-direction: column; gap: var(--space-3); }
+  .rr-guide__cost { align-items: flex-start; text-align: left; }
+  .rr-guide__costu { max-width: none; }
+}
 
 /* =====================================================================
    How Desk works for you: Redrob Auto in ModelPicker, the status line

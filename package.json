@@ -66,6 +66,7 @@
     "guide:check": "node tools/check/model-guide.js",
     "floating:check": "yarn build && node tools/check/floating.js",
     "shell:check": "node tools/check/shell.js",
+    "insights:check": "node tools/check/insights.js",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {

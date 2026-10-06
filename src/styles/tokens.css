@@ -100,6 +100,29 @@
   --shadow-sm: 0 1px 2px rgba(10, 11, 12, 0.08); /* Resting cards and inputs. */
   --shadow-md: 0 4px 12px rgba(10, 11, 12, 0.10); /* Menus, popovers and hovered cards. */
   --shadow-lg: 0 16px 40px rgba(10, 11, 12, 0.14); /* Modals and dialogs. */
+  /* Insight charts (MixBar, BulletBar, BarList, HeatCell, Histogram). Beyond the delivery: ported from
+     the Crew prototype's --cw-* chart variables when Crew's screens moved into Console. */
+  --chart-track: var(--gray-2); /* Empty track behind a bar; the ground a share is measured against. */
+  --chart-good: var(--blue-6); /* A change the good way, and the reader's own figure. */
+  --chart-bad: var(--accent-orange-4); /* A change the bad way. Orange, not red: something to help with, not an error. */
+  --ordinal-0: var(--gray-3); /* Ordinal ramp, step 0 (shallowest, e.g. Look up). Light to deep, so order reads without a key. */
+  --ordinal-1: var(--blue-2);
+  --ordinal-2: var(--blue-3);
+  --ordinal-3: var(--blue-5);
+  --ordinal-4: var(--blue-7);
+  --ordinal-5: var(--blue-9); /* Ordinal ramp, step 5 (deepest, e.g. Orchestrate). */
+  --ordinal-ink-0: var(--gray-9); /* Figure printed on ordinal step 0. */
+  --ordinal-ink-1: var(--blue-10);
+  --ordinal-ink-2: var(--blue-10);
+  --ordinal-ink-3: var(--redrob-white);
+  --ordinal-ink-4: var(--redrob-white);
+  --ordinal-ink-5: var(--redrob-white);
+  --heat-pos-1: #e3ecff; /* Compare grid: 3-8 points the good way. */
+  --heat-pos-2: #bad2ff; /* 8-15 points the good way. */
+  --heat-pos-3: #8aafff; /* 15 points or more the good way. */
+  --heat-neg-1: #fff1e2; /* Compare grid: 3-8 points the bad way. */
+  --heat-neg-2: #ffd5ab; /* 8-15 points the bad way. */
+  --heat-neg-3: #ffb571; /* 15 points or more the bad way. */
   /* Product colours. Eight products, each a mark (step 6), a 10-step ramp, three themed roles and
      three `beyond` grounds -- 136 declarations. The first seven are transcribed from the delivery's
      tokens.json. Console is the Group's own product (the control plane every other product signs in
@@ -185,6 +208,28 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.7);
   --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.8);
+  --chart-track: var(--gray-8);
+  --chart-good: var(--blue-5);
+  --chart-bad: var(--accent-orange-3);
+  /* The ordinal ramp runs the other way on dark: deep work is the brightest, so it still reads as most. */
+  --ordinal-0: var(--gray-6);
+  --ordinal-1: var(--blue-7);
+  --ordinal-2: var(--blue-6);
+  --ordinal-3: var(--blue-5);
+  --ordinal-4: var(--blue-3);
+  --ordinal-5: var(--blue-1);
+  --ordinal-ink-0: var(--redrob-white);
+  --ordinal-ink-1: var(--redrob-white);
+  --ordinal-ink-2: var(--redrob-white);
+  --ordinal-ink-3: var(--redrob-white);
+  --ordinal-ink-4: var(--blue-10);
+  --ordinal-ink-5: var(--blue-10);
+  --heat-pos-1: #0d1c4f;
+  --heat-pos-2: #15318a;
+  --heat-pos-3: #2445c4;
+  --heat-neg-1: #3a2208;
+  --heat-neg-2: #5c3405;
+  --heat-neg-3: #8a4c00;
   /* Product roles, dark: the ramp read from the far end -- wash 10, fill 9, line 8. */
   --product-router-wash: var(--product-router-10); --product-router-fill: var(--product-router-9); --product-router-line: var(--product-router-8);
   --product-chat-wash: var(--product-chat-10); --product-chat-fill: var(--product-chat-9); --product-chat-line: var(--product-chat-8);

@@ -50,9 +50,27 @@ export interface AppShellProps {
   collapseLabel?: string;
   expandLabel?: string;
   skipLabel?: React.ReactNode;
+  /**
+   * Space the desktop window's own controls take over the page, for a frameless window. `top` is reserved
+   * above the sidebar brand (the macOS traffic lights of `titleBarStyle: 'hiddenInset'`); `end` is the width
+   * and `endHeight` (default 40) the height of the strip at the top-right corner (the Windows caption buttons
+   * of `titleBarOverlay`), kept clear in the header, or in the rail when there is one. Pixels. Omit in a browser.
+   */
+  windowInset?: { top?: number; end?: number; endHeight?: number };
+  /**
+   * Makes the brand row and the header drag the window, for a frameless desktop window. Controls inside them
+   * stay clickable. Ignored by browsers, which have no `app-region`.
+   */
+  dragRegion?: boolean;
   className?: string;
   children?: React.ReactNode;
   onCollapsedChange?: (collapsed: boolean) => void;
+  /**
+   * Called when a nav link is followed with a plain click, for an app with a client-side router. Call
+   * `event.preventDefault()` and route to `href` yourself; leave it alone and the browser navigates. A click
+   * with a modifier key or another button is never passed here, so "open in new tab" keeps working.
+   */
+  onNavigate?: (href: string, event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 /**
@@ -61,7 +79,7 @@ export interface AppShellProps {
  * The lockup goes through `Mark` rather than a bare `img`, so it follows the theme. A bare img here is how the
  * first screen lost its wordmark in dark.
  *
- * `product` is validated against the seven real products and dropped otherwise. The component knows only the
+ * `product` is validated against the eight real products and dropped otherwise. The component knows only the
  * attribute; the colours are the `product-<p>-wash` tokens. An unrecognised name would set an attribute that
  * matches no token and silently render no wash, so it is rejected instead.
  *
@@ -76,7 +94,7 @@ export function AppShell(props: AppShellProps): React.ReactElement {
   const railId = 'rr-shell-rail';
 
   let pkey = props.product ? String(props.product).toLowerCase().replace(/^redrob\s+/, '') : null;
-  if (pkey && !/^(router|chat|code|desk|office|browser|design)$/.test(pkey)) pkey = null;
+  if (pkey && !/^(router|chat|code|desk|office|browser|design|console)$/.test(pkey)) pkey = null;
 
   const foldControlled = props.collapsed !== undefined;
   const [heldFold, setHeldFold] = React.useState<boolean>(() => {
@@ -102,6 +120,19 @@ export function AppShell(props: AppShellProps): React.ReactElement {
     if (props.onCollapsedChange) props.onCollapsedChange(next);
   }
 
+  // The insets are custom properties, so the stylesheet decides where each one lands and a shell without
+  // them carries no inline style at all.
+  const inset = props.windowInset;
+  let insetStyle: Record<string, string> | undefined;
+  if (inset && (inset.top || inset.end)) {
+    insetStyle = {};
+    if (inset.top) insetStyle['--rr-shell-inset-top'] = `${Math.max(0, inset.top)}px`;
+    if (inset.end) {
+      insetStyle['--rr-shell-inset-end'] = `${Math.max(0, inset.end)}px`;
+      insetStyle['--rr-shell-inset-end-h'] = `${Math.max(0, inset.endHeight != null ? inset.endHeight : 40)}px`;
+    }
+  }
+
   return React.createElement(
     'div',
     {
@@ -109,8 +140,11 @@ export function AppShell(props: AppShellProps): React.ReactElement {
         'rr-shell',
         !props.rail && 'rr-shell--norail',
         folded && 'rr-shell--folded',
+        insetStyle && 'rr-shell--inset',
+        props.dragRegion && 'rr-shell--drag',
         props.className,
       ),
+      style: insetStyle as React.CSSProperties | undefined,
       'data-product': pkey || undefined,
     },
     [
@@ -185,6 +219,13 @@ export function AppShell(props: AppShellProps): React.ReactElement {
                   {
                     key: tip ? 'a' : key,
                     href: it.href || '#',
+                    onClick:
+                      props.onNavigate && it.href
+                        ? (e: React.MouseEvent<HTMLAnchorElement>) => {
+                            if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                            props.onNavigate!(it.href as string, e);
+                          }
+                        : undefined,
                     className: it.icon ? undefined : 'rr-shell__navitem--text',
                     'aria-current': it.current ? 'page' : undefined,
                   },

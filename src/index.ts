@@ -140,6 +140,31 @@ export { AvatarMark } from './components/AvatarMark/AvatarMark';
 export type { AvatarMarkProps } from './components/AvatarMark/AvatarMark';
 export { seriesColor, niceMax, SERIES_LIGHT, SERIES_DARK } from './internal/chart';
 
+/* ---- Insights ------------------------------------------------------------ */
+/* Beyond the delivery: the analytics marks for AI-adoption views (Console Insights). */
+export { MixBar } from './components/MixBar/MixBar';
+export type { MixBarProps } from './components/MixBar/MixBar';
+export { MixColumns } from './components/MixColumns/MixColumns';
+export type { MixColumnsProps } from './components/MixColumns/MixColumns';
+export { MixKey } from './components/MixKey/MixKey';
+export type { MixKeyProps } from './components/MixKey/MixKey';
+export { BulletBar } from './components/BulletBar/BulletBar';
+export type { BulletBarProps } from './components/BulletBar/BulletBar';
+export { BarList } from './components/BarList/BarList';
+export type { BarListProps, BarListRow } from './components/BarList/BarList';
+export { CompareBar } from './components/CompareBar/CompareBar';
+export type { CompareBarProps } from './components/CompareBar/CompareBar';
+export { Histogram } from './components/Histogram/Histogram';
+export type { HistogramProps } from './components/Histogram/Histogram';
+export { HeatCell } from './components/HeatCell/HeatCell';
+export type { HeatCellProps } from './components/HeatCell/HeatCell';
+export { Delta } from './components/Delta/Delta';
+export type { DeltaProps } from './components/Delta/Delta';
+export { PrivacyFloor } from './components/PrivacyFloor/PrivacyFloor';
+export type { PrivacyFloorProps } from './components/PrivacyFloor/PrivacyFloor';
+export { heatBand } from './internal/insight';
+export type { HeatBand, MixStep } from './internal/insight';
+
 /* ---- Agent chat ---------------------------------------------------------- */
 export { Message } from './components/Message/Message';
 export type { MessageProps } from './components/Message/Message';

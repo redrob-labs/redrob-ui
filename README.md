@@ -2,7 +2,7 @@
 
 한국어: [README.ko.md](./README.ko.md)
 
-The **Redrob Group Design System 2026**, as typed React components: 123 components and 260 icons,
+The **Redrob Group Design System 2026**, as typed React components: 133 components and 260 icons,
 written in TypeScript, styled with plain CSS on design tokens.
 
 `@redrob-labs/ui`
@@ -81,9 +81,9 @@ that cannot run React can still be the same product visually.
 
 | layer | what it is | who it is for |
 | --- | --- | --- |
-| `@redrob-labs/ui` | 123 typed components | Next and Electron renderers: the sites, console, chat, Office |
+| `@redrob-labs/ui` | 133 typed components | Next and Electron renderers: the sites, console, chat, Office |
 | `tokens.css` + `styles.css` + `fonts/` | 149 class blocks, 1,239 selectors, no React | Vue, Solid, Chromium WebUI, plain HTML |
-| `tokens.json` + `native/*` | 172 tokens resolved to literals | C++ window chrome, Android, iOS |
+| `tokens.json` + `native/*` | 332 tokens resolved to literals | C++ window chrome, Android, iOS |
 
 ### CSS only — Vue, Solid, Chromium WebUI, plain HTML
 
@@ -108,7 +108,7 @@ app in Kotlin; neither can read it. So the `var()` chains are resolved here, per
 over as literals:
 
 ```
-@redrob-labs/ui/tokens.json        172 tokens, both themes, with the chain each one resolved through
+@redrob-labs/ui/tokens.json        332 tokens, both themes, with the chain each one resolved through
 @redrob-labs/ui/native/redrob_tokens.h    89 colours × 2 themes, 0xAARRGGBB for SkColor
 @redrob-labs/ui/native/RedrobTokens.kt    the same, as Kotlin Longs
 ```
@@ -134,7 +134,7 @@ React Native renders to native views, not to `div` and CSS classes, so neither t
 stylesheets apply there — only the token layer does. A mobile app inside a WebView or as a PWA uses
 all three layers unchanged.
 
-Of the 172 tokens, 29 are CSS `font` shorthands that still contain a `var()` — every text style is
+Of the 332 tokens, 29 are CSS `font` shorthands that still contain a `var()` — every text style is
 `600 21px/28px var(--font-sans)`, and only a whole-value alias can be followed further. They are
 flagged `containsVar` in `tokens.json`. No colour is among them, so the native headers are unaffected.
 

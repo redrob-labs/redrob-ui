@@ -22,9 +22,10 @@ const PRODUCT_GROUNDS: Record<string, 1> = {
   office: 1,
   browser: 1,
   design: 1,
+  console: 1,
 };
 
-export type BandProduct = 'router' | 'chat' | 'code' | 'desk' | 'office' | 'browser' | 'design';
+export type BandProduct = 'router' | 'chat' | 'code' | 'desk' | 'office' | 'browser' | 'design' | 'console';
 
 export interface BandProps {
   /** Which ground this stretch of page sits on. */

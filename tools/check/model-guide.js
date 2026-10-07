@@ -66,3 +66,10 @@ ok(!lab.includes('High effort') && lab.includes('High'), "effortUnit '' shows th
 ok(!lab.includes('rr-guide__sample'), 'no prompt/output boxes without a run');
 const run = renderToStaticMarkup(React.createElement(ModelGuide, { professions: [{ id: 'x', label: 'X', tasks: [{ id: 't', label: 'T', prompt: 'Ask', picks: [pick('p', { sample: { output: 'Out' } })] }] }] }));
 ok(run.includes('rr-guide__sample') && run.includes('High effort') && run.includes('on Redrob Desk'), 'defaults unchanged with a run');
+
+// Layout: the guide reflows on its own width (a product frame's column), not the viewport's. The
+// browser behaviour is checked in the Cowork screenshot sweep; this keeps the rules from being dropped.
+const css = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'dist', 'styles', 'system.css'), 'utf8');
+ok(/\.rr-guide\s*\{\s*container:\s*rr-guide\s*\/\s*inline-size/.test(css) && /@container rr-guide \(max-width: 880px\)/.test(css),
+  'guide grid and selects stack on a narrow container');
+ok(/@container rr-guide-detail \(max-width: 480px\)/.test(css), 'detail header stacks on a narrow detail');

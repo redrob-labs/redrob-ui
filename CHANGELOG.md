@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.3.0
 
 ### Added
 - Insights, a new group of ten analytics marks for AI-adoption views, moved in from the Crew prototype when Crew's screens moved into Console: `MixBar`, `MixColumns` and `MixKey` (an ordinal mix such as the six modes of AI use, as one bar, as columns over time, and its legend), `BulletBar` (a figure against its target and a comparison), `BarList` (groups on one scale, with a hatched, number-free row for a group under the privacy floor), `CompareBar` (one group against a wider one), `Histogram`, `HeatCell` (a compare-grid `td` shaded by distance from a baseline, unshaded within 3 points), `Delta` (a signed, direction-judged change) and `PrivacyFloor` (the lock and "Groups of 3 or more"). Plus `heatBand()` and the `MixStep`/`HeatBand` types. Every mark carries its figures as text as well, and every English default can be replaced for translation. None has a case in the reference delivery, so `yarn insights:check` (now in CI, beside `yarn shell:check`) asserts their behaviour.

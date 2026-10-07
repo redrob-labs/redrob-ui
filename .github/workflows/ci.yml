@@ -81,6 +81,17 @@ jobs:
       - name: Assert the ModelGuide language, chain and evidence props render
         run: yarn guide:check
 
+      # Parity renders AppShell open and without a product, so it cannot see the folded state, the
+      # window insets, onNavigate or the product wash. This renders those and asserts their markup.
+      - name: Assert the AppShell states parity cannot see
+        run: yarn shell:check
+
+      # The insight charts (MixBar, BarList, HeatCell, ...) have no case in the reference delivery.
+      # This asserts what they exist for: every figure in text as well as in a mark, no number for a
+      # group under the privacy floor, heat bands that follow the measure's direction.
+      - name: Assert the insight charts keep their figures readable and their floors
+        run: yarn insights:check
+
       # CSS has no compiler. `var(--x)` naming a property nothing declares is not a parse error - it
       # invalidates its own declaration at computed-value time and the cascade moves on. This caught 28
       # of them: the delivery's tokens.json defines 119 product tokens and its tokens.css declared

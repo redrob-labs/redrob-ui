@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { useDismiss } from '../../internal/useDismiss';
+import { useFloating } from '../../internal/useFloating';
 import { icons } from '../../icons';
 
 export interface MenuItem {
@@ -51,6 +52,15 @@ export function Menu(props: MenuProps): React.ReactElement {
   const [open, setOpen] = React.useState(!!props.defaultOpen);
   const close = React.useCallback(() => setOpen(false), []);
   const ref = useDismiss<HTMLDivElement>(open, close);
+  // Placed against the window, so a menu in a clipped or scrolling container still shows whole.
+  useFloating(
+    open,
+    () => [
+      ref.current && ref.current.querySelector<HTMLElement>(':scope > button'),
+      ref.current && ref.current.querySelector<HTMLElement>(':scope > .rr-menu__list'),
+    ],
+    { side: props.placement === 'up' ? 'top' : 'bottom', align: props.align === 'right' ? 'end' : 'start', fitHeight: true },
+  );
   const actionable = items.filter((item) => item.type !== 'separator' && !item.disabled);
   const iconOnly = !!props.icon && (props.label == null || props.label === '');
   // The accessible name. A label that is a node (an icon and text) has no string to give, so it needs

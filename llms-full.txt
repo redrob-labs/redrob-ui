@@ -1,6 +1,6 @@
 # @redrob-labs/ui - full reference
 
-Version 1.2.0. 135 React components on the Redrob Group Design System 2026, plus 260 icons.
+Version 1.3.0. 145 React components on the Redrob Group Design System 2026, plus 260 icons.
 
 ## Using the package
 
@@ -1263,6 +1263,168 @@ Import: `import { AvatarMark } from '@redrob-labs/ui';`
 | `seed` | `string \| number` | no | Overrides the name as the hash input, so a mark can stay put when a name changes. |
 | `family` | `(typeof MARK_FAMILIES)[number]` | no | Pin the accent family instead of deriving it. |
 | `label` | `string` | no | Names the mark. Without it the SVG is decorative and hidden. |
+| `className` | `string` | no |  |
+
+### Insights
+
+#### MixBar
+
+One 100% bar of an ordinal mix - how a body of work splits across steps that have an order, such as the six modes of AI use from Look up to Orchestrate.
+
+The colours are the ordinal ramp (`--ordinal-0..5`), light to deep, never categorical series colours: the steps are ordered, and a palette of unrelated hues would hide that order. The full text equivalent ("Look up 20%, Learn 15%, ...") is the accessible name and the tooltip, so the bar never carries a figure that only colour can tell.
+
+Import: `import { MixBar } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `mix` | `Array<number \| null>` | no | One share 0-100 per step, in step order. `null` or 0 draws no segment. |
+| `steps` | `MixStep[]` | no | The ordinal steps, shallowest first, at most six. Their names make the accessible text. |
+| `label` | `string` | no | Whose mix this is - "Your team" - prefixed to the accessible text. |
+| `thin` | `boolean` | no | A 8px strip with no numbers, for a table row. |
+| `showFrom` | `number` | no | Segments at or above this share print their number. 9 by default: below it the digits do not fit. |
+| `className` | `string` | no |  |
+
+#### MixColumns
+
+The same ordinal mix over time: one 100% column per period, the shallowest step at the bottom, so a shift towards deeper work reads as the dark part of the columns growing.
+
+An empty period is drawn as an empty track, not left out: dropping it would close the gap and make two weeks apart look adjacent.
+
+Import: `import { MixColumns } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `periods` | `Array<Array<number \| null>>` | no | One mix per period (each a share 0-100 per step), oldest first. An all-zero mix is an empty column. |
+| `labels` | `string[]` | no | A label per period, e.g. the week's start date. Every other one is printed under the columns. |
+| `steps` | `MixStep[]` | no |  |
+| `alt` | `string` | no | Accessible name of the whole chart. |
+| `periodPrefix` | `string` | no | Prefix of each column's tooltip, before its label. "Week of" by default. |
+| `className` | `string` | no |  |
+
+#### MixKey
+
+The legend for `MixBar` and `MixColumns`: a swatch of the ordinal ramp and the step's name.
+
+Import: `import { MixKey } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `steps` | `MixStep[]` | no |  |
+| `full` | `boolean` | no | Stacks the key and adds each step's defining sentence. For the first time a reader meets the scale. |
+| `className` | `string` | no |  |
+
+#### BulletBar
+
+A bullet graph: where a figure is against its goal, and optionally against a comparison, in the space of a table cell. For a habit with a target ("Check, target 85%") rather than a figure that only goes up.
+
+The full reading ("Now 72% · target 85% · Company 78%") is the accessible name, so the ticks are never the only way to tell the three apart.
+
+Import: `import { BulletBar } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `value` | `number \| null` | no |  |
+| `target` | `number` | yes | The goal. Drawn as a band up to it and a tick at it. |
+| `compare` | `number \| null` | no | A comparison, e.g. the company figure. A thinner tick. |
+| `compareLabel` | `string` | no |  |
+| `valueLabel` | `string` | no | "Now" by default. |
+| `targetLabel` | `string` | no | "target" by default. |
+| `max` | `number` | no |  |
+| `format` | `(v: number \| null \| undefined) => string` | no |  |
+| `className` | `string` | no |  |
+
+#### BarList
+
+Horizontal bars on one shared scale, one row per group, for comparing teams, tools or kinds of work.
+
+Each row is a list item whose text carries the label, the figure and its note, so the list reads in full without the bars. A group below the privacy floor keeps its row - leaving it out would let a reader subtract it back from the total - but shows a hatched track and the reason instead of a number.
+
+Import: `import { BarList } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `rows` | `BarListRow[]` | no |  |
+| `format` | `(v: number \| null \| undefined) => string` | no |  |
+| `max` | `number` | no | The scale's end. The largest value or reference by default. |
+| `referenceLabel` | `React.ReactNode` | no | Legend for the reference tick, printed under the list. |
+| `hiddenLabel` | `string` | no | What a hidden row says. "Fewer than 3 people" by default. |
+| `onNavigate` | `(href: string, event: React.MouseEvent<HTMLAnchorElement>) => void` | no | Plain-click handler for linked rows, for a client-side router. Same contract as `AppShell.onNavigate`. |
+| `className` | `string` | no |  |
+
+Exported types: `BarListRow`.
+
+#### CompareBar
+
+One measure for one group against a wider one: a team's figure as a bar, the company's as a tick, both printed beside it. Stack several for "Against the company".
+
+Import: `import { CompareBar } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `label` | `React.ReactNode` | yes |  |
+| `value` | `number \| null` | no |  |
+| `compare` | `number \| null` | no | The figure to compare against, drawn as a tick on the same track. |
+| `compareLabel` | `string` | no | "Company" by default; printed before the comparison figure. |
+| `max` | `number` | no |  |
+| `format` | `(v: number \| null \| undefined) => string` | no |  |
+| `className` | `string` | no |  |
+
+#### Histogram
+
+How a set of runs spreads across ranges of one figure, e.g. agent runs by actions per instruction. Columns only, no axis: the counts are in the accessible name and each column's tooltip.
+
+Import: `import { Histogram } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `bins` | `number[]` | no | A count per bin, in bin order. |
+| `labels` | `string[]` | no | A label per bin, e.g. "1-2", "3-5". |
+| `highlightFrom` | `number` | no | Bins from this index on are drawn in the brand colour - the range the reader is aiming for. |
+| `alt` | `string` | no | Accessible name; the counts are appended to it. |
+| `className` | `string` | no |  |
+
+#### HeatCell
+
+A table cell shaded by how far its figure sits from a baseline, for a compare grid (teams by measures).
+
+Within 3 points is noise and is not shaded. Beyond it, three steps of the brand blue for the good direction and three of orange for the bad one - orange rather than red, because a team behind its peers is something to help with, not an error. Renders a `td`; place it in a `tr`.
+
+Import: `import { HeatCell } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `diff` | `number \| null` | no | Difference from the baseline, in points. `null`: there is no baseline to compare with. |
+| `up` | `boolean \| null` | no | Whether higher is better. `false` flips the shading; `null` shades nothing. |
+| `children` | `React.ReactNode` | no | What the cell says - the value, and the difference. It must carry both: colour is never the only signal. |
+| `title` | `string` | no |  |
+| `className` | `string` | no |  |
+
+#### Delta
+
+A signed change with an arrow, coloured by whether it moved the good way: "+3 pts" beside a figure in a table or a tile.
+
+The arrow carries the direction as well as the colour. A move the bad way is the warning colour, not danger: a figure falling is a reason to look, not a failure. A change that rounds to zero is flat, and a missing one renders nothing rather than "+0".
+
+Import: `import { Delta } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `value` | `number \| null` | no | The change. Rounded to a whole number before it is shown or judged. |
+| `up` | `boolean \| null` | no | Whether up is good. `false` for figures like rework; `null` when neither direction is better. |
+| `suffix` | `string` | no | Unit after the number: " pts", "%", " h". Nothing by default. |
+| `suffixOne` | `string` | no | A unit for exactly one, e.g. " pt" beside " pts". |
+| `className` | `string` | no |  |
+
+#### PrivacyFloor
+
+The lock and "Groups of 3 or more" beside a view of other people's work: the promise that no figure on the screen describes fewer people than that. Put it where the scope is named, not in a footer.
+
+Import: `import { PrivacyFloor } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `minGroup` | `number` | no | The smallest group a figure is shown for. |
+| `children` | `React.ReactNode` | no | Replaces the default "Groups of 3 or more", e.g. a translation. |
 | `className` | `string` | no |  |
 
 ### Agent chat
@@ -2957,7 +3119,7 @@ The product frame: sidebar, the work, an optional rail.
 
 The lockup goes through `Mark` rather than a bare `img`, so it follows the theme. A bare img here is how the first screen lost its wordmark in dark.
 
-`product` is validated against the seven real products and dropped otherwise. The component knows only the attribute; the colours are the `product-<p>-wash` tokens. An unrecognised name would set an attribute that matches no token and silently render no wash, so it is rejected instead.
+`product` is validated against the eight real products and dropped otherwise. The component knows only the attribute; the colours are the `product-<p>-wash` tokens. An unrecognised name would set an attribute that matches no token and silently render no wash, so it is rejected instead.
 
 `main` holds the page heading, not just the body, so the skip link lands on the one `h1` rather than above it. `tabIndex={-1}` is what lets focus actually arrive.
 
@@ -2994,6 +3156,7 @@ Import: `import { AppShell } from '@redrob-labs/ui';`
 | `className` | `string` | no |  |
 | `children` | `React.ReactNode` | no |  |
 | `onCollapsedChange` | `(collapsed: boolean) => void` | no |  |
+| `onNavigate` | `(href: string, event: React.MouseEvent<HTMLAnchorElement>) => void` | no | Called when a nav link is followed with a plain click, for an app with a client-side router. Call `event.preventDefault()` and route to `href` yourself; leave it alone and the browser navigates. A click with a modifier key or another button is never passed here, so "open in new tab" keeps working. |
 
 Exported types: `AppShellNavItem`.
 

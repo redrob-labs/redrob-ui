@@ -73,6 +73,12 @@ export interface GuidePick {
   /** One real run: the prompt, the output, and whether it is illustrative. */
   sample?: { prompt?: React.ReactNode; output?: React.ReactNode; more?: React.ReactNode; illustrative?: boolean };
   runHref?: string;
+  /**
+   * A reference point, not a pick on offer: the same ranking run on someone else's product, shown so a reader
+   * can compare. It is greyed, carries no rank of its own and takes no slot in the top `limit`, and its detail
+   * has no "use" action, because choosing it here would not run it there.
+   */
+  benchmark?: boolean;
 }
 
 export interface GuideTask {
@@ -88,6 +94,13 @@ export interface GuideTask {
   picks?: GuidePick[];
   /** The top five per working language, keyed like `languages`. Falls back to `picks`. */
   picksByLanguage?: Record<string, GuidePick[]>;
+  /**
+   * The top five when the reader needs a particular deliverable, keyed by output (as in `outputs`) and then by
+   * working language. A task offers exactly the outputs keyed here; any other output reads as "anything", so a
+   * task that makes no slides never shows a slide ranking borrowed from another. An output keyed with no
+   * ranking for the working language falls back to the task's own ranking rather than an empty state.
+   */
+  picksByOutput?: Record<string, Record<string, GuidePick[]>>;
 }
 
 export interface GuideProfession {
@@ -155,6 +168,22 @@ export interface ModelGuideProps {
   defaultLanguage?: string;
   onLanguageChange?: (language: string) => void;
   languageLabel?: string;
+  /**
+   * What the work has to produce (documents, presentations, graphics...), which re-ranks the picks. Shown as a
+   * select when given, listing "anything" and then only the outputs the current task has a ranking for. Named
+   * `deliverable*` because `outputLabel` already labels a pick's sample output.
+   */
+  outputs?: Array<{ value: string; label: string }>;
+  /** Controlled output; `''` is "anything". */
+  output?: string;
+  defaultOutput?: string;
+  onOutputChange?: (output: string) => void;
+  deliverableLabel?: string;
+  /** The first option, which ranks for the task as a whole. */
+  anyOutputLabel?: string;
+  /** The badge on a `benchmark` pick, and the line its detail shows in place of the "use" action. */
+  benchmarkLabel?: React.ReactNode;
+  benchmarkNote?: React.ReactNode;
   kindLabels?: Partial<Record<GuideKind, string>>;
   comingSoonLabel?: React.ReactNode;
   /** Beside a tool the harness has no equivalent for. Sits with `comingSoonLabel`, not hardcoded. */
@@ -221,15 +250,42 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
   );
   const lang = props.language !== undefined ? props.language : langHeld;
   const byLang = task.picksByLanguage && lang ? task.picksByLanguage[lang] : undefined;
+  const outs = props.outputs || [];
+  const [outHeld, setOutHeld] = React.useState<string>(props.defaultOutput || '');
+  const outWanted = props.output !== undefined ? props.output : outHeld;
+  const byOutput = task.picksByOutput || {};
+  // Only the outputs this task is ranked for. One it is not ranked for reads as "anything" rather than
+  // persisting across a task change, so switching from slides to a task without slides never shows an
+  // empty list or a ranking for a deliverable the task does not make.
+  const offered = outs.filter((o) => byOutput[o.value]);
+  const out = offered.some((o) => o.value === outWanted) ? outWanted : '';
+  const outPool = out ? byOutput[out] : undefined;
+  const byOut = outPool ? (lang ? outPool[lang] : outPool[Object.keys(outPool)[0]]) : undefined;
   // A language that is keyed but holds no ranking yet falls back as an absent key does. Truthiness
   // would not: `[]` is truthy, so "ranked for Korean, not yet for Hindi" would render the empty
   // state instead of the language-neutral picks.
-  const picks = ((byLang && byLang.length ? byLang : task.picks) || []).slice(0, limit);
+  const ranked = (byOut && byOut.length ? byOut : byLang && byLang.length ? byLang : task.picks) || [];
+  // The cut counts ranked picks only. A benchmark sits beside the pick it is compared with and is
+  // kept while the ranked count is within `limit`, so it never pushes the fifth pick off the list.
+  const picks: GuidePick[] = [];
+  const rankOf: Record<string, number | null> = {};
+  let placed = 0;
+  for (const k of ranked) {
+    if (k.benchmark) {
+      picks.push(k);
+      rankOf[k.id] = null;
+      continue;
+    }
+    if (placed >= limit) break;
+    placed += 1;
+    picks.push(k);
+    rankOf[k.id] = placed;
+  }
 
   const [modeHeld, setModeHeld] = React.useState<'simple' | 'advanced'>(props.defaultMode || 'simple');
   const mode = props.mode !== undefined ? props.mode : modeHeld;
   const [pickId, setPickId] = React.useState<string | null>(null);
-  const current = picks.filter((k) => k.id === pickId)[0] || picks[0];
+  const current = picks.filter((k) => k.id === pickId)[0] || picks.filter((k) => !k.benchmark)[0] || picks[0];
   // A level the reader tries on the open pick, or null for the ranked one; reset when the pick changes.
   const [tried, setTried] = React.useState<{ id: string | null; level: number | null }>({ id: null, level: null });
   const tryLevel = current && tried.id === current.id ? tried.level : null;
@@ -261,6 +317,18 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
     if (props.language === undefined) setLangHeld(l);
     setPickId(null);
     if (props.onLanguageChange) props.onLanguageChange(l);
+  }
+
+  function chooseOutput(o: string): void {
+    if (props.output === undefined) setOutHeld(o);
+    setPickId(null);
+    if (props.onOutputChange) props.onOutputChange(o);
+  }
+
+  function benchBadge(k: GuidePick, key: string): React.ReactElement | null {
+    return k.benchmark
+      ? React.createElement(Badge, { key, tone: 'neutral', size: 'sm' }, props.benchmarkLabel || 'Benchmark')
+      : null;
   }
 
   /** "A → B" for a pick that runs models in sequence; the model's own name otherwise. */
@@ -388,9 +456,10 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
     );
   }
 
-  function row(k: GuidePick, i: number): React.ReactElement {
+  function row(k: GuidePick): React.ReactElement {
     const on = current && k.id === current.id;
     const total = guideTotal(k, w);
+    const rank = rankOf[k.id];
     return React.createElement(
       'li',
       { key: k.id },
@@ -398,17 +467,21 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
         'button',
         {
           type: 'button',
-          className: 'rr-guide__row',
+          className: cx('rr-guide__row', k.benchmark && 'is-benchmark'),
           'aria-pressed': String(on),
           onClick: () => setPickId(k.id),
         },
         [
-          React.createElement('span', { key: 'r', className: 'rr-model__rank' }, String(i + 1)),
+          // A benchmark has no place of its own; a dash keeps the column aligned without implying one.
+          rank != null
+            ? React.createElement('span', { key: 'r', className: 'rr-model__rank' }, String(rank))
+            : React.createElement('span', { key: 'r', className: 'rr-model__rank', 'aria-hidden': 'true' }, '\u2013'),
           React.createElement('span', { key: 'b', className: 'rr-model__body' }, [
             React.createElement('span', { key: 'n', className: 'rr-model__name' }, [
               React.createElement('span', { key: 'm' }, pickName(k)),
               React.createElement('span', { key: 'o', className: 'rr-model__on' }, `on ${k.harness}`),
               soonBadge(k, 'c'),
+              benchBadge(k, 'bm'),
             ]),
             React.createElement(EffortMeter, { key: 'e', effort: k.effort }),
             !adv && k.why ? React.createElement('span', { key: 'w', className: 'rr-model__why' }, k.why) : null,
@@ -543,16 +616,19 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
     ]);
   }
 
-  function detail(k: GuidePick | undefined, i: number): React.ReactElement | null {
+  function detail(k: GuidePick | undefined): React.ReactElement | null {
     if (!k) return null;
     const sample = k.sample || {};
+    const rank = rankOf[k.id];
     // Returned into the grid's children array beside the list, so it needs a key of its own.
     return React.createElement('div', { key: 'detail', className: 'rr-guide__detail', 'aria-live': 'polite' }, [
       React.createElement('div', { key: 'h', className: 'rr-guide__dhead' }, [
         React.createElement('div', { key: 'a' }, [
           React.createElement('p', { key: 'r', className: 'rr-guide__rank' }, [
-            `#${i + 1} for ${(task.label || '').toLowerCase()}`,
-            i === 0
+            rank != null
+              ? `#${rank} for ${(task.label || '').toLowerCase()}`
+              : props.benchmarkLabel || 'Benchmark',
+            rank === 1
               ? React.createElement(
                   Badge,
                   { key: 'b', tone: 'brand', size: 'sm' },
@@ -608,12 +684,13 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
       ]),
       k.why ? React.createElement('p', { key: 'w', className: 'rr-guide__why' }, k.why) : null,
       ...evidence(k),
-      k.efforts && k.efforts.length > 1
+      // Trying another effort prices a pick for use here; a benchmark is not on offer here.
+      !k.benchmark && k.efforts && k.efforts.length > 1
         ? React.createElement(EffortTune, {
             key: 'e',
             className: 'rr-guide__tune',
             pick: k,
-            place: i + 1,
+            place: rank || 1,
             chosen: tryLevel,
             onSelect: tryEffort,
             per: props.perLabel,
@@ -668,7 +745,13 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
       adv ? breakdown(k) : null,
       sources(k),
       React.createElement('div', { key: 'c', className: 'rr-guide__actions' }, [
-        React.createElement(
+        k.benchmark
+          ? React.createElement(
+              'p',
+              { key: 'b', className: 'rr-guide__benchnote' },
+              props.benchmarkNote || 'Shown for comparison. It runs on its own product, not from here.',
+            )
+          : React.createElement(
           Button,
           {
             key: 'b',
@@ -711,7 +794,10 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
         ]),
         modeSwitch(),
       ]),
-      React.createElement('div', { key: 'ask', className: cx('rr-guide__ask', langs.length > 1 && 'rr-guide__ask--lang') }, [
+      React.createElement('div', {
+        key: 'ask',
+        className: cx('rr-guide__ask', langs.length > 1 && 'rr-guide__ask--lang', outs.length > 0 && 'rr-guide__ask--out'),
+      }, [
         React.createElement(Select, {
           key: 'p',
           size: 'sm',
@@ -739,6 +825,21 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             choose(prof.id, target.value);
           },
         }),
+        outs.length > 0
+          ? React.createElement(Select, {
+              key: 'o',
+              size: 'sm',
+              label: props.deliverableLabel || 'I need',
+              value: out,
+              // Disabled rather than hidden when the task is ranked for no particular output, so the row
+              // keeps its shape from task to task.
+              disabled: offered.length === 0,
+              options: [{ value: '', label: props.anyOutputLabel || 'Anything' }].concat(
+                offered.map((o) => ({ value: o.value, label: o.label })),
+              ),
+              onChange: (event: unknown) => chooseOutput((event as { target: { value: string } }).target.value),
+            })
+          : null,
         langs.length > 1
           ? React.createElement(Select, {
               key: 'g',
@@ -767,9 +868,9 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             React.createElement(
               'ol',
               { key: 'l', className: 'rr-guide__list', 'aria-label': task.title || task.label },
-              picks.map(row),
+              picks.map((k) => row(k)),
             ),
-            detail(current, picks.indexOf(current)),
+            detail(current),
           ])
         : React.createElement('div', { key: 'e', className: 'rr-guide__empty' }, [
             React.createElement(

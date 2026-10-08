@@ -1468,6 +1468,14 @@ Import: `import { ModelGuide } from '@redrob-labs/ui';`
 | `defaultLanguage` | `string` | no |  |
 | `onLanguageChange` | `(language: string) => void` | no |  |
 | `languageLabel` | `string` | no |  |
+| `outputs` | `Array<{ value: string; label: string }>` | no | What the work has to produce (documents, presentations, graphics...), which re-ranks the picks. Shown as a select when given, listing "anything" and then only the outputs the current task has a ranking for. Named `deliverable*` because `outputLabel` already labels a pick's sample output. |
+| `output` | `string` | no | Controlled output; `''` is "anything". |
+| `defaultOutput` | `string` | no |  |
+| `onOutputChange` | `(output: string) => void` | no |  |
+| `deliverableLabel` | `string` | no |  |
+| `anyOutputLabel` | `string` | no | The first option, which ranks for the task as a whole. |
+| `benchmarkLabel` | `React.ReactNode` | no | The badge on a `benchmark` pick, and the line its detail shows in place of the "use" action. |
+| `benchmarkNote` | `React.ReactNode` | no |  |
 | `kindLabels` | `Partial<Record<GuideKind, string>>` | no |  |
 | `comingSoonLabel` | `React.ReactNode` | no |  |
 | `missingLabel` | `React.ReactNode` | no | Beside a tool the harness has no equivalent for. Sits with `comingSoonLabel`, not hardcoded. |

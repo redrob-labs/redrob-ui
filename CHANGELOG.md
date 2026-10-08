@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.3.0
+
+### Added
+- `ModelGuide`: an output select ("I need": documents, presentations, graphics...). It takes `outputs`, `output`, `defaultOutput`, `onOutputChange`, `deliverableLabel` and `anyOutputLabel`, and re-ranks each task from `picksByOutput[output][language]`.
+  - It lists "Anything" plus only the outputs the current task is ranked for.
+  - An output the task is not ranked for reads as "Anything".
+  - A keyed output with no ranking for the working language falls back to the task's ranking.
+  - The props are `deliverable*` because `outputLabel` already labels a pick's sample output.
+- `ModelGuide`: benchmark picks (`GuidePick.benchmark`, `benchmarkLabel`, `benchmarkNote`). These show the same ranking on another product, for comparison.
+  - The row is greyed and unranked, and takes no slot in the top `limit`.
+  - It is never the pick opened by default.
+  - Its detail has no use action or effort control.
+
+Every addition is optional and renders no markup when absent, so parity with the reference is unchanged. `yarn guide:check` asserts both behaviours and their absence.
+
 ## 1.2.0
 
 ### Added

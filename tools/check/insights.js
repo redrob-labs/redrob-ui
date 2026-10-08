@@ -76,3 +76,14 @@ ok(html(ui.PrivacyFloor, { minGroup: 5 }).includes('Groups of 5 or more'), 'Priv
 
 const css = fs.readFileSync(path.join(__dirname, '..', '..', 'dist', 'styles', 'tokens.css'), 'utf8');
 ok(['--chart-track', '--ordinal-5', '--ordinal-ink-5', '--heat-pos-3', '--heat-neg-3'].every((t) => (css.match(new RegExp(`${t}:`, 'g')) || []).length === 2), 'insight tokens have a light and a dark value');
+
+// Chart: a crowded axis prints only the labels that fit, and always the latest one.
+{
+  const labels = Array.from({ length: 31 }, (_, i) => `D${i + 1}`);
+  const crowded = html(ui.Chart, { kind: 'bar', labels, series: [{ name: 'Requests', values: labels.map(() => 1) }] });
+  const xlab = (crowded.match(/<g class="rr-chart__xlab">([\s\S]*?)<\/g>/) || [])[1] || '';
+  const shown = (xlab.match(/<text/g) || []).length;
+  ok(shown > 1 && shown <= 11 && xlab.includes('>D31<'), `Chart thins 31 axis labels to ${shown}, keeping the latest`);
+  const few = html(ui.Chart, { kind: 'bar', labels: ['Mon', 'Tue', 'Wed'], series: [{ values: [1, 2, 3] }] });
+  ok(['Mon', 'Tue', 'Wed'].every((l) => few.includes(`>${l}<`)), 'Chart keeps every label when they fit');
+}

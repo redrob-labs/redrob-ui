@@ -2,6 +2,7 @@ import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { useStableId } from '../../internal/ids';
 import { useDismiss } from '../../internal/useDismiss';
+import { useFloating } from '../../internal/useFloating';
 import { Field, FieldShellProps } from '../../internal/Field';
 import { docLocale, parseDate, parseMonth, weekStartFor, weekdayNames, ymd } from '../../internal/datetime';
 import { icons } from '../../icons';
@@ -56,6 +57,14 @@ export function DatePicker(props: DatePickerProps): React.ReactElement {
   const [open, setOpen] = React.useState(!!props.defaultOpen);
   const close = React.useCallback(() => setOpen(false), []);
   const ref = useDismiss<HTMLDivElement>(open, close);
+  useFloating(
+    open,
+    () => [
+      ref.current && ref.current.querySelector<HTMLElement>('.rr-select-wrap'),
+      ref.current && ref.current.querySelector<HTMLElement>('.rr-cal'),
+    ],
+    { side: 'bottom', gap: 4 },
+  );
   const [draft, setDraft] = React.useState<string | null>(null);
 
   const weekStart = props.weekStart != null ? props.weekStart : weekStartFor(locale);

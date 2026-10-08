@@ -63,7 +63,7 @@ export interface EffortNoteContext {
  * The title says whose scale it is, because "3 of 3" means nothing across makers - one vendor's high is another's
  * middle, and a bare meter invites a comparison that is not valid.
  */
-export function EffortMeter(props: { effort?: Effort }): React.ReactElement {
+export function EffortMeter(props: { effort?: Effort; unit?: string }): React.ReactElement {
   const e = props.effort || {};
   const of = e.of || 3;
   const bars: React.ReactNode[] = [];
@@ -78,7 +78,7 @@ export function EffortMeter(props: { effort?: Effort }): React.ReactElement {
     },
     [
       React.createElement('span', { key: 'm', className: 'rr-model__steps', 'aria-hidden': 'true' }, bars),
-      React.createElement('span', { key: 'l' }, `${e.label} effort`),
+      React.createElement('span', { key: 'l' }, props.unit === '' ? e.label : `${e.label} ${props.unit || 'effort'}`),
     ],
   );
 }

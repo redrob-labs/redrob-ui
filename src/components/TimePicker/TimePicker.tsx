@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
+import { useFloating } from '../../internal/useFloating';
 import { useStableId } from '../../internal/ids';
 import { Field, FieldShellProps } from '../../internal/Field';
 import { OFFICES, pad2, partOfDay, tzMinutes } from '../../internal/datetime';
@@ -58,6 +59,11 @@ export function TimePicker(props: TimePickerProps): React.ReactElement {
   const [hover, setHover] = React.useState<number | null>(null);
   const wrap = React.useRef<HTMLDivElement | null>(null);
   const field = React.useRef<HTMLInputElement | null>(null);
+  useFloating(
+    open,
+    () => [field.current && field.current.parentElement, wrap.current && wrap.current.querySelector<HTMLElement>('.rr-time__pop')],
+    { side: 'bottom', gap: 6 },
+  );
 
   const parts = String(value || '00:00').split(':');
   const hh = Number(parts[0]) || 0;

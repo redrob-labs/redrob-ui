@@ -1,22 +1,5 @@
 # Changelog
 
-## 1.4.0
-
-### Added
-- `ModelGuide`: an output select ("I need": documents, presentations, graphics...). It takes `outputs`, `output`, `defaultOutput`, `onOutputChange`, `deliverableLabel` and `anyOutputLabel`, and re-ranks each task from `picksByOutput[output][language]`.
-  - It lists "Anything" plus only the outputs the current task is ranked for.
-  - An output the task is not ranked for reads as "Anything".
-  - A keyed output with no ranking for the working language falls back to the task's ranking.
-  - The props are `deliverable*` because `outputLabel` already labels a pick's sample output.
-- `ModelGuide`: benchmark picks (`GuidePick.benchmark`, `benchmarkLabel`, `benchmarkNote`). These show the same ranking on another product, for comparison.
-  - The row is greyed and unranked, and takes no slot in the top `limit`.
-  - It is never the pick opened by default.
-  - Its detail has no use action or effort control.
-
-Every addition is optional and renders no markup when absent, so parity with the reference is unchanged. `yarn guide:check` asserts both behaviours and their absence.
-
-Built on 1.3.0: the benchmark rank text goes through `rankLabel` and the output select follows the container-query layout.
-
 ## 1.3.0
 
 ### Added
@@ -27,6 +10,17 @@ Built on 1.3.0: the benchmark rank text goes through `rankLabel` and the output 
 - `AppShell`: `windowInset` (`top`, `end`, `endHeight`) keeps a frameless desktop window's own controls off the page - the macOS traffic lights above the sidebar brand, the Windows caption buttons at the top-right of the header (or the rail) - and `dragRegion` makes the brand row and header drag the window while their controls stay clickable. Both are off by default; a shell without them renders no new class or inline style.
 - `AppShell`: `asideFolded`, what stays at the bottom of the sidebar when it is folded (or narrower than 900px) in place of `aside`, e.g. the account as an avatar-only menu button. Without it the folded shell renders as before.
 - `ModelGuide`: `harnessLabel`, `rankLabel` and `effortUnit`, so the "on <harness>", "#1 for <task>" and "<level> effort" text can be translated. Without them the English defaults render as before.
+- `ModelGuide`: an output select ("I need": documents, presentations, graphics...). It takes `outputs`, `output`, `defaultOutput`, `onOutputChange`, `deliverableLabel` and `anyOutputLabel`, and re-ranks each task from `picksByOutput[output][language]`.
+  - It lists "Anything" plus only the outputs the current task is ranked for.
+  - An output the task is not ranked for reads as "Anything".
+  - A keyed output with no ranking for the working language falls back to the task's ranking.
+  - The props are `deliverable*` because `outputLabel` already labels a pick's sample output.
+- `ModelGuide`: benchmark picks (`GuidePick.benchmark`, `benchmarkLabel`, `benchmarkNote`). These show the same ranking on another product, for comparison.
+  - The row is greyed and unranked, and takes no slot in the top `limit`.
+  - It is never the pick opened by default.
+  - Its detail has no use action or effort control.
+
+The ModelGuide output and benchmark additions are optional and render no markup when absent, so parity with the reference is unchanged. `yarn guide:check` asserts both behaviours and their absence.
 
 ### Fixed
 - `ModelGuide`: reflows on its own width instead of the window's (container queries, with the 900px media query kept as a fallback). In a product frame with a menu and a side panel open, the two-column grid used to stay side by side in a ~480px column, the selects ran past its edge and the effort label overlapped the ranking note. Below 880px the grid and selects stack; below 480px the pick's header puts the cost under the model name.

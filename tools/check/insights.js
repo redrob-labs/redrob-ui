@@ -51,6 +51,8 @@ const list = html(ui.BarList, {
 ok(!list.includes('>99<'), 'BarList never prints a hidden row\u2019s figure');
 ok(list.includes('rr-barlist__hidden') && list.includes('rr-visually-hidden'), 'BarList says why a row is hidden, to sight and to a screen reader');
 ok(/style="width:max\(2px, 100%\)"/.test(list), 'BarList scales to the largest shown value, not a hidden one');
+const cents = html(ui.BarList, { rows: [{ label: 'cowork', value: 0.007 }, { label: 'office', value: 0.0035 }] });
+ok(/width:max\(2px, 100%\)/.test(cents) && /width:max\(2px, 50%\)/.test(cents), 'BarList scales amounts under one to the largest, not to 1');
 ok(list.includes('href="/teams/sales"') && list.includes('rr-barlist__ref') && list.includes('Peers'), 'BarList links rows and draws the reference tick and key');
 
 const cmp = html(ui.CompareBar, { label: 'Kept', value: 70, compare: 64 });

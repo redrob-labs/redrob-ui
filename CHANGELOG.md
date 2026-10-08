@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- `BarList`: without a `max`, the scale ended at 1 or the largest value, whichever was greater. That suits percentages, but a list of amounts under one (cents of spend, fractions of an hour) drew every row as a 2px stub. The scale now ends at the largest shown value or reference, and only an all-zero list falls back to 1. `yarn insights:check` covers it.
+
 ## 1.3.1
 
 ### Fixed

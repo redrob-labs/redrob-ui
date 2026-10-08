@@ -3,6 +3,7 @@ import { cx } from '../../internal/cx';
 import { omit } from '../../internal/omit';
 import { useStableId } from '../../internal/ids';
 import { Field, FieldShellProps } from '../../internal/Field';
+import { useFloating } from '../../internal/useFloating';
 import { icons } from '../../icons';
 
 export interface SelectOption {
@@ -120,6 +121,9 @@ export function Select(props: SelectProps): React.ReactElement {
     const el = list.current.children[active] as HTMLElement | undefined;
     if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
   }, [open, active]);
+
+  // Placed against the window: the list used to open inside its container and could be cut off by it.
+  useFloating(open, () => [btn.current, list.current], { side: up ? 'top' : 'bottom', gap: 6, matchWidth: 'min', fitHeight: true });
 
   function onKey(event: React.KeyboardEvent<HTMLButtonElement>): void {
     const k = event.key;

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { useDismiss } from '../../internal/useDismiss';
+import { useFloating } from '../../internal/useFloating';
 import { StatusBars } from '../../internal/StatusBars';
 
 export interface ComposerStatusItem {
@@ -51,6 +52,13 @@ export function ComposerStatus(props: ComposerStatusProps): React.ReactElement {
   const close = React.useCallback(() => set(null), [props.open]);
   const ref = useDismiss<HTMLDivElement>(!!open, close);
   const cur = items.filter((x) => x.id === open)[0];
+  // Above the row by default, below it when there is more room there: a composer in the middle of an
+  // empty chat has little space above it, and the panel used to run off the top of its column.
+  useFloating(
+    !!(cur && cur.panel),
+    () => [ref.current, ref.current && ref.current.querySelector<HTMLElement>(':scope > .rr-cstatus__panel')],
+    { side: 'top', align: 'start', matchWidth: 'exact', fitHeight: true },
+  );
 
   return React.createElement(
     'div',

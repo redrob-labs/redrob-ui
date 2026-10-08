@@ -2,6 +2,7 @@ import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { nextId } from '../../internal/ids';
 import { useDismiss } from '../../internal/useDismiss';
+import { useFloating } from '../../internal/useFloating';
 import { icons } from '../../icons';
 
 export interface LangOption {
@@ -50,6 +51,14 @@ export function LangSwitch(props: LangSwitchProps): React.ReactElement {
   const [open, setOpen] = React.useState(false);
   const close = React.useCallback(() => setOpen(false), []);
   const ref = useDismiss<HTMLDivElement>(open, close);
+  useFloating(
+    open,
+    () => [
+      ref.current && ref.current.querySelector<HTMLElement>('.rr-lang__trigger'),
+      ref.current && ref.current.querySelector<HTMLElement>('.rr-lang__menu'),
+    ],
+    { side: props.placement === 'up' ? 'top' : 'bottom', align: props.align === 'left' ? 'start' : 'end', fitHeight: true },
+  );
   const id = React.useRef(nextId('rr-lang')).current;
 
   let here: LangOption | null = null;

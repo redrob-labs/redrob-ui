@@ -272,6 +272,13 @@ export function Chart(props: ChartProps): React.ReactElement {
           { key: 'x', className: 'rr-chart__xlab' },
           labels.map((lb, i) => {
             const band = iw / Math.max(labels.length, 1);
+            // A label is about 7 characters at 11px. When there are more points than room for one each
+            // (thirty days on a half-width card), every label is drawn on top of its neighbours and none
+            // can be read. So only every step-th one is printed, counted back from the last point so the
+            // most recent is always named, plus whichever point is hovered. Every label is still in the
+            // figures table; this only decides which ones fit under the axis.
+            const step = Math.max(1, Math.ceil(labels.length / Math.max(1, Math.floor(iw / 56))));
+            if (at !== i && (labels.length - 1 - i) % step !== 0) return null;
             const cx2 = kind === 'bar' ? PAD.l + band * i + band / 2 : x(i);
             return React.createElement(
               'text',

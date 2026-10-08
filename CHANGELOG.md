@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.3.1
 
 ### Fixed
 - `Chart`: an axis with more points than room for a label each (thirty days on a half-width card) printed every label on top of its neighbours. It now prints every n-th label, counted back from the last point so the latest is always named, plus the hovered point. The figures table still lists every label, and a chart whose labels fit is unchanged. `yarn insights:check` covers both.

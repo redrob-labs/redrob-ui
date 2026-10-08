@@ -2,6 +2,7 @@ import * as React from 'react';
 import { cx } from '../../internal/cx';
 import { useStableId } from '../../internal/ids';
 import { useDismiss } from '../../internal/useDismiss';
+import { useFloating } from '../../internal/useFloating';
 import { Field, FieldShellProps } from '../../internal/Field';
 import { icons } from '../../icons';
 
@@ -49,6 +50,14 @@ export function Combobox(props: ComboboxProps): React.ReactElement {
   const value = props.value !== undefined ? props.value : held;
   const close = React.useCallback(() => setOpen(false), []);
   const ref = useDismiss<HTMLDivElement>(open, close);
+  useFloating(
+    open,
+    () => [
+      ref.current && ref.current.querySelector<HTMLElement>('.rr-select-wrap'),
+      ref.current && ref.current.querySelector<HTMLElement>('.rr-combo__list'),
+    ],
+    { side: 'bottom', gap: 4, matchWidth: 'exact', fitHeight: true },
+  );
 
   const norm: ComboboxOption[] = options.map((o) => (typeof o === 'string' ? { value: o, label: o } : o));
   const selected = norm.filter((o) => o.value === value)[0];

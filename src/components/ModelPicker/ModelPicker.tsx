@@ -3,6 +3,7 @@ import { cx } from '../../internal/cx';
 import { nextId } from '../../internal/ids';
 import { docLocale } from '../../internal/datetime';
 import { useDismiss } from '../../internal/useDismiss';
+import { useFloating } from '../../internal/useFloating';
 import { CURRENCY_STEP, currencyFor, Effort, EffortLevel, EffortMeter, EffortNoteContext } from '../../internal/model';
 import { EffortTune } from '../../internal/effort';
 import { guidePrice } from '../../internal/guide';
@@ -185,6 +186,25 @@ export function ModelPicker(props: ModelPickerProps): React.ReactElement {
 
   const close = React.useCallback(() => setOpen(false), []);
   const ref = useDismiss<HTMLDivElement>(open, close);
+  // Placed against the window. Inside a composer the panel lines up with the composer, as the
+  // stylesheet already does; on a narrow window the stylesheet's bottom sheet takes over.
+  useFloating(
+    open,
+    () => {
+      const root = ref.current;
+      if (!root) return [null, null];
+      const composer = root.closest<HTMLElement>('.rr-composer');
+      const trigger = root.querySelector<HTMLElement>(':scope > .rr-model__trigger');
+      return [composer || trigger, root.querySelector<HTMLElement>(':scope > .rr-model__panel')];
+    },
+    {
+      side: props.placement === 'top' ? 'top' : 'bottom',
+      align: props.align === 'end' ? 'end' : 'start',
+      gap: props.placement === 'top' ? 12 : 8,
+      fitHeight: true,
+      skipBelow: 560,
+    },
+  );
   const titleId = React.useRef(nextId('rr-model')).current;
 
   function choose(k: ModelPick): void {

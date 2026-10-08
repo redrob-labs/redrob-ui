@@ -1,8 +1,8 @@
 # @redrob-labs/ui
 
-> React components for the Redrob Group Design System 2026. 135 components, 260 icons. Every component is rendered against the design system's own reference bundle and compared markup-for-markup, so its appearance is checked mechanically rather than by eye.
+> React components for the Redrob Group Design System 2026. 145 components, 260 icons. Every component is rendered against the design system's own reference bundle and compared markup-for-markup, so its appearance is checked mechanically rather than by eye.
 
-Version 1.3.0. Install `@redrob-labs/ui`. Import named exports from the package root. Ship `@redrob-labs/ui/tokens.css`, `@redrob-labs/ui/styles.css` and `@redrob-labs/ui/preflight.css`, in that order, or nothing is styled.
+Version 1.4.0. Install `@redrob-labs/ui`. Import named exports from the package root. Ship `@redrob-labs/ui/tokens.css`, `@redrob-labs/ui/styles.css` and `@redrob-labs/ui/preflight.css`, in that order, or nothing is styled.
 
 Read [llms-full.txt](https://redrob-labs.github.io/redrob-ui/llms-full.txt) instead of this file when you need props: it carries every component's description and full prop list in one fetch.
 
@@ -83,6 +83,19 @@ Read [llms-full.txt](https://redrob-labs.github.io/redrob-ui/llms-full.txt) inst
 - [Badge](https://redrob-labs.github.io/redrob-ui/components/Badge.html): A short piece of state on something else: a status, a count, a label.
 - [Avatar](https://redrob-labs.github.io/redrob-ui/components/Avatar.html): Stands in for a person: their picture, a generated mark, or their initials.
 - [AvatarMark](https://redrob-labs.github.io/redrob-ui/components/AvatarMark.html): @deprecated Use Avatar (AvatarMark is internal to it in the October 2026 delivery).
+
+## Insights
+
+- [MixBar](https://redrob-labs.github.io/redrob-ui/components/MixBar.html): One 100% bar of an ordinal mix - how a body of work splits across steps that have an order, such as the six modes of AI use from Look up to Orchestrate.
+- [MixColumns](https://redrob-labs.github.io/redrob-ui/components/MixColumns.html): The same ordinal mix over time: one 100% column per period, the shallowest step at the bottom, so a shift towards deeper work reads as the dark part of the columns growing.
+- [MixKey](https://redrob-labs.github.io/redrob-ui/components/MixKey.html): The legend for `MixBar` and `MixColumns`: a swatch of the ordinal ramp and the step's name.
+- [BulletBar](https://redrob-labs.github.io/redrob-ui/components/BulletBar.html): A bullet graph: where a figure is against its goal, and optionally against a comparison, in the space of a table cell.
+- [BarList](https://redrob-labs.github.io/redrob-ui/components/BarList.html): Horizontal bars on one shared scale, one row per group, for comparing teams, tools or kinds of work.
+- [CompareBar](https://redrob-labs.github.io/redrob-ui/components/CompareBar.html): One measure for one group against a wider one: a team's figure as a bar, the company's as a tick, both printed beside it.
+- [Histogram](https://redrob-labs.github.io/redrob-ui/components/Histogram.html): How a set of runs spreads across ranges of one figure, e.g.
+- [HeatCell](https://redrob-labs.github.io/redrob-ui/components/HeatCell.html): A table cell shaded by how far its figure sits from a baseline, for a compare grid (teams by measures).
+- [Delta](https://redrob-labs.github.io/redrob-ui/components/Delta.html): A signed change with an arrow, coloured by whether it moved the good way: "+3 pts" beside a figure in a table or a tile.
+- [PrivacyFloor](https://redrob-labs.github.io/redrob-ui/components/PrivacyFloor.html): The lock and "Groups of 3 or more" beside a view of other people's work: the promise that no figure on the screen describes fewer people than that.
 
 ## Agent chat
 

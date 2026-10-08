@@ -3,7 +3,7 @@
 English: [README.md](./README.md)
 
 **Redrob Group Design System 2026**을 타입이 붙은 React 컴포넌트로 옮긴 라이브러리입니다.
-컴포넌트 123개, 아이콘 260개. TypeScript로 작성하고, 디자인 토큰 위에 순수 CSS로 스타일을 입혔습니다.
+컴포넌트 133개, 아이콘 260개. TypeScript로 작성하고, 디자인 토큰 위에 순수 CSS로 스타일을 입혔습니다.
 
 `@redrob-labs/ui`
 
@@ -78,9 +78,9 @@ React 컴포넌트는 세 층 중 맨 위 한 층입니다. React를 못 돌리�
 
 | 층 | 무엇인가 | 누가 쓰나 |
 | --- | --- | --- |
-| `@redrob-labs/ui` | 타입 붙은 컴포넌트 123개 | Next·Electron 렌더러: 웹사이트, 콘솔, 챗, 오피스 |
+| `@redrob-labs/ui` | 타입 붙은 컴포넌트 133개 | Next·Electron 렌더러: 웹사이트, 콘솔, 챗, 오피스 |
 | `tokens.css` + `styles.css` + `fonts/` | 클래스 블록 149개, 셀렉터 1,239개, React 없음 | Vue, Solid, 크로미움 WebUI, 순수 HTML |
-| `tokens.json` + `native/*` | 리터럴로 해석된 토큰 172개 | C++ 창 크롬, 안드로이드, iOS |
+| `tokens.json` + `native/*` | 리터럴로 해석된 토큰 332개 | C++ 창 크롬, 안드로이드, iOS |
 
 ### CSS만 — Vue, Solid, 크로미움 WebUI, 순수 HTML
 
@@ -104,7 +104,7 @@ import '@redrob-labs/ui/styles.css';
 둘 다 그것을 읽지 못합니다. 그래서 `var()` 사슬을 여기서 테마별로 풀어 리터럴로 넘깁니다.
 
 ```
-@redrob-labs/ui/tokens.json        토큰 172개, 두 테마, 각 토큰이 지나온 사슬까지
+@redrob-labs/ui/tokens.json        토큰 332개, 두 테마, 각 토큰이 지나온 사슬까지
 @redrob-labs/ui/native/redrob_tokens.h    색 89개 × 두 테마, SkColor용 0xAARRGGBB
 @redrob-labs/ui/native/RedrobTokens.kt    같은 값, Kotlin Long
 ```
@@ -130,7 +130,7 @@ React Native는 `div`와 CSS 클래스가 아니라 네이티브 뷰로 그립�
 거기서는 쓸 수 없고, 토큰 층만 쓸 수 있습니다. WebView 안이나 PWA로 만든 모바일 앱은 세 층을 그대로
 다 씁니다.
 
-토큰 172개 중 29개는 안에 `var()`가 남은 CSS `font` 축약형입니다. 텍스트 스타일은 모두
+토큰 332개 중 29개는 안에 `var()`가 남은 CSS `font` 축약형입니다. 텍스트 스타일은 모두
 `600 21px/28px var(--font-sans)` 꼴이고, 값 전체가 별칭일 때만 더 따라갈 수 있습니다. `tokens.json`에
 `containsVar`로 표시해 뒀습니다. 색은 하나도 여기 없으므로 네이티브 헤더는 영향받지 않습니다.
 

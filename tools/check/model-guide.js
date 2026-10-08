@@ -57,6 +57,23 @@ ok(!rangeOnly.includes('rr-guide__costv') && rangeOnly.includes('Likely between'
 const ko2 = renderToStaticMarkup(React.createElement(ModelGuide, { professions, languages: langs, language: 'ko', comingSoonLabel: '곧 지원', missingLabel: '지원 안 함' }));
 ok(ko2.includes('지원 안 함') && !ko2.includes('not available'), 'missingLabel replaces the hardcoded English');
 
+// 1.2.1: labels a consumer translates, and no empty sample boxes when a pick has no run.
+const lab = renderToStaticMarkup(React.createElement(ModelGuide, { professions, languages: langs,
+  harnessLabel: (h) => `(${h})`, rankLabel: (n, t) => `${t} ${n}위`, effortUnit: '' }));
+ok(lab.includes('(Redrob Desk)') && !lab.includes('on Redrob Desk'), 'harnessLabel replaces "on <harness>"');
+ok(lab.includes('Review contracts 1위') && !lab.includes('#1 for'), 'rankLabel replaces "#1 for <task>"');
+ok(!lab.includes('High effort') && lab.includes('High'), "effortUnit '' shows the level alone");
+ok(!lab.includes('rr-guide__sample'), 'no prompt/output boxes without a run');
+const run = renderToStaticMarkup(React.createElement(ModelGuide, { professions: [{ id: 'x', label: 'X', tasks: [{ id: 't', label: 'T', prompt: 'Ask', picks: [pick('p', { sample: { output: 'Out' } })] }] }] }));
+ok(run.includes('rr-guide__sample') && run.includes('High effort') && run.includes('on Redrob Desk'), 'defaults unchanged with a run');
+
+// Layout: the guide reflows on its own width (a product frame's column), not the viewport's. The
+// browser behaviour is checked in the Cowork screenshot sweep; this keeps the rules from being dropped.
+const css = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'dist', 'styles', 'system.css'), 'utf8');
+ok(/\.rr-guide\s*\{\s*container:\s*rr-guide\s*\/\s*inline-size/.test(css) && /@container rr-guide \(max-width: 880px\)/.test(css),
+  'guide grid and selects stack on a narrow container');
+ok(/@container rr-guide-detail \(max-width: 480px\)/.test(css), 'detail header stacks on a narrow detail');
+
 // Outputs: a select listing "anything" and only the outputs this task is ranked for, re-ranking from
 // picksByOutput[output][language], and falling back to the task's ranking when the output is not keyed.
 const outs = [{ value: 'presentation', label: 'Presentations' }, { value: 'graphic', label: 'Graphics' }, { value: 'document', label: 'Documents' }];

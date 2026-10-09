@@ -125,7 +125,7 @@ Read [llms-full.txt](https://redrob-labs.github.io/redrob-ui/llms-full.txt) inst
 
 - [ProtectionStatus](https://redrob-labs.github.io/redrob-ui/components/ProtectionStatus.html): The one sentence a person needs about a protection, large, with whether it is running.
 - [StatusCard](https://redrob-labs.github.io/redrob-ui/components/StatusCard.html): @deprecated Renamed `ProtectionStatus` in the October 2026 delivery.
-- [PrivacyProtection](https://redrob-labs.github.io/redrob-ui/components/PrivacyProtection.html): Whether the on-device privacy check is running, at what level, and what it does.
+- [PrivacyProtection](https://redrob-labs.github.io/redrob-ui/components/PrivacyProtection.html): Whether the privacy check is running, at what level, and what it does.
 - [MemoryScope](https://redrob-labs.github.io/redrob-ui/components/MemoryScope.html): Which memory this chat reads, including none.
 - [CrossCheckSetting](https://redrob-labs.github.io/redrob-ui/components/CrossCheckSetting.html): The panel behind Cross-check in the status line: two checks, Fact check and Challenge, each Off, When it matters or Always.
 - [SecondOpinionSetting](https://redrob-labs.github.io/redrob-ui/components/SecondOpinionSetting.html): @deprecated Replaced by `CrossCheckSetting` in the October 2026 delivery, which sets Fact check and Challenge separately; its old `rr-opset` styles are gone.

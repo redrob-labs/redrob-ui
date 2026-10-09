@@ -5,11 +5,14 @@ import { icons } from '../../icons';
 import { ProtectionStatus } from '../ProtectionStatus/ProtectionStatus';
 
 export interface PrivacyProtectionProps {
-  /** `off` when the check cannot run here - on the web, or on a phone. */
+  /** `off` when the check is not running for what this person sends, for whatever reason the product has. */
   state?: 'on' | 'off';
   level?: string;
   levels?: PrivacyLevel[];
-  /** What is running, beside the live dot. */
+  /**
+   * What is running, beside the live dot. Default "Running". Name the place when the product knows it ("Running
+   * on this laptop"); the default does not, because the same panel ships where the check runs on a server.
+   */
   running?: string;
   summary?: React.ReactNode;
   /** `false` hides the explanation. */
@@ -21,18 +24,28 @@ export interface PrivacyProtectionProps {
   /** What it caught last, and when. */
   last?: React.ReactNode;
   onLabel?: string;
+  /** Default "Privacy protection is off". */
   offTitle?: React.ReactNode;
+  /**
+   * Default "What you send goes to the AI as written." Say why it is off and where it would work, when the product
+   * knows ("It runs on your laptop, so it only works in the desktop app."); the default cannot know, so it says
+   * only the consequence.
+   */
   offText?: React.ReactNode;
   foot?: React.ReactNode;
   className?: string;
 }
 
 /**
- * Whether the on-device privacy check is running, at what level, and what it does.
+ * Whether the privacy check is running, at what level, and what it does.
  *
- * The `off` state is the important one. On the web and on a phone the check cannot run, and this says so in
- * plain words: what you send goes to the AI as written. A privacy panel that renders the same everywhere would
- * be telling people they are protected where they are not, which is worse than having no panel.
+ * The `off` state is the important one. Where the check is not running, this says so in plain words: what you
+ * send goes to the AI as written. A privacy panel that renders the same everywhere would be telling people they
+ * are protected where they are not, which is worse than having no panel.
+ *
+ * The defaults for `running`, `offTitle` and `offText` do not say where the check runs. Whether that is the
+ * person's laptop or the product's server differs per product, and a default that names the wrong one is a
+ * false privacy claim; a product that knows passes its own words.
  *
  * The explanation names where the work happens - a small model on the person's own laptop, swapping details for
  * placeholders before Send and putting the real ones back in the answer. "Your data is protected" is not a
@@ -50,10 +63,9 @@ export function PrivacyProtection(props: PrivacyProtectionProps): React.ReactEle
           key: 'c',
           tone: 'warn',
           icon: icons.shield({ width: 28, height: 28 }),
-          title: props.offTitle || 'Privacy protection is off here',
+          title: props.offTitle || 'Privacy protection is off',
         },
-        props.offText ||
-          'It runs on your laptop, so it only works in the Redrob desktop app. On the web, what you send goes to the AI as written.',
+        props.offText || 'What you send goes to the AI as written.',
       ),
       props.foot ? React.createElement('div', { key: 'f', className: 'rr-panelfoot' }, props.foot) : null,
     ]);
@@ -68,7 +80,7 @@ export function PrivacyProtection(props: PrivacyProtectionProps): React.ReactEle
             tone: 'safe',
             icon: icons.shieldCheck({ width: 28, height: 28 }),
             title: `${props.onLabel || 'Privacy protection is on'}: ${lvl.label}`,
-            live: props.running || 'Running on this laptop',
+            live: props.running || 'Running',
           },
           props.summary,
         )

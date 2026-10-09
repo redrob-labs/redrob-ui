@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- `PrivacyProtection` and `PRIVACY_LEVELS`: the defaults no longer say where the privacy check runs. Strict's detail ended "Nothing can be sent from the web or a phone, where the check cannot run", and that is false in a product whose web app does run the check. It now reads "High, plus addresses, amounts and dates." The other defaults have changed too: `running` is "Running" (was "Running on this laptop"), `offTitle` is "Privacy protection is off" (was "... off here") and `offText` is "What you send goes to the AI as written." (was a sentence about the laptop and the desktop app). Consumers that pass these props render exactly as before. A product that knows where its check runs should say so through `running`, `offText` or `levels`.
+  - This goes beyond the 4 October 2026 delivery, whose defaults still carry the old wording. The `PrivacyProtection` and `ComposerStatus` parity cases rely on those defaults, so `yarn test` reports them as `differs`. The only differences are the two default strings. The harness is unchanged.
+- `ScheduleRow`: in a narrow column the name and cadence were squeezed to a few characters a line beside the last run and the switch. Below 480px of its own width (a container query, with a 480px viewport query as the fallback), the body takes the full row and the last run and switch wrap under it. This is CSS only. The markup is unchanged, and so is parity.
+
 ## 1.3.1
 
 ### Fixed

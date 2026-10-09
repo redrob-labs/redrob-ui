@@ -1997,9 +1997,11 @@ Import: `import { StatusCard } from '@redrob-labs/ui';`
 
 #### PrivacyProtection
 
-Whether the on-device privacy check is running, at what level, and what it does.
+Whether the privacy check is running, at what level, and what it does.
 
-The `off` state is the important one. On the web and on a phone the check cannot run, and this says so in plain words: what you send goes to the AI as written. A privacy panel that renders the same everywhere would be telling people they are protected where they are not, which is worse than having no panel.
+The `off` state is the important one. Where the check is not running, this says so in plain words: what you send goes to the AI as written. A privacy panel that renders the same everywhere would be telling people they are protected where they are not, which is worse than having no panel.
+
+The defaults for `running`, `offTitle` and `offText` do not say where the check runs. Whether that is the person's laptop or the product's server differs per product, and a default that names the wrong one is a false privacy claim; a product that knows passes its own words.
 
 The explanation names where the work happens - a small model on the person's own laptop, swapping details for placeholders before Send and putting the real ones back in the answer. "Your data is protected" is not a claim anybody can check.
 
@@ -2007,18 +2009,18 @@ Import: `import { PrivacyProtection } from '@redrob-labs/ui';`
 
 | Prop | Type | Required | Notes |
 | --- | --- | --- | --- |
-| `state` | `'on' \| 'off'` | no | `off` when the check cannot run here - on the web, or on a phone. |
+| `state` | `'on' \| 'off'` | no | `off` when the check is not running for what this person sends, for whatever reason the product has. |
 | `level` | `string` | no |  |
 | `levels` | `PrivacyLevel[]` | no |  |
-| `running` | `string` | no | What is running, beside the live dot. |
+| `running` | `string` | no | What is running, beside the live dot. Default "Running". Name the place when the product knows it ("Running on this laptop"); the default does not, because the same panel ships where the check runs on a server. |
 | `summary` | `React.ReactNode` | no |  |
 | `lede` | `React.ReactNode \| false` | no | `false` hides the explanation. |
 | `card` | `boolean` | no | `false` hides the status card. |
 | `showLevels` | `boolean` | no | `false` hides the level list. |
 | `last` | `React.ReactNode` | no | What it caught last, and when. |
 | `onLabel` | `string` | no |  |
-| `offTitle` | `React.ReactNode` | no |  |
-| `offText` | `React.ReactNode` | no |  |
+| `offTitle` | `React.ReactNode` | no | Default "Privacy protection is off". |
+| `offText` | `React.ReactNode` | no | Default "What you send goes to the AI as written." Say why it is off and where it would work, when the product knows ("It runs on your laptop, so it only works in the desktop app."); the default cannot know, so it says only the consequence. |
 | `foot` | `React.ReactNode` | no |  |
 | `className` | `string` | no |  |
 

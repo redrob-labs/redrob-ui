@@ -5,10 +5,12 @@ import { StatusBars } from './StatusBars';
  * The three protection levels, each saying exactly what is left out.
  *
  * Named contents rather than a slider from "low" to "high". A person choosing a privacy level is deciding what
- * leaves their laptop, and "high" tells them nothing about that.
+ * reaches the AI, and "high" tells them nothing about that.
  *
- * Strict says out loud that it cannot run on the web or a phone. A level that silently does less on some
- * surfaces would be the worst kind of reassurance.
+ * Each detail says only what the level leaves out, not where the check runs. The same levels apply wherever a
+ * product runs the check - on the person's own computer, or on its servers before anything reaches an outside
+ * AI - so a sentence about the surface belongs to the product (`levels`, or the panel's `offText`), not here. A
+ * default that says "nothing can be sent from the web" is false in a product whose web app does run the check.
  */
 export const PRIVACY_LEVELS = [
   { id: 'standard', label: 'Standard', n: 1, detail: 'ID, bank and card numbers are left out.' },
@@ -24,7 +26,7 @@ export const PRIVACY_LEVELS = [
     label: 'Strict',
     n: 3,
     detail:
-      'High, plus addresses, amounts and dates. Nothing can be sent from the web or a phone, where the check cannot run.',
+      'High, plus addresses, amounts and dates.',
   },
 ];
 

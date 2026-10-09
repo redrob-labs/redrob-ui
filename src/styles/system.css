@@ -2280,6 +2280,21 @@ span.rr-card__title, span.rr-card__desc { display: block; }
 .rr-schedule__last { flex: none; display: flex; align-items: center; gap: var(--space-2); font-size: 12px; color: var(--ink-muted); }
 .rr-schedule--off .rr-schedule__name,
 .rr-schedule--off .rr-schedule__when { color: var(--ink-muted); }
+/* In a narrow column (a phone, or a schedules list beside a side panel) the name and cadence were
+   squeezed to a few characters a line while the last run and the switch kept their width. Below
+   480px the body takes the whole row and the last run and switch wrap under it. The row reflows on
+   its own width, as ModelGuide does; the viewport query is the fallback for browsers without
+   container queries. Wrapping is harmless when wide: the body's flex basis is 0, so nothing breaks
+   onto a second line until the body is forced to 100%. */
+.rr-schedule { container: rr-schedule / inline-size; flex-wrap: wrap; row-gap: var(--space-2); }
+@media (max-width: 480px) {
+  .rr-schedule__body { flex-basis: 100%; }
+  .rr-schedule__last { margin-inline-end: auto; }
+}
+@container rr-schedule (max-width: 480px) {
+  .rr-schedule__body { flex-basis: 100%; }
+  .rr-schedule__last { margin-inline-end: auto; }
+}
 
 /* ---- CheckIn ------------------------------------------------------------ */
 /* The agent has stopped and needs a person. It waits; it does not guess. */

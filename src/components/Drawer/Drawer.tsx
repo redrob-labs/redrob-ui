@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { icons } from '../../icons';
 import { IconButton } from '../IconButton/IconButton';
 
@@ -29,8 +29,9 @@ export interface DrawerProps {
  * a text selection dragged out of the panel does not close it.
  */
 export function Drawer(props: DrawerProps): React.ReactElement | null {
+  // Before the early return: a hook skipped while closed would shift every hook after it on open.
+  const titleId = useStableId('rr-drawer-title');
   if (props.open === false) return null;
-  const titleId = nextId('rr-drawer-title');
   const side = props.side || 'right';
 
   return React.createElement(

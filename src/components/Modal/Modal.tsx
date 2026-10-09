@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { icons } from '../../icons';
 import { IconButton } from '../IconButton/IconButton';
 
@@ -31,8 +31,9 @@ export interface ModalProps {
  * compares target with currentTarget: a drag that began inside the panel should not dismiss the decision.
  */
 export function Modal(props: ModalProps): React.ReactElement | null {
+  // Before the early return: a hook skipped while closed would shift every hook after it on open.
+  const titleId = useStableId('rr-modal-title');
   if (props.open === false) return null;
-  const titleId = nextId('rr-modal-title');
 
   return React.createElement(
     'div',

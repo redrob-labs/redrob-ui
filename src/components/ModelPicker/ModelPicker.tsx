@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { docLocale } from '../../internal/datetime';
 import { useDismiss } from '../../internal/useDismiss';
 import { useFloating } from '../../internal/useFloating';
@@ -205,7 +205,7 @@ export function ModelPicker(props: ModelPickerProps): React.ReactElement {
       skipBelow: 560,
     },
   );
-  const titleId = React.useRef(nextId('rr-model')).current;
+  const titleId = useStableId('rr-model');
 
   function choose(k: ModelPick): void {
     if (away(k)) return;

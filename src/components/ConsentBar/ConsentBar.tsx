@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { Button } from '../Button/Button';
 import { Checkbox } from '../Checkbox/Checkbox';
 
@@ -50,7 +50,7 @@ export function ConsentBar(props: ConsentBarProps): React.ReactElement {
     });
     return o;
   });
-  const id = React.useRef(nextId('rr-consent')).current;
+  const id = useStableId('rr-consent');
 
   function decide(all: boolean | null): void {
     const o: Record<string, boolean> = {};

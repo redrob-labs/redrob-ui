@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { icons } from '../../icons';
 
 export interface SiteHeaderItem {
@@ -49,7 +49,7 @@ export function SiteHeader(props: SiteHeaderProps): React.ReactElement {
   const sections = (props.sections || []).slice(0, 6);
   const [open, setOpen] = React.useState<number | null>(null);
   const [menu, setMenu] = React.useState(false);
-  const id = React.useRef(nextId('rr-nav')).current;
+  const id = useStableId('rr-nav');
 
   React.useEffect(() => {
     if (typeof document === 'undefined') return;

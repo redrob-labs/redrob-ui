@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 
 /** Who acted. `decision` is still a person: it is a person choosing, not a third kind of actor. */
 export type DiagramActor = 'person' | 'machine' | 'system' | 'decision';
@@ -57,7 +57,7 @@ export function Diagram(props: DiagramProps): React.ReactElement {
   const steps = props.steps || [];
   const lanes = !!props.lanes;
   const flow = props.orientation !== 'stack';
-  const titleId = React.useRef(nextId('rr-dia')).current;
+  const titleId = useStableId('rr-dia');
 
   const laneOf = (step: DiagramStep): number =>
     step.by === 'machine' || step.by === 'system' ? 1 : 0;

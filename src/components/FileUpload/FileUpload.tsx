@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { formatBytes } from '../../internal/datetime';
 import { icons } from '../../icons';
 import { IconButton } from '../IconButton/IconButton';
@@ -38,7 +38,7 @@ export interface FileUploadProps {
  * progress and failures live, and a component that owned the list would have to own those too.
  */
 export function FileUpload(props: FileUploadProps): React.ReactElement {
-  const id = React.useRef(nextId('rr-upload')).current;
+  const id = useStableId('rr-upload');
   const [over, setOver] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const files = props.files || [];

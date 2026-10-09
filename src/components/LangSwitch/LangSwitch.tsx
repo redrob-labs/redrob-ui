@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { useDismiss } from '../../internal/useDismiss';
 import { useFloating } from '../../internal/useFloating';
 import { icons } from '../../icons';
@@ -59,7 +59,7 @@ export function LangSwitch(props: LangSwitchProps): React.ReactElement {
     ],
     { side: props.placement === 'up' ? 'top' : 'bottom', align: props.align === 'left' ? 'start' : 'end', fitHeight: true },
   );
-  const id = React.useRef(nextId('rr-lang')).current;
+  const id = useStableId('rr-lang');
 
   let here: LangOption | null = null;
   for (let k = 0; k < langs.length; k++) if (langs[k].code === current) here = langs[k];

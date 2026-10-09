@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { icons } from '../../icons';
 import { Button } from '../Button/Button';
 
@@ -50,7 +50,7 @@ export function Form(props: FormProps): React.ReactElement {
   const state = props.state || 'idle';
   const errors = props.errors || [];
   const summary = React.useRef<HTMLDivElement | null>(null);
-  const id = React.useRef(nextId('rr-form')).current;
+  const id = useStableId('rr-form');
 
   React.useEffect(() => {
     if (errors.length && summary.current) summary.current.focus();

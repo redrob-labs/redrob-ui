@@ -191,6 +191,7 @@ export type {
   GuideProfession,
 } from './components/ModelGuide/ModelGuide';
 export type { Effort, EffortLevel, EffortNoteContext } from './internal/model';
+export type { GlanceLabels, GuideMapLabels } from './internal/guide-glance';
 export { ComposerStatus } from './components/ComposerStatus/ComposerStatus';
 export type { ComposerStatusProps, ComposerStatusItem } from './components/ComposerStatus/ComposerStatus';
 export { AnswerReceipt } from './components/AnswerReceipt/AnswerReceipt';

@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.4.0
+
+### Added
+- `ModelGuide`: `summary="glance"`, a comparison strip in place of each row's effort meter.
+  - Quality, reliability, speed and value (the cost score), each as five steps against the best pick shown for the task (95%, 85%, 70%, 50% of it, and below), under one set of column heads that line up with every row.
+  - "Tied with #1" on a pick whose total is within the 95% intervals of #1's. "Best value" on the most quality per dollar among picks with at least 80% of the best quality.
+  - A partly estimated ranking (`kind: 'estimate'`) is hatched, as `Chart` marks an estimate, and says so in the strip's accessible name. Each step's tooltip gives the figure and the best on the task.
+  - With it, the effort is written out ("Thinking: High") in the detail and in a chain's steps instead of metered, because a maker's own scale says little beside another maker's.
+  - Labels for translation: `glanceLabels`, `tiedLabel`, `bestValueLabel`, `thinkingLabel`.
+- `ModelGuide`: `map`, in advanced mode a quality-against-price chart above the list.
+  - Price is on a log scale because the picks on one task span up to 100x.
+  - The picks nothing on the task beats on both are joined as the trade-off line.
+  - Each dot is a keyboard-reachable control, named with rank, model, quality and price, that opens its pick.
+  - Labels: `mapLabels`.
+- `GuidePick.unavailable`: why a pick cannot be used from here. The use action is disabled and the reason shown beside it.
+- `ModelGuide`: a sample `output` given as rendered markup (a consumer's markdown, say) gets `rr-guide__output--rich`, with its own headings, lists, tables and code blocks instead of pre-wrapped text. A plain-string output is unchanged.
+- `GlanceLabels` and `GuideMapLabels` types are exported.
+
+All of these are optional and render no markup when absent, so parity with the reference is unchanged. `yarn guide:check` asserts each one and its absence.
+
 ## 1.3.1
 
 ### Fixed

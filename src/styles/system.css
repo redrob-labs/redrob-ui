@@ -4578,6 +4578,58 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-guide__method summary { cursor: pointer; font-weight: 600; color: var(--ink-primary); }
 .rr-guide__method > div { margin-top: var(--space-3); display: flex; flex-direction: column; gap: var(--space-2); max-width: 72ch; }
 .rr-guide__method p { margin: 0; }
+/* The comparison strip (summary="glance"): four five-step meters per row, under one set of heads. The heads
+   sit on the row's own grid and padding, so every column lines up with the strip below it. */
+.rr-guide__col { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+.rr-guide__glancehead { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--space-3); padding: 0 calc(var(--space-3) + 1px); }
+.rr-guide__glancecols, .rr-guide__glance { display: grid; grid-template-columns: repeat(4, minmax(0, 64px)); gap: 14px; }
+.rr-guide__glancecols span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; line-height: 16px; font-weight: 600; color: var(--ink-secondary); }
+.rr-guide__glance { margin: 2px 0; }
+.rr-guide__glancedim { display: flex; gap: 2px; align-items: center; height: 16px; }
+.rr-guide__glancedim i { flex: 1 1 0; height: 6px; border-radius: 1px; background: var(--chart-track); }
+.rr-guide__glancedim i.is-on { background: var(--chart-good); }
+/* Partly estimated: the same steps, hatched, as Chart marks an estimate. */
+.rr-guide__glance.is-estimated .rr-guide__glancedim i.is-on { background: repeating-linear-gradient(130deg, var(--chart-good) 0 2px, transparent 2px 4px); box-shadow: inset 0 0 0 1px var(--chart-good); }
+.rr-guide__row.is-benchmark .rr-guide__glance { opacity: 0.45; }
+.rr-guide__glancetags { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.rr-guide__thinking { display: inline-block; font-size: 12px; line-height: 16px; color: var(--ink-secondary); }
+.rr-guide__dhead .rr-guide__thinking { margin-bottom: 2px; }
+.rr-guide__unavail { margin: 0; font-size: 13px; line-height: 20px; color: var(--ink-secondary); }
+/* Quality against price (map, advanced). */
+.rr-guide__map { margin: 0 0 var(--space-2); padding: var(--space-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-base); }
+.rr-guide__map svg { display: block; width: 100%; height: auto; overflow: visible; }
+.rr-guide__mapaxis { stroke: var(--border-strong); stroke-width: 1; }
+.rr-guide__maptick { font-size: 10px; fill: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.rr-guide__mapname { font-size: 10px; font-weight: 600; fill: var(--ink-secondary); }
+.rr-guide__mapline { fill: none; stroke: var(--chart-good); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.rr-guide__mapdot { cursor: pointer; outline: none; }
+.rr-guide__mapdot circle { fill: var(--surface-raised); stroke: var(--border-strong); stroke-width: 1.5; }
+.rr-guide__mapdot text { font-size: 11px; font-weight: 700; fill: var(--ink-primary); pointer-events: none; }
+.rr-guide__mapdot.is-frontier circle { stroke: var(--chart-good); }
+.rr-guide__mapdot.is-benchmark circle { stroke-dasharray: 2 2; }
+.rr-guide__mapdot.is-benchmark text { fill: var(--ink-muted); }
+.rr-guide__mapdot.is-current circle { fill: var(--action-primary); stroke: var(--action-primary); }
+.rr-guide__mapdot.is-current text { fill: var(--ink-on-brand); }
+.rr-guide__mapdot:hover circle { stroke-width: 2.5; }
+.rr-guide__mapdot:focus-visible circle { stroke: var(--focus-ring); stroke-width: 3; }
+.rr-guide__mapkey { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); font-size: 12px; line-height: 16px; color: var(--ink-secondary); }
+.rr-guide__mapkey i { flex: none; width: 18px; border-top: 1.5px dashed var(--chart-good); }
+/* Rendered output (markdown): its own blocks, not pre-wrapped text. */
+.rr-guide__output--rich { white-space: normal; }
+.rr-guide__output--rich > :first-child { margin-top: 0; }
+.rr-guide__output--rich > :last-child { margin-bottom: 0; }
+.rr-guide__output--rich :is(h1, h2, h3, h4) { margin: var(--space-4) 0 var(--space-2); line-height: 1.3; font-weight: 700; }
+.rr-guide__output--rich h1 { font-size: 18px; }
+.rr-guide__output--rich h2 { font-size: 16px; }
+.rr-guide__output--rich :is(h3, h4) { font-size: 14px; }
+.rr-guide__output--rich :is(p, ul, ol, blockquote, pre, table) { margin: 0 0 var(--space-3); }
+.rr-guide__output--rich :is(ul, ol) { padding-left: 1.25em; }
+.rr-guide__output--rich table { border-collapse: collapse; font-size: 13px; display: block; overflow-x: auto; }
+.rr-guide__output--rich :is(th, td) { padding: 4px 8px; border: 1px solid var(--border-subtle); text-align: left; vertical-align: top; }
+.rr-guide__output--rich th { background: var(--surface-sunken); font-weight: 600; }
+.rr-guide__output--rich code { font-family: var(--font-mono); font-size: 12px; }
+.rr-guide__output--rich pre { padding: var(--space-3); border-radius: var(--radius-sm); background: var(--surface-sunken); overflow-x: auto; white-space: pre; }
+.rr-guide__output--rich blockquote { padding-left: var(--space-3); border-left: 2px solid var(--border-strong); color: var(--ink-secondary); }
 .rr-model__guide { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--ink-brand); text-decoration: none; }
 .rr-model__guide:hover { text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 900px) {

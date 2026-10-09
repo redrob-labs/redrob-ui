@@ -111,3 +111,33 @@ const benchOpen = renderToStaticMarkup(React.createElement(ModelGuide, { profess
   picks: [pick('b1', { benchmark: true, harness: 'Claude Cowork' })] }] }], benchmarkNote: 'Compare only' }));
 ok(benchOpen.includes('Compare only') && !benchOpen.includes('Use this in the chat') && !benchOpen.includes('#1 for'), 'benchmark detail has no use action and no rank');
 ok(!/rr-guide__(ask--out|benchnote)|is-benchmark/.test(plain) && !/rr-guide__ask--out|is-benchmark/.test(en), 'no output or benchmark markup without those props');
+
+// 1.4.0: the comparison strip, quality against price, unavailable picks and rendered output.
+// Figures from a real ranking (marketer, optimize for search): #1 and #2 tie, #3 is the value pick.
+const sc = (quality, reliability, speed, cost, ci) => ({ quality, reliability, speed, cost, ci });
+const gl = [{ id: 'm', label: 'Marketer', tasks: [{ id: 'seo', label: 'Optimize for search', picks: [
+  pick('opus', { score: sc(98, 72, 40, 5, 2.3), monthly: 7.91 }),
+  pick('sonnet', { score: sc(90, 79, 56, 6, 2.4), monthly: 6.04 }),
+  pick('sol', { score: sc(81, 70, 19, 41, 2.3), monthly: 1.31, kind: 'estimate' }),
+  pick('fable', { score: sc(91, 63, 26, 5, 1.6), monthly: 12.04, unavailable: 'Not on Redrob yet' }),
+  pick('astra', { score: sc(83, 73, 22, 18, 1.7), monthly: 6.6 }),
+  pick('cowork', { benchmark: true, harness: 'Claude Cowork', score: sc(98, 72, 40, 5, 2.3), monthly: 7.91 }),
+] }] }];
+const g = renderToStaticMarkup(React.createElement(ModelGuide, { professions: gl, summary: 'glance' }));
+ok(g.includes('rr-guide__glancehead') && (g.match(/class="rr-guide__glance( |")/g) || []).length === 6, 'glance: heads once, a strip per row');
+ok(!g.includes('rr-model__effort') && g.includes('Thinking: High'), 'glance: no effort meter; the effort is written out in the detail');
+// Opus: reliability 72/79 = 91% -> 4, speed 40/56 = 71% -> 3. Sol: quality 81/98 = 83% -> 3, cost is the best -> 5.
+ok(/aria-label="Quality 5 of 5, Reliability 4 of 5, Speed 3 of 5, Value 1 of 5"/.test(g), 'glance: levels against the best on the task');
+ok(/aria-label="Quality 3 of 5, Reliability 4 of 5, Speed 1 of 5, Value 5 of 5, Partly estimated"/.test(g) && g.includes('is-estimated'), 'glance: value is the cost score; an estimate is hatched and said');
+ok((g.match(/Tied with #1/g) || []).length === 1 && (g.match(/Best value/g) || []).length === 1, 'glance: one tie with #1 (overlapping intervals) and one best value');
+ok(/SONNET[\s\S]*Tied with #1[\s\S]*SOL[\s\S]*Best value/.test(g), 'glance: the tie is #2 and the value pick is #3');
+ok(!g.includes('rr-guide__map'), 'no chart outside advanced mode');
+const gm = renderToStaticMarkup(React.createElement(ModelGuide, { professions: gl, summary: 'glance', map: true, mode: 'advanced' }));
+ok(gm.includes('rr-guide__map') && (gm.match(/class="rr-guide__mapdot/g) || []).length === 6, 'map: a dot per pick in advanced mode');
+ok((gm.match(/is-frontier/g) || []).length === 3 && gm.includes('rr-guide__mapline'), 'map: sol, sonnet and opus are the trade-off line');
+ok(/role="button" tabindex="0" aria-pressed="true" aria-label="#1 OPUS: quality 98, \$8 a month"/.test(gm), 'map: dots are named controls; #1 is open');
+const un = renderToStaticMarkup(React.createElement(ModelGuide, { professions: [{ id: 'p', label: 'P', tasks: [{ id: 't', label: 'T',
+  picks: [pick('h', { unavailable: 'Not on Redrob yet', sample: { prompt: 'Ask', output: React.createElement('h2', null, 'Rich') } })] }] }] }));
+ok(/<button[^>]*disabled=""[^>]*><span>Use this in the chat/.test(un) && un.includes('rr-guide__unavail') && un.includes('Not on Redrob yet'), 'unavailable: use disabled, reason shown');
+ok(un.includes('rr-guide__output rr-guide__output--rich') && !run.includes('rr-guide__output--rich'), 'rendered output gets the rich class; plain text does not');
+ok(!/rr-guide__(glance|col|map|thinking|unavail)|output--rich/.test(plain), 'no strip, chart, unavailable or rich markup without their props');

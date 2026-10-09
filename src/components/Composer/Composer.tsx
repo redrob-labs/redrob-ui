@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { icons } from '../../icons';
 
 export interface ComposerProps {
@@ -50,7 +50,7 @@ export function Composer(props: ComposerProps): React.ReactElement {
   const [held, setHeld] = React.useState(props.defaultValue || '');
   const value = props.value !== undefined ? props.value : held;
   const taRef = React.useRef<HTMLTextAreaElement | null>(null);
-  const id = React.useRef(nextId('rr-composer')).current;
+  const id = useStableId('rr-composer');
   const maxRows = props.maxRows || 8;
 
   React.useEffect(() => {

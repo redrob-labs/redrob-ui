@@ -3,7 +3,7 @@
 ## Unreleased
 
 ### Fixed
-- `BarList`: without a `max`, the scale ended at 1 or the largest value, whichever was greater. That suits percentages, but a list of amounts under one (cents of spend, fractions of an hour) drew every row as a 2px stub. The scale now ends at the largest shown value or reference, and only an all-zero list falls back to 1. `yarn insights:check` covers it.
+- Generated ids are the same on the server and in the browser. They came from a module-level counter, which on a Node server kept counting across requests, so the server sent e.g. `ThemeSwitch` radios named `rr-theme-412` while the browser rendered `rr-theme-1` and React reported a hydration mismatch in Next.js consumers. Every generated id (field labels and hints, dialog titles, radio names, chart and diagram titles, ...) now comes from `React.useId`, written as digits so it keeps the `rr-<kind>-<number>` shape: no colon or guillemet ever reaches an `id`, `for`, `name` or selector. `Modal` and `Drawer` also stop minting a new title id on every render. The numbers themselves change (`rr-theme-3710` rather than `rr-theme-1`); nothing should depend on them. `yarn ids:check` (now in CI) renders `ThemeSwitch` twice in one process and requires identical markup.
 
 ## 1.3.1
 

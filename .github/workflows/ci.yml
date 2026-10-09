@@ -92,6 +92,14 @@ jobs:
       - name: Assert the insight charts keep their figures readable and their floors
         run: yarn insights:check
 
+      # Parity normalises generated ids and loads a fresh build per case, so it cannot see an id that
+      # depends on how many renders the process has done. A Next.js server is one long process, and a
+      # module-level counter there meant server and browser disagreed on every generated id, so React
+      # reported a hydration mismatch. This renders ThemeSwitch twice in one process and wants the
+      # same bytes.
+      - name: Assert generated ids are the same on every server render
+        run: yarn ids:check
+
       # CSS has no compiler. `var(--x)` naming a property nothing declares is not a parse error - it
       # invalidates its own declaration at computed-value time and the cascade moves on. This caught 28
       # of them: the delivery's tokens.json defines 119 product tokens and its tokens.css declared

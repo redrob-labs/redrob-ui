@@ -2707,7 +2707,9 @@ a.rr-evidence__source:focus-visible { outline: var(--focus-ring-width) solid var
    bought, which is the test the texture register already applies to itself.
    140deg is the 40 degree rake in CSS. This is a GROUND, not a layer: it is the
    dark counterpart to sunken, and it says nothing about what is on it. Depth of
-   content is 40-surfaces-and-motion.md and stays there. */
+   content is 40-surfaces-and-motion.md and stays there. Measured: a pale screenshot is
+   17:1 on deep (1.01:1 on sunken, hence the FeatureRow bleed note); a dark render on deep
+   is 1.07:1 and dissolves, so deep takes the light screenshot. */
 .rr-band--deep {
   /* The stops as tokens at an alpha, which is how the wash gradients are written
      too. Explicit zero-alpha ends rather than `transparent`, so no engine can
@@ -2746,8 +2748,8 @@ a.rr-evidence__source:focus-visible { outline: var(--focus-ring-width) solid var
   transform: skewX(-40deg); transform-origin: 0 100%;
 }
 /* On the brand ground the threshold is the social cards' and the email hero's: one 40
-   degree cut near the right edge, the ground beyond it lit one step, a teal seam on
-   the cut with one faint line either side (assets/Social/render.js, 85-social.md). The
+   degree cut near the right edge, the ground beyond it lit one step, a 3px teal seam on
+   the cut with one faint line either side (brighter, it reads as a panel) (assets/Social/render.js, 85-social.md). The
    cut starts at 62% along the foot of the band and leans right as it rises; skewX(-40deg)
    from the bottom edge keeps it on the rake at any band height. Type never crosses it,
    so a brand band with a threshold keeps its content in the left two thirds. */
@@ -2780,15 +2782,17 @@ a.rr-evidence__source:focus-visible { outline: var(--focus-ring-width) solid var
    gap, on the same rake. Suite surfaces only: never inside one product's page. */
 .rr-band__spectrum {
   /* The suite card's spectrum: eight lines of one width with one gap between each, the teal
-     seam first, then the seven products in suite order at step 4 (20-color.md; literal here
-     because product variables belong to AppShell). Each line 1% of the band's width. */
-  --spec-1: #7AC6FF;
-  --spec-2: #5FD2D6;
-  --spec-3: #5DDB87;
-  --spec-4: #FFA664;
-  --spec-5: #FFA193;
-  --spec-6: #FF98CA;
-  --spec-7: #DCA2FF;
+     seam first, then the launch seven in suite order at step 4 (20-color.md, Where it goes).
+     Each line 1% of the band's width. Values: tokens.json product-<p>-4 (chat, cowork,
+     browser, console, office, design, code), literal because product variables belong to
+     AppShell. */
+  --spec-1: #85C8E8;
+  --spec-2: #FFA475;
+  --spec-3: #70D2C0;
+  --spec-4: #7FC5FF;
+  --spec-5: #FFA28C;
+  --spec-6: #ED99FA;
+  --spec-7: #CAACFF;
   --spec-t: max(4px, 1cqw);
   position: absolute; top: 0; bottom: 0; left: var(--cut-x); width: calc(var(--spec-t) * 15);
   transform: skewX(-40deg); transform-origin: 0 100%;
@@ -2803,13 +2807,19 @@ a.rr-evidence__source:focus-visible { outline: var(--focus-ring-width) solid var
 /* ---- Product grounds on a Band (20-color.md, The three product grounds) ---------
    The ramps are literal here, as the spectrum's are: --product-* belongs to AppShell.
    --pg-1/3/4/5/6/7 are steps 1, 3, 4, 5, 6 (the mark) and 7 of the product's ramp. */
-.rr-band--p-router { --pg-1: #F0F8FF; --pg-3: #B3DEFF; --pg-4: #7AC6FF; --pg-5: #37ABF5; --pg-mark: #1194DD; --pg-7: #0069A1; }
-.rr-band--p-chat { --pg-1: #E9FBFB; --pg-3: #98E8EA; --pg-4: #5FD2D6; --pg-5: #3DB5B9; --pg-mark: #149CA0; --pg-7: #007275; }
-.rr-band--p-code { --pg-1: #E9FDED; --pg-3: #97EFAF; --pg-4: #5DDB87; --pg-5: #3ABE6C; --pg-mark: #02A252; --pg-7: #00783B; }
-.rr-band--p-desk { --pg-1: #FFF5EE; --pg-3: #FFCBA8; --pg-4: #FFA664; --pg-5: #EB8227; --pg-mark: #D87101; --pg-7: #964D00; }
-.rr-band--p-office { --pg-1: #FFF4F2; --pg-3: #FFC8C0; --pg-4: #FFA193; --pg-5: #FF6C5B; --pg-mark: #FE4D3E; --pg-7: #B81610; }
-.rr-band--p-browser { --pg-1: #FFF3F8; --pg-3: #FFC4DE; --pg-4: #FF98CA; --pg-5: #FF58B4; --pg-mark: #F14AA8; --pg-7: #AD1373; }
-.rr-band--p-design { --pg-1: #FAF4FF; --pg-3: #EAC9FF; --pg-4: #DCA2FF; --pg-5: #CD72FF; --pg-mark: #C162F4; --pg-7: #8832B2; }
+.rr-band--p-chat { --pg-1: #F1F8FC; --pg-3: #B9DEF0; --pg-4: #85C8E8; --pg-5: #59ADD2; --pg-mark: #006B8D; --pg-7: #0F5670; }
+.rr-band--p-cowork { --pg-1: #FFF4EF; --pg-3: #FFCAB0; --pg-4: #FFA475; --pg-5: #F97620; --pg-mark: #EB6900; --pg-7: #B6530F; }
+.rr-band--p-browser { --pg-1: #F0F9F7; --pg-3: #B1E4D9; --pg-4: #70D2C0; --pg-5: #34B9A4; --pg-mark: #00A28E; --pg-7: #127E6F; }
+.rr-band--p-console { --pg-1: #F0F8FF; --pg-3: #B5DDFF; --pg-4: #7FC5FF; --pg-5: #2DA9FE; --pg-mark: #0096E9; --pg-7: #1175B4; }
+.rr-band--p-office { --pg-1: #FFF4F1; --pg-3: #FFC9BC; --pg-4: #FFA28C; --pg-5: #FD6F50; --pg-mark: #BA2F0C; --pg-7: #932A12; }
+.rr-band--p-design { --pg-1: #FCF3FE; --pg-3: #F4C4FB; --pg-4: #ED99FA; --pg-5: #D773E7; --pg-mark: #CB68DB; --pg-7: #9D52A9; }
+.rr-band--p-code { --pg-1: #F8F5FF; --pg-3: #DECEFF; --pg-4: #CAACFF; --pg-5: #B483FF; --pg-mark: #7B47BF; --pg-7: #623B96; }
+.rr-band--p-mail { --pg-1: #FCF5EE; --pg-3: #F4D0AC; --pg-4: #EDB06C; --pg-5: #D79038; --pg-mark: #B46F00; --pg-7: #8C580E; }
+.rr-band--p-books { --pg-1: #FFF4EF; --pg-3: #FFCAB0; --pg-4: #FFA474; --pg-5: #EC8144; --pg-mark: #B75100; --pg-7: #90420E; }
+.rr-band--p-jobs { --pg-1: #FFF4F2; --pg-3: #FFC8C2; --pg-4: #FFA097; --pg-5: #FF6B62; --pg-mark: #F55C55; --pg-7: #BD4943; }
+.rr-band--p-skill-tests { --pg-1: #FFF3F5; --pg-3: #FFC6CF; --pg-4: #FF9DAF; --pg-5: #FB698C; --pg-mark: #B82956; --pg-7: #912645; }
+.rr-band--p-passport { --pg-1: #FFF3F6; --pg-3: #FFC5D6; --pg-4: #FF9BBB; --pg-5: #FB659D; --pg-mark: #EF5A93; --pg-7: #B94772; }
+.rr-band--p-craft { --pg-1: #FEF3FB; --pg-3: #FBC3EF; --pg-4: #F896E5; --pg-5: #E370CF; --pg-mark: #C050AE; --pg-7: #964088; }
 /* Section tick in the product's mark: the one place the page names where you are. */
 .rr-band--product .rr-tick { background: var(--pg-mark); }
 /* Light ground: the field stays white, the far side of the cut is lit in the product,
@@ -3691,7 +3701,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 
 /* ------------------------------------------------- What the screens changed */
 /* Streaming's label: the line that says what it is doing, beside the text it is
-   producing. See ScreenDesk. */
+   producing. See ScreenCowork. */
 .rr-streaming__label { color: var(--ink-secondary); margin-right: var(--space-2); }
 
 /* Hangul must not break mid-syllable-block in a data cell. The keep-all rule is scoped
@@ -3712,7 +3722,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 
 /* ==========================================================================
    AppShell: the frame a product screen lives in
-   Built after a real Desk screen had to hand-roll forty lines of chrome.
+   Built after a real Cowork screen had to hand-roll forty lines of chrome.
    ========================================================================== */
 
 .rr-shell {
@@ -3747,13 +3757,19 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
    enters from the top edge of the sidebar - the system's wash-edge, tinted - and fades
    out before the nav, so selection, text and controls stay Redrob Blue and ink. Only
    AppShell reads --product-*; lint/system.py fails any other component that does. */
-.rr-shell[data-product="router"]  { --product-mark: var(--product-router);  --product-wash: var(--product-router-wash);  --product-fill: var(--product-router-fill);  --product-line: var(--product-router-line); }
-.rr-shell[data-product="chat"]    { --product-mark: var(--product-chat);    --product-wash: var(--product-chat-wash);    --product-fill: var(--product-chat-fill);    --product-line: var(--product-chat-line); }
-.rr-shell[data-product="code"]    { --product-mark: var(--product-code);    --product-wash: var(--product-code-wash);    --product-fill: var(--product-code-fill);    --product-line: var(--product-code-line); }
-.rr-shell[data-product="desk"]    { --product-mark: var(--product-desk);    --product-wash: var(--product-desk-wash);    --product-fill: var(--product-desk-fill);    --product-line: var(--product-desk-line); }
-.rr-shell[data-product="office"]  { --product-mark: var(--product-office);  --product-wash: var(--product-office-wash);  --product-fill: var(--product-office-fill);  --product-line: var(--product-office-line); }
+.rr-shell[data-product="chat"] { --product-mark: var(--product-chat); --product-wash: var(--product-chat-wash); --product-fill: var(--product-chat-fill); --product-line: var(--product-chat-line); }
+.rr-shell[data-product="cowork"] { --product-mark: var(--product-cowork); --product-wash: var(--product-cowork-wash); --product-fill: var(--product-cowork-fill); --product-line: var(--product-cowork-line); }
 .rr-shell[data-product="browser"] { --product-mark: var(--product-browser); --product-wash: var(--product-browser-wash); --product-fill: var(--product-browser-fill); --product-line: var(--product-browser-line); }
-.rr-shell[data-product="design"]  { --product-mark: var(--product-design);  --product-wash: var(--product-design-wash);  --product-fill: var(--product-design-fill);  --product-line: var(--product-design-line); }
+.rr-shell[data-product="console"] { --product-mark: var(--product-console); --product-wash: var(--product-console-wash); --product-fill: var(--product-console-fill); --product-line: var(--product-console-line); }
+.rr-shell[data-product="office"] { --product-mark: var(--product-office); --product-wash: var(--product-office-wash); --product-fill: var(--product-office-fill); --product-line: var(--product-office-line); }
+.rr-shell[data-product="design"] { --product-mark: var(--product-design); --product-wash: var(--product-design-wash); --product-fill: var(--product-design-fill); --product-line: var(--product-design-line); }
+.rr-shell[data-product="code"] { --product-mark: var(--product-code); --product-wash: var(--product-code-wash); --product-fill: var(--product-code-fill); --product-line: var(--product-code-line); }
+.rr-shell[data-product="mail"] { --product-mark: var(--product-mail); --product-wash: var(--product-mail-wash); --product-fill: var(--product-mail-fill); --product-line: var(--product-mail-line); }
+.rr-shell[data-product="books"] { --product-mark: var(--product-books); --product-wash: var(--product-books-wash); --product-fill: var(--product-books-fill); --product-line: var(--product-books-line); }
+.rr-shell[data-product="jobs"] { --product-mark: var(--product-jobs); --product-wash: var(--product-jobs-wash); --product-fill: var(--product-jobs-fill); --product-line: var(--product-jobs-line); }
+.rr-shell[data-product="skill-tests"] { --product-mark: var(--product-skill-tests); --product-wash: var(--product-skill-tests-wash); --product-fill: var(--product-skill-tests-fill); --product-line: var(--product-skill-tests-line); }
+.rr-shell[data-product="passport"] { --product-mark: var(--product-passport); --product-wash: var(--product-passport-wash); --product-fill: var(--product-passport-fill); --product-line: var(--product-passport-line); }
+.rr-shell[data-product="craft"] { --product-mark: var(--product-craft); --product-wash: var(--product-craft-wash); --product-fill: var(--product-craft-fill); --product-line: var(--product-craft-line); }
 .rr-shell[data-product] .rr-shell__side {
   background-image: linear-gradient(180deg, var(--product-wash) 0, transparent 132px);
 }
@@ -4472,7 +4488,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 }
 
 /* =====================================================================
-   How Desk works for you: Redrob Auto in ModelPicker, the status line
+   How Cowork works for you: Redrob Auto in ModelPicker, the status line
    under the composer, and the receipts an answer leaves in the chat.
    ===================================================================== */
 

@@ -49,7 +49,7 @@ export function CrossCheckSetting(props: CrossCheckSettingProps): React.ReactEle
     React.createElement(
       'p',
       { key: 'l', className: 'rr-panellede' },
-      props.lede || 'After Desk answers, AIs from other companies check its work. Every check says who ran it.',
+      props.lede || 'After Cowork answers, AIs from other companies check its work. Every check says who ran it.',
     ),
     checks.map((c) => {
       const cur = value[c.id] || 'off';

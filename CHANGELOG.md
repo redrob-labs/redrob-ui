@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.5.0
+
+Brings the library to the Redrob Group Design System 2026 delivery that renames the **Cowork** product (formerly **Desk**) and recolours the band and spectrum grounds. Nothing is removed from the public surface, and every repository-ahead correction is kept.
+
+### Changed
+- **Desk → Cowork.** The product is renamed everywhere it was `Desk`/`desk`: the fifteen `ScreenDesk*` reference screens are now `ScreenCowork*`; `Band`'s product ground, the `AppShell` product key and the `--product-*` / `.rr-band--p-*` token namespace move from `desk` to `cowork`; and the product's name in default copy (`ComposerMode`, `CrossCheckSetting`, `Disputed`, the `COMPOSER_MODES` hints) now reads "Cowork". `BandProduct` is `'chat' | 'cowork' | 'browser' | 'console' | 'office' | 'design' | 'code'`.
+- **Band and spectrum grounds recoloured** to the new delivery: `--spec-1..7` and every `.rr-band--p-*` ground take the delivery's new values, and the social seam note moves to 3px. The deep-ground screenshot contrast note is updated.
+- `Toast`: the `danger` tone is now announced assertively (`role="alert"`, `aria-live="assertive"`), as `Alert` is — a failure the person needs now is worth interrupting for. Every other tone stays polite.
+- Reference bundle, stylesheet, type declarations and all 164 component preview cases refreshed from the new delivery; `src/icons/index.tsx` regenerated from it (252 glyphs).
+
+### Kept
+- The accessibility corrections already carried ahead of the delivery (`--ink-muted` #686e78, dark `--surface-sunken` #1c1f26), the Insights group and its tokens, the 136 `--product-*` declarations `references.js` requires, the Hindi/Devanagari font stack and `:lang(hi)` italic guard, and the ModelGuide 1.4.0 work this change stacks on.
+- `router` is dropped as a product key, matching the new delivery; the six unreleased products (`mail`, `books`, `jobs`, `skill-tests`, `passport`, `craft`) the delivery previews are intentionally **not** added to the public API in this release.
+
 ## 1.4.0
 
 ### Added

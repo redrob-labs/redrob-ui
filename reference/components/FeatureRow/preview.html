@@ -3,8 +3,8 @@
 <script>
   const h = React.createElement;
   const R = window.Redrob;
-  /* Real renders of ScreenDeskPlaybook, ScreenDeskConnectors and the Office prototype (ScreenOfficeDocument), not wireframes. See assets/Screens. */
-  const SHOTS = ['/_blob/f506fd2a0eb2bb67b24f207b43d84da4', '/_blob/2acb1b5349c8e7a534808f04d799eb7d', '/_blob/b37bfd6193c8e7f4eadcc1b990d743b4'];
+  /* Real renders of ScreenCoworkPlaybook, ScreenCoworkConnectors and the Office prototype (ScreenOfficeDocument), not wireframes. See assets/Screens. */
+  const SHOTS = ['/_blob/5b072da03c2da58ad18052e822caefa9', '/_blob/82884ccc49a344553615f3307e5a0983', '/_blob/b37bfd6193c8e7f4eadcc1b990d743b4'];
   const SHOT = (i) => SHOTS[i % SHOTS.length];
 
   function Demo() {
@@ -14,21 +14,21 @@
          every other B2B site, where each section is a screenshot in a neat box,
          alternating sides. One per page: two is a pattern. */
       h(R.Band, { key:1 }, h(R.FeatureRow, { index:0, bleed:true,
-        title:'Redrob Desk does the same work the same way, every time',
+        title:'Redrob Cowork does the same work the same way, every time',
         points:['Save a way of working as a playbook, step by step',
                 'Run it once, on a schedule, or when a file arrives',
                 'Every step that sends, signs or pays waits for you'],
         action: h(R.Button,{size:'sm',variant:'secondary'},'See the thirty examples'),
-        media: h(R.Figure,{ src: SHOT(0), alt:'A Redrob Desk playbook: the contract renewal sweep with its figure, its steps, when it runs and the apps it may reach.', ratio:'8 / 5',
-          caption:'The renewal sweep runs every Monday at 08:00 Seoul time, and stops twice for a person.', credit:'Redrob Desk, as designed' }) }, 'A playbook is work your team already does, written down once. Desk follows the steps in order, in any project, and stops wherever you said a person should check.')),
+        media: h(R.Figure,{ src: SHOT(0), alt:'A Redrob Cowork playbook: the contract renewal sweep with its figure, its steps, when it runs and the apps it may reach.', ratio:'8 / 5',
+          caption:'The renewal sweep runs every Monday at 08:00 Seoul time, and stops twice for a person.', credit:'Redrob Cowork, as designed' }) }, 'A playbook is work your team already does, written down once. Cowork follows the steps in order, in any project, and stops wherever you said a person should check.')),
       h(R.Band, { key:3, ground:'sunken' }, h(R.FeatureRow, { index:1,
         title:'It reaches only the apps you add',
         points:['Twenty of the most used work apps, from Gmail to Jira',
                 'Each one can read, or read and write, nothing in between',
                 'Sending is a step, and that step always asks'],
         action: h(R.Button,{size:'sm',variant:'secondary'},'See the connectors'),
-        media: h(R.Figure,{ src: SHOT(1), alt:'The Connectors page in Redrob Desk: six connected apps, each with what Desk does there.', ratio:'8 / 5',
-          caption:'Six apps connected. A playbook reaches the ones added to it, and no others.', credit:'Redrob Desk, as designed' }) }, 'Connect the apps you already work in. Then each playbook says which of them it may read, and which it may change.')),
+        media: h(R.Figure,{ src: SHOT(1), alt:'The Connectors page in Redrob Cowork: six connected apps, each with what Cowork does there.', ratio:'8 / 5',
+          caption:'Six apps connected. A playbook reaches the ones added to it, and no others.', credit:'Redrob Cowork, as designed' }) }, 'Connect the apps you already work in. Then each playbook says which of them it may read, and which it may change.')),
       h(R.Band, { key:2 }, h(R.FeatureRow, { index:2,
         /* The copy matches the screen beside it. There is no Browser screen yet, so there
            is no Browser row: a marketing page that describes a product it cannot show is

@@ -78,13 +78,13 @@
   /* The site's one navigation (90-web.md, One navigation): the same on every page. */
   const NAV = [
     { label:'Products', items:[
-      { label:'Redrob Router',  href:'#', detail:'Sends each prompt to the model and harness that do it best' },
-      { label:'Redrob Chat',    href:'#', detail:'A conversation, with each question sent to the model that answers it best' },
-      { label:'Redrob Code',    href:'#', detail:'Writing and fixing code, with the model and harness that do it best' },
-      { label:'Redrob Desk',    href:'#', detail:'The agent that works in your own files, in place' },
-      { label:'Redrob Office',  href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
-      { label:'Redrob Browser', href:'#', detail:'A browser that finishes the task you give it' },
-      { label:'Redrob Design',  href:'#', detail:'Designs the whole product as one system, in the file' } ] },
+      { label:'Redrob Chat',     href:'#', detail:'A conversation, with each question sent to the model that answers it best' },
+      { label:'Redrob Cowork',   href:'#', detail:'The agent that works beside you, in your own files and apps' },
+      { label:'Redrob Browser',  href:'#', detail:'A browser that finishes the task you give it' },
+      { label:'Redrob Console',  href:'#', detail:'Where a team sees its AI: usage, spend, models and results' },
+      { label:'Redrob Office',   href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
+      { label:'Redrob Design',   href:'#', detail:'Designs the whole product as one system, in the file' },
+      { label:'Redrob Code',     href:'#', detail:'An agent that writes and fixes code in your terminal' } ] },
     { label:'Solutions', items:['For founders','For small teams','For engineers','For designers','For product managers','For marketers','For sales teams','For recruiters','For HR teams','For lawyers','For accountants','For consultants','For investors'].map(l => ({ label:l, href:'#' })) },
     { label:'Research', href:'#' },
     { label:'News', href:'#' },
@@ -109,13 +109,13 @@
     h('img', { key:'d', className:'rr-mark__dark',  src:MARK_D, alt:'',       style:{ height:px+'px' } })
   ]);
   const SUITE = [
-    ['Redrob Router', '/_blob/6e601414249ca963b6ca0ed571b4c70f', 'Sends each prompt to the model and harness that do it best'],
-    ['Redrob Chat', '/_blob/9d0d361ce060da4e41d7dbc0f9716eed', 'A conversation, with each question sent to the model that answers it best'],
-    ['Redrob Code', '/_blob/ac6267d836341ee1f2f359dc0b38c55e', 'Writing and fixing code, with the model and harness that do it best'],
-    ['Redrob Desk', '/_blob/6211a2e35407c807a0addf21d98817da', 'The agent that works in your own files, in place'],
-    ['Redrob Office', '/_blob/1c5e12194b27c0fe69016d6aa902ea82', 'Documents, sheets and decks that update when a fact changes'],
-    ['Redrob Browser', '/_blob/8bf6ec0afa3a78c58012fa032a5885ff', 'A browser that finishes the task you give it'],
-    ['Redrob Design', '/_blob/21d0b202feafa13473311241eeb110b7', 'Designs the whole product as one system, in the file']
+    ['Redrob Chat', '/_blob/bf10c52aa8d82d7664c19060542fd0f9', 'A conversation, with each question sent to the model that answers it best'],
+    ['Redrob Cowork', '/_blob/58948e9c2994969a266dddc91ee86cb5', 'The agent that works beside you, in your own files and apps'],
+    ['Redrob Browser', '/_blob/8da12a0f6a1d4f4863b066f8f382e3b3', 'A browser that finishes the task you give it'],
+    ['Redrob Console', '/_blob/40c7e8a4cbf1d8ec92cc0af110f96ce5', 'Where a team sees its AI: usage, spend, models and results'],
+    ['Redrob Office', '/_blob/14ac1d8d7434e80578b423a4d0f5704a', 'Documents, sheets and decks that update when a fact changes'],
+    ['Redrob Design', '/_blob/dce03e4290a23e41a58cbfa285ab0fab', 'Designs the whole product as one system, in the file'],
+    ['Redrob Code', '/_blob/51456d190e75be46664a010cba510aca', 'An agent that writes and fixes code in your terminal']
   ];
   const HEADER = h(R.SiteHeader, { key:'hd', mark: mark(24), homeLabel:'Redrob',
     sections: NAV, lang: LANG, theme: THEME,
@@ -124,9 +124,9 @@
     line: "The last mile of AI: the world's best models, across every border of language, place, background and technical skill.",
     columns: [
       { title:'Products', items:[
-        {label:'Redrob Router',href:'#'},{label:'Redrob Chat',href:'#'},{label:'Redrob Code',href:'#'},{label:'Redrob Desk',href:'#'},
-        {label:'Redrob Office',href:'#'},{label:'Redrob Browser',href:'#'},{label:'Redrob Design',href:'#'},
-        {label:'Luma, by Redrob',href:'#',divider:true,external:true},{label:'Signal, by Redrob',href:'#',external:true},{label:'Kaabil, by Redrob',href:'#',external:true}] },
+        {label:'Redrob Chat',href:'#'},{label:'Redrob Cowork',href:'#'},{label:'Redrob Browser',href:'#'},{label:'Redrob Console',href:'#'},
+        {label:'Redrob Office',href:'#'},{label:'Redrob Design',href:'#'},{label:'Redrob Code',href:'#'},
+        {label:'Luma, by Redrob',href:'#',divider:true,external:true},{label:'Signal, by Redrob',href:'#',external:true},{label:'Kaabil, by Redrob',href:'#',external:true},{label:'Crew, by Redrob',href:'#',external:true}] },
       { title:'Solutions', items:[{label:'For founders',href:'#'},{label:'For small teams',href:'#'},{label:'For engineers',href:'#'},{label:'For designers',href:'#'},{label:'For product managers',href:'#'},{label:'For marketers',href:'#'},{label:'For sales teams',href:'#'},{label:'For recruiters',href:'#'},{label:'For HR teams',href:'#'},{label:'For lawyers',href:'#'},{label:'For accountants',href:'#'},{label:'For consultants',href:'#'},{label:'For investors',href:'#'}] },
       { title:'Company', items:[{label:'About Redrob',href:'#'},{label:'Research',href:'#'},{label:'News',href:'#'},{label:'Blog',href:'#'}] }
     ],
@@ -178,9 +178,8 @@
      been, what it makes, who backs it. Splits (a heading on the left third) alternate
      with full-width rows, and no second band competes with the hero. */
   function Screen() {
-    return h('div', null, [
-      HEADER,
-
+    /* One PageShell per page: the skip link, the landmarks and lang (PageShell). */
+    return h(R.PageShell, { lang:'en', header: HEADER, footer: FOOTER }, [
       h(R.Band, { key:'open', ground:'deep' }, h(R.Hero, {
         film: FILM,
         lede: 'The best AI in the world has already been built. Who gets to use it is decided by everything around it: the language a product speaks, the country it launched in, the background it assumes, how much you already know about models. Those are borders, and Redrob exists to take them down.'
@@ -215,7 +214,7 @@
           h('ul', { key:'l', className:'sx-suite' }, SUITE.map(s => h('li', { key:s[0] }, h('a', { href:'#' }, [
             h('img', { key:'i', src:s[1], alt:'' }), h('div', { key:'t' }, [h('b', { key:'n' }, s[0]), h('span', { key:'d' }, s[2])])])))),
           h('p', { key:'a', className:'sx-also' }, ['Also by Redrob: ',
-            h('a', { key:1, href:'#' }, 'Luma, by Redrob'), ', ', h('a', { key:2, href:'#' }, 'Signal, by Redrob'), ' and ', h('a', { key:3, href:'#' }, 'Kaabil, by Redrob'), '.'])
+            h('a', { key:1, href:'#' }, 'Luma, by Redrob'), ', ', h('a', { key:2, href:'#' }, 'Signal, by Redrob'), ', ', h('a', { key:3, href:'#' }, 'Kaabil, by Redrob'), ' and ', h('a', { key:4, href:'#' }, 'Crew, by Redrob'), '.'])
         ])
       ])),
 
@@ -230,9 +229,7 @@
           h(R.Button, { key:'b', size:'lg', shape:'pill', emphasis:true }, 'Start free'),
           h('a', { key:'a', className:'sx-close__link', href:'#' }, 'Read the research →')
         ])
-      ])),
-
-      FOOTER
+      ]))
     ]);
   }
   ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));

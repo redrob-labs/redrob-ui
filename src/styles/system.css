@@ -2863,13 +2863,13 @@ a.rr-evidence__source:focus-visible { outline: var(--focus-ring-width) solid var
   /* The suite card's spectrum: eight lines of one width with one gap between each, the teal
      seam first, then the seven products in suite order at step 4 (20-color.md; literal here
      because product variables belong to AppShell). Each line 1% of the band's width. */
-  --spec-1: #7AC6FF;
-  --spec-2: #5FD2D6;
-  --spec-3: #5DDB87;
-  --spec-4: #FFA664;
-  --spec-5: #FFA193;
-  --spec-6: #FF98CA;
-  --spec-7: #DCA2FF;
+  --spec-1: #85C8E8;
+  --spec-2: #FFA475;
+  --spec-3: #70D2C0;
+  --spec-4: #7FC5FF;
+  --spec-5: #FFA28C;
+  --spec-6: #ED99FA;
+  --spec-7: #CAACFF;
   --spec-t: max(4px, 1cqw);
   position: absolute; top: 0; bottom: 0; left: var(--cut-x); width: calc(var(--spec-t) * 15);
   transform: skewX(-40deg); transform-origin: 0 100%;
@@ -2884,14 +2884,13 @@ a.rr-evidence__source:focus-visible { outline: var(--focus-ring-width) solid var
 /* ---- Product grounds on a Band (20-color.md, The three product grounds) ---------
    The ramps are literal here, as the spectrum's are: --product-* belongs to AppShell.
    --pg-1/3/4/5/6/7 are steps 1, 3, 4, 5, 6 (the mark) and 7 of the product's ramp. */
-.rr-band--p-router { --pg-1: #F0F8FF; --pg-3: #B3DEFF; --pg-4: #7AC6FF; --pg-5: #37ABF5; --pg-mark: #1194DD; --pg-7: #0069A1; }
-.rr-band--p-chat { --pg-1: #E9FBFB; --pg-3: #98E8EA; --pg-4: #5FD2D6; --pg-5: #3DB5B9; --pg-mark: #149CA0; --pg-7: #007275; }
-.rr-band--p-code { --pg-1: #E9FDED; --pg-3: #97EFAF; --pg-4: #5DDB87; --pg-5: #3ABE6C; --pg-mark: #02A252; --pg-7: #00783B; }
-.rr-band--p-desk { --pg-1: #FFF5EE; --pg-3: #FFCBA8; --pg-4: #FFA664; --pg-5: #EB8227; --pg-mark: #D87101; --pg-7: #964D00; }
-.rr-band--p-office { --pg-1: #FFF4F2; --pg-3: #FFC8C0; --pg-4: #FFA193; --pg-5: #FF6C5B; --pg-mark: #FE4D3E; --pg-7: #B81610; }
-.rr-band--p-browser { --pg-1: #FFF3F8; --pg-3: #FFC4DE; --pg-4: #FF98CA; --pg-5: #FF58B4; --pg-mark: #F14AA8; --pg-7: #AD1373; }
-.rr-band--p-design { --pg-1: #FAF4FF; --pg-3: #EAC9FF; --pg-4: #DCA2FF; --pg-5: #CD72FF; --pg-mark: #C162F4; --pg-7: #8832B2; }
-.rr-band--p-console { --pg-1: #EEF4FF; --pg-3: #BAD2FF; --pg-4: #8AAFFF; --pg-5: #507FFF; --pg-mark: #2B52FF; --pg-7: #1733D5; }
+.rr-band--p-chat { --pg-1: #F1F8FC; --pg-3: #B9DEF0; --pg-4: #85C8E8; --pg-5: #59ADD2; --pg-mark: #006B8D; --pg-7: #0F5670; }
+.rr-band--p-code { --pg-1: #F8F5FF; --pg-3: #DECEFF; --pg-4: #CAACFF; --pg-5: #B483FF; --pg-mark: #7B47BF; --pg-7: #623B96; }
+.rr-band--p-cowork { --pg-1: #FFF4EF; --pg-3: #FFCAB0; --pg-4: #FFA475; --pg-5: #F97620; --pg-mark: #EB6900; --pg-7: #B6530F; }
+.rr-band--p-office { --pg-1: #FFF4F1; --pg-3: #FFC9BC; --pg-4: #FFA28C; --pg-5: #FD6F50; --pg-mark: #BA2F0C; --pg-7: #932A12; }
+.rr-band--p-browser { --pg-1: #F0F9F7; --pg-3: #B1E4D9; --pg-4: #70D2C0; --pg-5: #34B9A4; --pg-mark: #00A28E; --pg-7: #127E6F; }
+.rr-band--p-design { --pg-1: #FCF3FE; --pg-3: #F4C4FB; --pg-4: #ED99FA; --pg-5: #D773E7; --pg-mark: #CB68DB; --pg-7: #9D52A9; }
+.rr-band--p-console { --pg-1: #F0F8FF; --pg-3: #B5DDFF; --pg-4: #7FC5FF; --pg-5: #2DA9FE; --pg-mark: #0096E9; --pg-7: #1175B4; }
 /* Section tick in the product's mark: the one place the page names where you are. */
 .rr-band--product .rr-tick { background: var(--pg-mark); }
 /* Light ground: the field stays white, the far side of the cut is lit in the product,
@@ -3773,7 +3772,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 
 /* ------------------------------------------------- What the screens changed */
 /* Streaming's label: the line that says what it is doing, beside the text it is
-   producing. See ScreenDesk. */
+   producing. See ScreenCowork. */
 .rr-streaming__label { color: var(--ink-secondary); margin-right: var(--space-2); }
 
 /* Hangul must not break mid-syllable-block in a data cell. The keep-all rule is scoped
@@ -3794,7 +3793,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 
 /* ==========================================================================
    AppShell: the frame a product screen lives in
-   Built after a real Desk screen had to hand-roll forty lines of chrome.
+   Built after a real Cowork screen had to hand-roll forty lines of chrome.
    ========================================================================== */
 
 .rr-shell {
@@ -3832,7 +3831,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-shell[data-product="router"]  { --product-mark: var(--product-router);  --product-wash: var(--product-router-wash);  --product-fill: var(--product-router-fill);  --product-line: var(--product-router-line); }
 .rr-shell[data-product="chat"]    { --product-mark: var(--product-chat);    --product-wash: var(--product-chat-wash);    --product-fill: var(--product-chat-fill);    --product-line: var(--product-chat-line); }
 .rr-shell[data-product="code"]    { --product-mark: var(--product-code);    --product-wash: var(--product-code-wash);    --product-fill: var(--product-code-fill);    --product-line: var(--product-code-line); }
-.rr-shell[data-product="desk"]    { --product-mark: var(--product-desk);    --product-wash: var(--product-desk-wash);    --product-fill: var(--product-desk-fill);    --product-line: var(--product-desk-line); }
+.rr-shell[data-product="cowork"]    { --product-mark: var(--product-cowork);    --product-wash: var(--product-cowork-wash);    --product-fill: var(--product-cowork-fill);    --product-line: var(--product-cowork-line); }
 .rr-shell[data-product="office"]  { --product-mark: var(--product-office);  --product-wash: var(--product-office-wash);  --product-fill: var(--product-office-fill);  --product-line: var(--product-office-line); }
 .rr-shell[data-product="browser"] { --product-mark: var(--product-browser); --product-wash: var(--product-browser-wash); --product-fill: var(--product-browser-fill); --product-line: var(--product-browser-line); }
 .rr-shell[data-product="design"]  { --product-mark: var(--product-design);  --product-wash: var(--product-design-wash);  --product-fill: var(--product-design-fill);  --product-line: var(--product-design-line); }
@@ -4695,7 +4694,7 @@ ol.rr-guide__cardlist { list-style: decimal; }
 }
 
 /* =====================================================================
-   How Desk works for you: Redrob Auto in ModelPicker, the status line
+   How Cowork works for you: Redrob Auto in ModelPicker, the status line
    under the composer, and the receipts an answer leaves in the chat.
    ===================================================================== */
 

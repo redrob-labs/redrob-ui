@@ -100,7 +100,7 @@ export const OPINION_VERDICTS: Record<string, { label: string; icon?: string }> 
   quiet: { label: 'Didn’t comment' },
 };
 
-/* ---- How Desk works on a message ------------------------------------------------------------------- */
+/* ---- How Cowork works on a message ------------------------------------------------------------------- */
 
 /** Plan or Run, in the composer bar beside the ModelPicker. */
 export interface ComposerModeOption {
@@ -121,9 +121,9 @@ export const COMPOSER_MODES: ComposerModeOption[] = [
     value: 'plan',
     label: 'Plan',
     icon: 'route',
-    hint: 'Desk asks what it needs and writes a plan. Nothing runs until you say so.',
+    hint: 'Cowork asks what it needs and writes a plan. Nothing runs until you say so.',
   },
-  { value: 'run', label: 'Run', icon: 'play', hint: 'Desk starts at once.' },
+  { value: 'run', label: 'Run', icon: 'play', hint: 'Cowork starts at once.' },
 ];
 
 export type CrossCheckLevel = 'off' | 'auto' | 'always';

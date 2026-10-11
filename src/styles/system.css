@@ -4614,6 +4614,34 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-guide__mapdot:focus-visible circle { stroke: var(--focus-ring); stroke-width: 3; }
 .rr-guide__mapkey { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); font-size: 12px; line-height: 16px; color: var(--ink-secondary); }
 .rr-guide__mapkey i { flex: none; width: 18px; border-top: 1.5px dashed var(--chart-good); }
+/* A run with a task card: card, scorecard, folded answer, run facts. */
+.rr-guide__sample--card { gap: var(--space-5); }
+.rr-guide__card { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); background: var(--surface-sunken); }
+.rr-guide__brief { margin: 0; font-size: 15px; line-height: 23px; font-weight: 600; color: var(--ink-primary); }
+.rr-guide__cardpart { display: flex; flex-direction: column; gap: 4px; }
+.rr-guide__cardlist { margin: 0; padding-left: 1.2em; font-size: 13px; line-height: 20px; color: var(--ink-primary); }
+.rr-guide__cardlist li + li { margin-top: 2px; }
+.rr-guide__cardnote { margin: 0; font-size: 12px; line-height: 18px; color: var(--ink-secondary); font-style: italic; }
+.rr-guide__hard { margin: 0; font-size: 13px; line-height: 20px; color: var(--ink-primary); }
+.rr-guide__exact summary, .rr-guide__answer summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--ink-brand); }
+.rr-guide__exact[open] summary, .rr-guide__answer[open] summary { margin-bottom: var(--space-2); }
+.rr-guide__exact .rr-guide__prompt { max-height: 320px; overflow-y: auto; white-space: pre-wrap; font-size: 13px; line-height: 20px; }
+.rr-guide__scorecard { display: flex; flex-direction: column; gap: var(--space-2); }
+.rr-guide__scorehead { margin: 0; display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); font-size: 12px; font-weight: 600; color: var(--ink-secondary); }
+.rr-guide__scorehead b { font-size: 15px; color: var(--ink-primary); font-variant-numeric: tabular-nums; }
+.rr-guide__checks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden; }
+.rr-guide__check { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: var(--space-2); padding: var(--space-2) var(--space-3); font-size: 13px; line-height: 20px; color: var(--ink-primary); background: var(--surface-base); }
+.rr-guide__check + .rr-guide__check { border-top: 1px solid var(--border-subtle); }
+.rr-guide__mark { font-weight: 700; text-align: center; }
+.rr-guide__check.is-pass .rr-guide__mark { color: var(--status-success); }
+.rr-guide__check.is-partial .rr-guide__mark { color: var(--status-warning); }
+.rr-guide__check.is-miss .rr-guide__mark { color: var(--status-danger); }
+.rr-guide__checkbody { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.rr-guide__quote { display: block; font-size: 12px; line-height: 18px; color: var(--ink-secondary); quotes: "\201C" "\201D"; overflow-wrap: anywhere; }
+.rr-guide__run { display: flex; flex-direction: column; gap: var(--space-2); }
+.rr-guide__runfacts { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: var(--space-2) var(--space-4); margin: 0; }
+.rr-guide__runfacts dt { font-size: 11px; color: var(--ink-secondary); }
+.rr-guide__runfacts dd { margin: 1px 0 0; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
 /* Rendered output (markdown): its own blocks, not pre-wrapped text. */
 .rr-guide__output--rich { white-space: normal; }
 .rr-guide__output--rich > :first-child { margin-top: 0; }

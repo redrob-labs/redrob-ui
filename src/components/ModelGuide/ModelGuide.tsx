@@ -6,6 +6,16 @@ import { currencyFor, Effort, EffortLevel, EffortMeter, EffortNoteContext } from
 import { EffortTune } from '../../internal/effort';
 import { GUIDE_DIMS, GuideScore, GuideWeights, guidePrice, guideTotal } from '../../internal/guide';
 import { GlanceHead, GlanceLabels, GlanceStrip, GuideMap, GuideMapLabels, guideGlance } from '../../internal/guide-glance';
+import {
+  GuideSampleLabels,
+  GuideScorecard,
+  GuideTaskCard,
+  RunFacts,
+  Scorecard,
+  TaskCard,
+  scoreOf,
+  scoreText,
+} from '../../internal/guide-sample';
 import { icons } from '../../icons';
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
@@ -72,7 +82,21 @@ export interface GuidePick {
   /** What the graders said. */
   note?: React.ReactNode;
   /** One real run: the prompt, the output, and whether it is illustrative. */
-  sample?: { prompt?: React.ReactNode; output?: React.ReactNode; more?: React.ReactNode; illustrative?: boolean };
+  sample?: {
+    prompt?: React.ReactNode;
+    output?: React.ReactNode;
+    more?: React.ReactNode;
+    illustrative?: boolean;
+    /**
+     * The task as a reader needs it. With a card the sample reads card, scorecard, answer (folded), run; the
+     * exact prompt moves inside the card. Without one it renders as before.
+     */
+    card?: GuideTaskCard;
+    /** How this answer did against the task's checklist. Its score also shows on the pick's row. */
+    scorecard?: GuideScorecard;
+    /** What the run took: model, level, time, cost, date. */
+    run?: Array<[React.ReactNode, React.ReactNode]>;
+  };
   runHref?: string;
   /**
    * Why this pick cannot be used from here right now, e.g. "Not on Redrob yet". The use action is disabled
@@ -218,6 +242,8 @@ export interface ModelGuideProps {
   bestValueLabel?: React.ReactNode;
   /** Before the written-out effort in the detail with `summary="glance"`, `Thinking` by default. */
   thinkingLabel?: string;
+  /** Headings and words for a sample with a task card and scorecard. English by default. */
+  sampleLabels?: GuideSampleLabels;
   /** In advanced mode, a quality-against-price chart above the list. Each dot opens its pick. */
   map?: boolean;
   mapLabels?: GuideMapLabels;
@@ -346,11 +372,19 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
   }
 
   function glanceTags(k: GuidePick): React.ReactElement | null {
-    if (!glance || k.benchmark) return null;
-    const tied = glance.tied[k.id];
-    const value = glance.bestValue === k.id;
-    if (!tied && !value) return null;
+    const card = k.sample && k.sample.scorecard;
+    const tied = glance && !k.benchmark && glance.tied[k.id];
+    const value = glance && !k.benchmark && glance.bestValue === k.id;
+    if (!tied && !value && !card) return null;
+    const s = card ? scoreOf(card) : null;
     return React.createElement('span', { key: 'g', className: 'rr-guide__glancetags' }, [
+      card && s
+        ? React.createElement(
+            Badge,
+            { key: 's', tone: s.passed === s.of ? 'success' : 'neutral', size: 'sm' },
+            `${(props.sampleLabels || {}).scorecard || 'Scorecard'} ${scoreText(card, props.sampleLabels || {})}`,
+          )
+        : null,
       tied ? React.createElement(Badge, { key: 't', tone: 'neutral', size: 'sm' }, props.tiedLabel || 'Tied with #1') : null,
       value ? React.createElement(Badge, { key: 'v', tone: 'success', size: 'sm' }, props.bestValueLabel || 'Best value') : null,
     ]);
@@ -759,8 +793,36 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             title: props.effortHint || 'The sample below was written at the ranked effort.',
           })
         : null,
-      // No run to show (a guide ranked from published benchmarks): no empty prompt and output boxes.
-      !(task.prompt || sample.prompt || sample.output) ? null : React.createElement('div', { key: 's', className: 'rr-guide__sample' }, [
+      // A run with a task card: what it was given and asked, how it did, the answer folded, what it took.
+      sample.card
+        ? React.createElement('div', { key: 's', className: 'rr-guide__sample rr-guide__sample--card' }, [
+            React.createElement(TaskCard, { key: 'c', card: sample.card, prompt: task.prompt || sample.prompt, labels: props.sampleLabels || {} }),
+            sample.scorecard
+              ? React.createElement(Scorecard, { key: 's', card: sample.scorecard, labels: props.sampleLabels || {} })
+              : null,
+            sample.output != null
+              ? React.createElement('details', { key: 'a', className: 'rr-guide__answer' }, [
+                  React.createElement('summary', { key: 's' }, (props.sampleLabels || {}).fullAnswer || 'Read the full answer'),
+                  React.createElement(
+                    'div',
+                    {
+                      key: 't',
+                      className: cx('rr-guide__output', typeof sample.output !== 'string' && 'rr-guide__output--rich'),
+                      tabIndex: 0,
+                      role: 'region',
+                      'aria-label': `${props.outputLabel || 'What it wrote'}: ${pickName(k)}`,
+                    },
+                    sample.output,
+                  ),
+                ])
+              : null,
+            sample.run && sample.run.length
+              ? React.createElement(RunFacts, { key: 'r', facts: sample.run, label: (props.sampleLabels || {}).run })
+              : null,
+            sample.more ? React.createElement('p', { key: 'm', className: 'rr-guide__cut' }, sample.more) : null,
+          ])
+        : // No run to show (a guide ranked from published benchmarks): no empty prompt and output boxes.
+          !(task.prompt || sample.prompt || sample.output) ? null : React.createElement('div', { key: 's', className: 'rr-guide__sample' }, [
         React.createElement('div', { key: 'q', className: 'rr-guide__turn' }, [
           React.createElement(
             'p',

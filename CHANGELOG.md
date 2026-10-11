@@ -16,7 +16,8 @@
   - Labels: `mapLabels`.
 - `GuidePick.unavailable`: why a pick cannot be used from here. The use action is disabled and the reason shown beside it.
 - `ModelGuide`: a sample `output` given as rendered markup (a consumer's markdown, say) gets `rr-guide__output--rich`, with its own headings, lists, tables and code blocks instead of pre-wrapped text. A plain-string output is unchanged.
-- `GlanceLabels` and `GuideMapLabels` types are exported.
+- `ModelGuide`: a sample can carry a task card (`sample.card`: brief, what was given, what was asked, the limit, what makes it hard), a scorecard (`sample.scorecard`: a verdict per check, pass / partial / miss, with the passage of the answer that earned it) and run facts (`sample.run`). Such a sample reads card, scorecard, the answer folded under "Read the full answer", then the run; the exact prompt folds inside the card. The pick's row shows its score. Verdicts are said in words for screen readers, not only marked. Labels: `sampleLabels`.
+- `GlanceLabels`, `GuideMapLabels`, `GuideTaskCard`, `GuideScorecard`, `GuideVerdict` and `GuideSampleLabels` types are exported.
 
 All of these are optional and render no markup when absent, so parity with the reference is unchanged. `yarn guide:check` asserts each one and its absence.
 

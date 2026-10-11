@@ -1652,6 +1652,7 @@ Import: `import { ModelGuide } from '@redrob-labs/ui';`
 | `tiedLabel` | `React.ReactNode` | no |  |
 | `bestValueLabel` | `React.ReactNode` | no |  |
 | `thinkingLabel` | `string` | no | Before the written-out effort in the detail with `summary="glance"`, `Thinking` by default. |
+| `sampleLabels` | `GuideSampleLabels` | no | Headings and words for a sample with a task card and scorecard. English by default. |
 | `map` | `boolean` | no | In advanced mode, a quality-against-price chart above the list. Each dot opens its pick. |
 | `mapLabels` | `GuideMapLabels` | no |  |
 

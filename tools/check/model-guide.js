@@ -141,3 +141,28 @@ const un = renderToStaticMarkup(React.createElement(ModelGuide, { professions: [
 ok(/<button[^>]*disabled=""[^>]*><span>Use this in the chat/.test(un) && un.includes('rr-guide__unavail') && un.includes('Not on Redrob yet'), 'unavailable: use disabled, reason shown');
 ok(un.includes('rr-guide__output rr-guide__output--rich') && !run.includes('rr-guide__output--rich'), 'rendered output gets the rich class; plain text does not');
 ok(!/rr-guide__(glance|col|map|thinking|unavail)|output--rich/.test(plain), 'no strip, chart, unavailable or rich markup without their props');
+
+// 1.4.0: a sample with a task card and scorecard reads card, scorecard, folded answer, run facts.
+const carded = (extra) => [{ id: 'a', label: 'Accountant', tasks: [{ id: 'close', label: 'Close the books', picks: [pick('opus', Object.assign({ sample: {
+  prompt: 'Full prompt text',
+  output: 'The whole answer',
+  card: { brief: 'Finish a reconciliation', given: ['Bank statement', 'GL excerpt'], asked: ['A table', 'Entries'], limit: 'About 1,200 words', hard: 'A planted error', note: 'Everything was in the message.' },
+  scorecard: { lines: [
+    { check: 'Splits the $4,527', verdict: 'pass', quote: '$4,500 duplicate' },
+    { check: 'Voids #2019', verdict: 'partial' },
+    { check: 'NSF to receivables', verdict: 'miss' },
+  ], note: 'Graded by two models' },
+  run: [['Time', '48 s'], ['Cost', '$0.11']],
+} }, extra || {})), pick('sonnet')] }] }];
+const c1 = renderToStaticMarkup(React.createElement(ModelGuide, { professions: carded() }));
+ok(/rr-guide__card[\s\S]*rr-guide__scorecard[\s\S]*rr-guide__answer[\s\S]*rr-guide__run/.test(c1), 'card sample: card, scorecard, folded answer, run, in that order');
+ok(c1.includes('Finish a reconciliation') && c1.includes('Everything was in the message.') && /<ol class="rr-guide__cardlist"><li>A table/.test(c1), 'card: brief, given, note, asked as an ordered list');
+ok(/<details class="rr-guide__exact"><summary>See the exact prompt<\/summary>[\s\S]*Full prompt text/.test(c1), 'exact prompt folded inside the card');
+ok(c1.includes('<b>1 of 3, 1 partly</b>') && c1.includes('is-pass') && c1.includes('is-partial') && c1.includes('is-miss'), 'scorecard: score and a mark per line');
+ok(c1.includes('Passed: </span>Splits') && c1.includes('<q class="rr-guide__quote">$4,500 duplicate</q>'), 'verdict in words for screen readers; quote shown');
+ok(/<details class="rr-guide__answer"><summary>Read the full answer<\/summary>/.test(c1) && !c1.includes('rr-guide__turn'), 'answer folded; no old prompt box');
+ok(c1.includes('<dt>Cost</dt><dd>$0.11</dd>'), 'run facts');
+ok(/OPUS[\s\S]*Scorecard 1 of 3, 1 partly[\s\S]*SONNET/.test(c1) && (c1.match(/Scorecard \d of/g) || []).length === 1, 'row shows the score only for a pick with a scorecard');
+const c2 = renderToStaticMarkup(React.createElement(ModelGuide, { professions: carded(), sampleLabels: { scorecard: '채점표', score: (p, o) => `${o}개 중 ${p}개`, fullAnswer: '전체 답변 보기' } }));
+ok(c2.includes('3개 중 1개') && c2.includes('전체 답변 보기') && !c2.includes('Read the full answer'), 'sample labels translate');
+ok(!/rr-guide__(card|scorecard|answer|run)\b/.test(run), 'a sample without a card renders as before');

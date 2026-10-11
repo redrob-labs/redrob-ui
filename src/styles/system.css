@@ -4620,6 +4620,8 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-guide__brief { margin: 0; font-size: 15px; line-height: 23px; font-weight: 600; color: var(--ink-primary); }
 .rr-guide__cardpart { display: flex; flex-direction: column; gap: 4px; }
 .rr-guide__cardlist { margin: 0; padding-left: 1.2em; font-size: 13px; line-height: 20px; color: var(--ink-primary); }
+ul.rr-guide__cardlist { list-style: disc; }
+ol.rr-guide__cardlist { list-style: decimal; }
 .rr-guide__cardlist li + li { margin-top: 2px; }
 .rr-guide__cardnote { margin: 0; font-size: 12px; line-height: 18px; color: var(--ink-secondary); font-style: italic; }
 .rr-guide__hard { margin: 0; font-size: 13px; line-height: 20px; color: var(--ink-primary); }

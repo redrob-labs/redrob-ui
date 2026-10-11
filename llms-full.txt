@@ -1,6 +1,6 @@
 # @redrob-labs/ui - full reference
 
-Version 1.3.1. 145 React components on the Redrob Group Design System 2026, plus 260 icons.
+Version 1.4.0. 145 React components on the Redrob Group Design System 2026, plus 260 icons.
 
 ## Using the package
 
@@ -1647,6 +1647,14 @@ Import: `import { ModelGuide } from '@redrob-labs/ui';`
 | `harnessLabel` | `(harness: string) => React.ReactNode` | no | Where a pick runs, e.g. `(h) => \`on ${h}\`` (the default). |
 | `rankLabel` | `(place: number, task: string) => React.ReactNode` | no | The detail's rank line, e.g. `(place, task) => \`#${place} for ${task}\`` (the default). |
 | `effortUnit` | `string` | no | The word after an effort level, `effort` by default; `''` shows the level alone. |
+| `summary` | `'effort' \| 'glance'` | no | What each row shows under its name. `effort` (the default) is the effort meter. `glance` is the comparison strip: quality, reliability, speed and value as five-step meters against the best pick on this task, under one set of column heads, with "Tied with #1" where the 95% intervals overlap and "Best value" on the most quality per dollar. With `glance` the effort is written out in the detail instead of metered, because a maker's own scale says little next to another maker's. |
+| `glanceLabels` | `GlanceLabels` | no | Column heads, accessible names and tooltips for the strip. English by default. |
+| `tiedLabel` | `React.ReactNode` | no |  |
+| `bestValueLabel` | `React.ReactNode` | no |  |
+| `thinkingLabel` | `string` | no | Before the written-out effort in the detail with `summary="glance"`, `Thinking` by default. |
+| `sampleLabels` | `GuideSampleLabels` | no | Headings and words for a sample with a task card and scorecard. English by default. |
+| `map` | `boolean` | no | In advanced mode, a quality-against-price chart above the list. Each dot opens its pick. |
+| `mapLabels` | `GuideMapLabels` | no |  |
 
 Exported types: `GuideKind`, `GuideStep`, `GuideSource`, `GuideTool`, `GuidePick`, `GuideTask`, `GuideProfession`.
 

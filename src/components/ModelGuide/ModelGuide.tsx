@@ -5,6 +5,17 @@ import { docLocale } from '../../internal/datetime';
 import { currencyFor, Effort, EffortLevel, EffortMeter, EffortNoteContext } from '../../internal/model';
 import { EffortTune } from '../../internal/effort';
 import { GUIDE_DIMS, GuideScore, GuideWeights, guidePrice, guideTotal } from '../../internal/guide';
+import { GlanceHead, GlanceLabels, GlanceStrip, GuideMap, GuideMapLabels, guideGlance } from '../../internal/guide-glance';
+import {
+  GuideSampleLabels,
+  GuideScorecard,
+  GuideTaskCard,
+  RunFacts,
+  Scorecard,
+  TaskCard,
+  scoreOf,
+  scoreText,
+} from '../../internal/guide-sample';
 import { icons } from '../../icons';
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
@@ -71,8 +82,27 @@ export interface GuidePick {
   /** What the graders said. */
   note?: React.ReactNode;
   /** One real run: the prompt, the output, and whether it is illustrative. */
-  sample?: { prompt?: React.ReactNode; output?: React.ReactNode; more?: React.ReactNode; illustrative?: boolean };
+  sample?: {
+    prompt?: React.ReactNode;
+    output?: React.ReactNode;
+    more?: React.ReactNode;
+    illustrative?: boolean;
+    /**
+     * The task as a reader needs it. With a card the sample reads card, scorecard, answer (folded), run; the
+     * exact prompt moves inside the card. Without one it renders as before.
+     */
+    card?: GuideTaskCard;
+    /** How this answer did against the task's checklist. Its score also shows on the pick's row. */
+    scorecard?: GuideScorecard;
+    /** What the run took: model, level, time, cost, date. */
+    run?: Array<[React.ReactNode, React.ReactNode]>;
+  };
   runHref?: string;
+  /**
+   * Why this pick cannot be used from here right now, e.g. "Not on Redrob yet". The use action is disabled
+   * and this line shown beside it, rather than a button that does nothing.
+   */
+  unavailable?: React.ReactNode;
   /**
    * A reference point, not a pick on offer: the same ranking run on someone else's product, shown so a reader
    * can compare. It is greyed, carries no rank of its own and takes no slot in the top `limit`, and its detail
@@ -198,6 +228,25 @@ export interface ModelGuideProps {
   rankLabel?: (place: number, task: string) => React.ReactNode;
   /** The word after an effort level, `effort` by default; `''` shows the level alone. */
   effortUnit?: string;
+  /**
+   * What each row shows under its name. `effort` (the default) is the effort meter. `glance` is the
+   * comparison strip: quality, reliability, speed and value as five-step meters against the best pick on this
+   * task, under one set of column heads, with "Tied with #1" where the 95% intervals overlap and "Best value"
+   * on the most quality per dollar. With `glance` the effort is written out in the detail instead of metered,
+   * because a maker's own scale says little next to another maker's.
+   */
+  summary?: 'effort' | 'glance';
+  /** Column heads, accessible names and tooltips for the strip. English by default. */
+  glanceLabels?: GlanceLabels;
+  tiedLabel?: React.ReactNode;
+  bestValueLabel?: React.ReactNode;
+  /** Before the written-out effort in the detail with `summary="glance"`, `Thinking` by default. */
+  thinkingLabel?: string;
+  /** Headings and words for a sample with a task card and scorecard. English by default. */
+  sampleLabels?: GuideSampleLabels;
+  /** In advanced mode, a quality-against-price chart above the list. Each dot opens its pick. */
+  map?: boolean;
+  mapLabels?: GuideMapLabels;
 }
 
 const KIND_LABEL: Record<GuideKind, string> = {
@@ -312,6 +361,34 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
     task.weights || props.weights || { quality: 0.55, reliability: 0.25, speed: 0.05, cost: 0.15 };
   const headId = useStableId('rr-guide');
   const adv = mode === 'advanced';
+  const glance = props.summary === 'glance' ? guideGlance(picks, w) : null;
+  const glanceLabels = props.glanceLabels || {};
+
+  /** The effort as a meter, or with `summary="glance"` as words: "Thinking: High". */
+  function effortMark(e: Effort | undefined, key: string): React.ReactElement | null {
+    if (!glance) return React.createElement(EffortMeter, { key, effort: e, unit: props.effortUnit });
+    if (!e || !e.label) return null;
+    return React.createElement('span', { key, className: 'rr-guide__thinking' }, `${props.thinkingLabel || 'Thinking'}: ${e.label}`);
+  }
+
+  function glanceTags(k: GuidePick): React.ReactElement | null {
+    const card = k.sample && k.sample.scorecard;
+    const tied = glance && !k.benchmark && glance.tied[k.id];
+    const value = glance && !k.benchmark && glance.bestValue === k.id;
+    if (!tied && !value && !card) return null;
+    const s = card ? scoreOf(card) : null;
+    return React.createElement('span', { key: 'g', className: 'rr-guide__glancetags' }, [
+      card && s
+        ? React.createElement(
+            Badge,
+            { key: 's', tone: s.passed === s.of ? 'success' : 'neutral', size: 'sm' },
+            `${(props.sampleLabels || {}).scorecard || 'Scorecard'} ${scoreText(card, props.sampleLabels || {})}`,
+          )
+        : null,
+      tied ? React.createElement(Badge, { key: 't', tone: 'neutral', size: 'sm' }, props.tiedLabel || 'Tied with #1') : null,
+      value ? React.createElement(Badge, { key: 'v', tone: 'success', size: 'sm' }, props.bestValueLabel || 'Best value') : null,
+    ]);
+  }
 
   function choose(pid: string, tid: string | null): void {
     if (props.profession === undefined) setProfHeld(pid);
@@ -368,7 +445,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             React.createElement('li', { key: j }, [
               React.createElement('span', { key: 'm', className: 'rr-guide__stepname' }, st.model),
               st.role ? React.createElement('span', { key: 'r', className: 'rr-guide__steprole' }, st.role) : null,
-              st.effort ? React.createElement(EffortMeter, { key: 'e', effort: st.effort, unit: props.effortUnit }) : null,
+              st.effort ? effortMark(st.effort, 'e') : null,
             ]),
           ),
         ),
@@ -490,7 +567,10 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
               soonBadge(k, 'c'),
               benchBadge(k, 'bm'),
             ]),
-            React.createElement(EffortMeter, { key: 'e', effort: k.effort, unit: props.effortUnit }),
+            glance
+              ? React.createElement(GlanceStrip, { key: 'e', pick: k, glance, labels: glanceLabels })
+              : React.createElement(EffortMeter, { key: 'e', effort: k.effort, unit: props.effortUnit }),
+            glanceTags(k),
             !adv && k.why ? React.createElement('span', { key: 'w', className: 'rr-model__why' }, k.why) : null,
             adv && k.score
               ? React.createElement(
@@ -649,7 +729,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             pickName(k),
             React.createElement('span', { key: 'o' }, [' ', onHarness(k.harness)]),
           ]),
-          React.createElement(EffortMeter, { key: 'e', effort: k.effort, unit: props.effortUnit }),
+          effortMark(k.effort, 'e'),
           k.kind || k.comingSoon || (k.flags && k.flags.length)
             ? React.createElement('p', { key: 'k', className: 'rr-guide__badges' }, [
                 kindBadge(k.kind, 'k'),
@@ -713,8 +793,36 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             title: props.effortHint || 'The sample below was written at the ranked effort.',
           })
         : null,
-      // No run to show (a guide ranked from published benchmarks): no empty prompt and output boxes.
-      !(task.prompt || sample.prompt || sample.output) ? null : React.createElement('div', { key: 's', className: 'rr-guide__sample' }, [
+      // A run with a task card: what it was given and asked, how it did, the answer folded, what it took.
+      sample.card
+        ? React.createElement('div', { key: 's', className: 'rr-guide__sample rr-guide__sample--card' }, [
+            React.createElement(TaskCard, { key: 'c', card: sample.card, prompt: task.prompt || sample.prompt, labels: props.sampleLabels || {} }),
+            sample.scorecard
+              ? React.createElement(Scorecard, { key: 's', card: sample.scorecard, labels: props.sampleLabels || {} })
+              : null,
+            sample.output != null
+              ? React.createElement('details', { key: 'a', className: 'rr-guide__answer' }, [
+                  React.createElement('summary', { key: 's' }, (props.sampleLabels || {}).fullAnswer || 'Read the full answer'),
+                  React.createElement(
+                    'div',
+                    {
+                      key: 't',
+                      className: cx('rr-guide__output', typeof sample.output !== 'string' && 'rr-guide__output--rich'),
+                      tabIndex: 0,
+                      role: 'region',
+                      'aria-label': `${props.outputLabel || 'What it wrote'}: ${pickName(k)}`,
+                    },
+                    sample.output,
+                  ),
+                ])
+              : null,
+            sample.run && sample.run.length
+              ? React.createElement(RunFacts, { key: 'r', facts: sample.run, label: (props.sampleLabels || {}).run })
+              : null,
+            sample.more ? React.createElement('p', { key: 'm', className: 'rr-guide__cut' }, sample.more) : null,
+          ])
+        : // No run to show (a guide ranked from published benchmarks): no empty prompt and output boxes.
+          !(task.prompt || sample.prompt || sample.output) ? null : React.createElement('div', { key: 's', className: 'rr-guide__sample' }, [
         React.createElement('div', { key: 'q', className: 'rr-guide__turn' }, [
           React.createElement(
             'p',
@@ -742,7 +850,9 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             'div',
             {
               key: 't',
-              className: 'rr-guide__output',
+              // Rendered markup (a consumer's markdown, say) sets its own line breaks; only plain text keeps
+              // its newlines as written.
+              className: cx('rr-guide__output', sample.output != null && typeof sample.output !== 'string' && 'rr-guide__output--rich'),
               tabIndex: 0,
               role: 'region',
               'aria-label': `${props.outputLabel || 'What it wrote'}: ${pickName(k)}`,
@@ -766,6 +876,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
           {
             key: 'b',
             variant: 'primary',
+            disabled: k.unavailable ? true : undefined,
             onClick: () => {
               const lv = tryLevel != null && k.efforts ? k.efforts.filter((l) => l.level === tryLevel)[0] : null;
               if (props.onUse) props.onUse(k, { profession: prof, task, effort: lv || null });
@@ -773,6 +884,9 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
           },
           props.useLabel || 'Use this in the chat',
         ),
+        !k.benchmark && k.unavailable
+          ? React.createElement('p', { key: 'u', className: 'rr-guide__unavail' }, k.unavailable)
+          : null,
         k.runHref
           ? React.createElement('a', { key: 'a', className: 'rr-guide__runlink', href: k.runHref }, [
               props.runLabel || 'See the full run',
@@ -784,6 +898,41 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
             ])
           : null,
       ]),
+    ]);
+  }
+
+  /** A monthly price as plain text, for places a Money element cannot go (SVG text, accessible names). */
+  function priceText(m: number): string {
+    const amt = shown === base ? m : m * rates[shown];
+    return new Intl.NumberFormat(locale, { style: 'currency', currency: shown, maximumFractionDigits: 0 }).format(amt);
+  }
+
+  /**
+   * The ranked list. Bare, as the reference has it, unless the strip or the chart is on: those need a column
+   * to sit in, with the strip's heads and the chart above the rows.
+   */
+  function list(): React.ReactElement {
+    const ol = React.createElement(
+      'ol',
+      { key: 'l', className: 'rr-guide__list', 'aria-label': task.title || task.label },
+      picks.map((k) => row(k)),
+    );
+    const showMap = adv && props.map;
+    if (!glance && !showMap) return ol;
+    return React.createElement('div', { key: 'l', className: 'rr-guide__col' }, [
+      showMap
+        ? React.createElement(GuideMap, {
+            key: 'm',
+            picks: picks.map((k) => ({ id: k.id, name: pickName(k) || k.id, score: k.score, monthly: k.monthly, benchmark: k.benchmark })),
+            rankOf,
+            current: current && current.id,
+            onSelect: (id: string) => setPickId(id),
+            price: priceText,
+            labels: props.mapLabels || {},
+          })
+        : null,
+      glance ? React.createElement(GlanceHead, { key: 'h', labels: glanceLabels }) : null,
+      ol,
     ]);
   }
 
@@ -875,11 +1024,7 @@ export function ModelGuide(props: ModelGuideProps): React.ReactElement {
       ]),
       picks.length
         ? React.createElement('div', { key: 'grid', className: 'rr-guide__grid' }, [
-            React.createElement(
-              'ol',
-              { key: 'l', className: 'rr-guide__list', 'aria-label': task.title || task.label },
-              picks.map((k) => row(k)),
-            ),
+            list(),
             detail(current),
           ])
         : React.createElement('div', { key: 'e', className: 'rr-guide__empty' }, [

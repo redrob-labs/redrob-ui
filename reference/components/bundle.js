@@ -5623,7 +5623,7 @@
   var PRIVACY_LEVELS = [
     { id: 'standard', label: 'Standard', n: 1, detail: 'ID, bank and card numbers are left out.' },
     { id: 'high', label: 'High', n: 2, detail: 'Standard, plus names, phone numbers, emails, clients and projects are swapped for placeholders.' },
-    { id: 'strict', label: 'Strict', n: 3, detail: 'High, plus addresses, amounts and dates. Nothing can be sent from the web or a phone, where the check cannot run.' }
+    { id: 'strict', label: 'Strict', n: 3, detail: 'High, plus addresses, amounts and dates.' }
   ];
 
   function PrivacyLevels(props) {
@@ -5650,14 +5650,14 @@
     var lvl = levels.filter(function (l) { return l.id === (props.level || 'high'); })[0] || levels[1];
     if (props.state === 'off') {
       return h('div', { className: cx('rr-privacy', props.className) }, [
-        h(ProtectionStatus, { key: 'c', tone: 'warn', icon: Icons.shield({ width: 28, height: 28 }), title: props.offTitle || 'Privacy protection is off here' },
-          props.offText || 'It runs on your laptop, so it only works in the Redrob desktop app. On the web, what you send goes to the AI as written.'),
+        h(ProtectionStatus, { key: 'c', tone: 'warn', icon: Icons.shield({ width: 28, height: 28 }), title: props.offTitle || 'Privacy protection is off' },
+          props.offText || 'What you send goes to the AI as written.'),
         props.foot ? h('div', { key: 'f', className: 'rr-panelfoot' }, props.foot) : null
       ]);
     }
     return h('div', { className: cx('rr-privacy', props.className) }, [
       props.card !== false ? h(ProtectionStatus, { key: 'c', tone: 'safe', icon: Icons.shieldCheck({ width: 28, height: 28 }),
-        title: (props.onLabel || 'Privacy protection is on') + ': ' + lvl.label, live: props.running || 'Running on this laptop' }, props.summary) : null,
+        title: (props.onLabel || 'Privacy protection is on') + ': ' + lvl.label, live: props.running || 'Running' }, props.summary) : null,
       props.lede !== false ? h('p', { key: 'l', className: 'rr-panellede' }, props.lede ||
         'A small privacy AI runs on your own laptop, not in the cloud. When you press Send, it reads the message first and swaps private details for placeholders, so the AI that answers never sees them. When the answer comes back, your laptop puts the real names back.') : null,
       props.showLevels !== false ? h(PrivacyLevels, { key: 'v', levels: levels, level: lvl.id }) : null,

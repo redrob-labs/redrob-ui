@@ -108,7 +108,7 @@ export function Disputed(props: DisputedProps): React.ReactElement {
                           if (props.onSettle) props.onSettle();
                         },
                       },
-                      props.settleLabel || 'Ask Desk to settle it',
+                      props.settleLabel || 'Ask Cowork to settle it',
                     )
                   : null,
                 React.createElement(

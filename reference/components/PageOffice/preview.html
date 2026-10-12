@@ -15,7 +15,7 @@
 .ox-shot .rr-figure__frame { border-radius: 16px; overflow: hidden; border: 1px solid var(--border-subtle); }
 .rr-band--sunken .ox-stage { background-color: var(--surface-base); }
 .ox-stage { position: relative; width: 100%; height: 100%; overflow: hidden; box-sizing: border-box; padding: 32px; display: flex; align-items: center; justify-content: center;
-  background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--product-office, #FE4D3E) 12%, transparent) 0%, transparent 55%), var(--surface-sunken);
+  background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--product-office, #BA2F0C) 12%, transparent) 0%, transparent 55%), var(--surface-sunken);
   font-family: var(--font-sans); color: var(--ink-primary); font-size: 13px; line-height: 20px; }
 .ox-card { background: var(--surface-base); border: 1px solid var(--border-subtle); border-radius: 12px; box-sizing: border-box; }
 /* Layouts. Everything sits inside the stage's 32px margin, on one grid: two parts share
@@ -186,13 +186,13 @@
   /* The site's one navigation (90-web.md, One navigation): the same on every page. */
   const NAV = [
     { label:'Products', items:[
-      { label:'Redrob Router',  href:'#', detail:'Sends each prompt to the model and harness that do it best' },
-      { label:'Redrob Chat',    href:'#', detail:'A conversation, with each question sent to the model that answers it best' },
-      { label:'Redrob Code',    href:'#', detail:'Writing and fixing code, with the model and harness that do it best' },
-      { label:'Redrob Desk',    href:'#', detail:'The agent that works in your own files, in place' },
-      { label:'Redrob Office',  href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
-      { label:'Redrob Browser', href:'#', detail:'A browser that finishes the task you give it' },
-      { label:'Redrob Design',  href:'#', detail:'Designs the whole product as one system, in the file' } ] },
+      { label:'Redrob Chat',     href:'#', detail:'A conversation, with each question sent to the model that answers it best' },
+      { label:'Redrob Cowork',   href:'#', detail:'The agent that works beside you, in your own files and apps' },
+      { label:'Redrob Browser',  href:'#', detail:'A browser that finishes the task you give it' },
+      { label:'Redrob Console',  href:'#', detail:'Where a team sees its AI: usage, spend, models and results' },
+      { label:'Redrob Office',   href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
+      { label:'Redrob Design',   href:'#', detail:'Designs the whole product as one system, in the file' },
+      { label:'Redrob Code',     href:'#', detail:'An agent that writes and fixes code in your terminal' } ] },
     { label:'Solutions', items:['For founders','For small teams','For engineers','For designers','For product managers','For marketers','For sales teams','For recruiters','For HR teams','For lawyers','For accountants','For consultants','For investors'].map(l => ({ label:l, href:'#' })) },
     { label:'Research', href:'#' },
     { label:'News', href:'#' },
@@ -223,16 +223,16 @@
     line: "The last mile of AI: the world's best models, across every border of language, place, background and technical skill.",
     columns: [
       { title:'Products', items:[
-        {label:'Redrob Router',href:'#'},{label:'Redrob Chat',href:'#'},{label:'Redrob Code',href:'#'},{label:'Redrob Desk',href:'#'},
-        {label:'Redrob Office',href:'#'},{label:'Redrob Browser',href:'#'},{label:'Redrob Design',href:'#'},
-        {label:'Luma, by Redrob',href:'#',divider:true,external:true},{label:'Signal, by Redrob',href:'#',external:true},{label:'Kaabil, by Redrob',href:'#',external:true}] },
+        {label:'Redrob Chat',href:'#'},{label:'Redrob Cowork',href:'#'},{label:'Redrob Browser',href:'#'},{label:'Redrob Console',href:'#'},
+        {label:'Redrob Office',href:'#'},{label:'Redrob Design',href:'#'},{label:'Redrob Code',href:'#'},
+        {label:'Luma, by Redrob',href:'#',divider:true,external:true},{label:'Signal, by Redrob',href:'#',external:true},{label:'Kaabil, by Redrob',href:'#',external:true},{label:'Crew, by Redrob',href:'#',external:true}] },
       { title:'Solutions', items:[{label:'For founders',href:'#'},{label:'For small teams',href:'#'},{label:'For engineers',href:'#'},{label:'For designers',href:'#'},{label:'For product managers',href:'#'},{label:'For marketers',href:'#'},{label:'For sales teams',href:'#'},{label:'For recruiters',href:'#'},{label:'For HR teams',href:'#'},{label:'For lawyers',href:'#'},{label:'For accountants',href:'#'},{label:'For consultants',href:'#'},{label:'For investors',href:'#'}] },
       { title:'Company', items:[{label:'About Redrob',href:'#'},{label:'Research',href:'#'},{label:'News',href:'#'},{label:'Blog',href:'#'}] }
     ],
     copyright: '© 2026 Redrob Inc.',
     legal: [ {label:'Privacy',href:'#'}, {label:'Terms',href:'#'}, {label:'Cookies',onClick:()=>{}}, {label:'Accessibility',href:'#'}, {label:'Company details',href:'#'} ] });
 
-  const OFFICE_ICON = '/_blob/1c5e12194b27c0fe69016d6aa902ea82';
+  const OFFICE_ICON = '/_blob/14ac1d8d7434e80578b423a4d0f5704a';
   const SYMBOL = '/_blob/a35853f38695b112ff00dae9ab62fdce';
   const FACE = { felix:'/_blob/70df7900794a8d3f9136b3db4d675ed5', jae:'/_blob/a85fa607de6ac6f02f3eb91206a2ec67', seunghyun:'/_blob/a0f7809e68d01abe473a00358bd92e26' };
   const ic = (n, s) => h(R.icons[n], { width: s || 16, height: s || 16, 'aria-hidden': 'true' });
@@ -262,7 +262,7 @@
       h('h4', { key:'m' }, 'Board of directors · 7 October 2026'),
       h('h3', { key:'t' }, 'Q3 2026: board memo'),
       h('p', { key:'p' }, ['Q3 revenue was ', h('span', { key:'f', className:'ox-figline' }, '₩3.86bn'), ' (', h('span', { key:'u', className:'ox-figline' }, '$2.78m'), ' at ₩1,387.97 per $1, Federal Reserve H.10, 18 Sep 2026), up ', h('span', { key:'g', className:'ox-figline' }, '20.6%'), ' on Q2.']),
-      h('p', { key:'q' }, 'Revenue grew by about a fifth, led by the Seorin renewal and the first three enterprise Desk customers.'),
+      h('p', { key:'q' }, 'Revenue grew by about a fifth, led by the Seorin renewal and the first three enterprise Cowork customers.'),
       h('p', { key:'r' }, 'Gross margin held at 61%. Cash runway is 26 months at the current burn.')
     ]),
     h('div', { key:'p', className:'ox-card ox-lift ox-pop' }, [
@@ -284,7 +284,7 @@
       h('h5', { key:'a' }, '5. Term'),
       h('p', { key:'b' }, ['This Agreement', cursor('Seunghyun', 'var(--accent-violet-5, #8944FF)'), ' lasts two (2) years from the Effective Date.']),
       h('h5', { key:'c' }, '8. Governing law'),
-      h('p', { key:'d' }, ['This Agreement is governed by the laws of the State of ', h('span', { key:'o', className:'ox-old' }, 'New York'), ' ', h('span', { key:'n', className:'ox-ins' }, 'Delaware'), cursor('Jae', 'var(--accent-teal-6, #00847F)'), '.'])
+      h('p', { key:'d' }, ['This Agreement is governed by the laws of the State of ', h('span', { key:'o', className:'ox-old' }, 'New York'), ' ', h('span', { key:'n', className:'ox-ins' }, 'Delaware'), cursor('Jae', 'var(--accent-teal-5, #006A7A)'), '.'])
     ]),
     h('div', { key:'t', className:'ox-card ox-lift ox-thread' }, [
       h('p', { key:'q', className:'ox-thread__q' }, '“the laws of the State of Delaware”'),
@@ -356,7 +356,7 @@
     'Ask @Redrob in a comment and it answers in the thread, with its receipt.'
   ];
 
-  /* 05-mission.md, verbatim; Expert Match is Router's. Each capability keeps its beat. */
+  /* 05-mission.md, verbatim; no Expert Match (Console and Code only; here it is Redrob Auto). Each capability keeps its beat. */
   const CAPS = [
     { key:'memory', name:'Multi-Model Memory', head:'Your work, remembered across every AI.',
       copy:'Every AI you switch to starts from zero. Memory carries one professional context across Claude, GPT, Gemini and specialized models, and across your projects, files and conversations.', beat:'Switch models, not context.',
@@ -404,9 +404,8 @@
      together, Cross-check, files). Never a shrunk full window. Customer
      stories are sample content: fictional companies and people, to be replaced before launch. */
   function Screen() {
-    return h('div', null, [
-      HEADER,
-
+    /* One PageShell per page: the skip link, the landmarks and lang (PageShell). */
+    return h(R.PageShell, { lang:'en', header: HEADER, footer: FOOTER }, [
       h(R.Band, { key:'hero', product:'office', threshold:true }, h(R.Hero, {
         mark: h('span', { className:'ox-product' }, [h('img', { key:'i', src: OFFICE_ICON, alt:'' }), h('span', { key:'n' }, 'Redrob Office')]),
         lede: 'Change one number and every document, sheet and deck that used it is out of date. Edit a fact, a decision or an assumption, and Office finds everything that depends on it, recalculates the figures, rewrites the documents and updates the decks.',
@@ -467,9 +466,7 @@
           h(R.Button, { key:'b', size:'lg', shape:'pill', emphasis:true }, 'Try Office free'),
           h('a', { key:'a', className:'ox-close__link', href:'#' }, 'See pricing →')
         ])
-      ])),
-
-      FOOTER
+      ]))
     ]);
   }
   ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));

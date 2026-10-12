@@ -4,17 +4,17 @@
   const h = React.createElement;
   const R = window.Redrob;
   const I = R.icons;
-  const DESK = '/_blob/c9f7a1ca0f93453df21a0432cfdb1031';
+  const DESK = '/_blob/b3c5023586b93302b5fa11e97c5ef689';
   /* The site's one navigation (90-web.md, One navigation): the same on every page. */
   const NAV = [
     { label:'Products', items:[
-      { label:'Redrob Router',  href:'#', detail:'Sends each prompt to the model and harness that do it best' },
-      { label:'Redrob Chat',    href:'#', detail:'A conversation, with each question sent to the model that answers it best' },
-      { label:'Redrob Code',    href:'#', detail:'Writing and fixing code, with the model and harness that do it best' },
-      { label:'Redrob Desk',    href:'#', detail:'The agent that works in your own files, in place' },
-      { label:'Redrob Office',  href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
-      { label:'Redrob Browser', href:'#', detail:'A browser that finishes the task you give it' },
-      { label:'Redrob Design',  href:'#', detail:'Designs the whole product as one system, in the file' } ] },
+      { label:'Redrob Chat',     href:'#', detail:'A conversation, with each question sent to the model that answers it best' },
+      { label:'Redrob Cowork',   href:'#', detail:'The agent that works beside you, in your own files and apps' },
+      { label:'Redrob Browser',  href:'#', detail:'A browser that finishes the task you give it' },
+      { label:'Redrob Console',  href:'#', detail:'Where a team sees its AI: usage, spend, models and results' },
+      { label:'Redrob Office',   href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
+      { label:'Redrob Design',   href:'#', detail:'Designs the whole product as one system, in the file' },
+      { label:'Redrob Code',     href:'#', detail:'An agent that writes and fixes code in your terminal' } ] },
     { label:'Solutions', items:['For founders','For small teams','For engineers','For designers','For product managers','For marketers','For sales teams','For recruiters','For HR teams','For lawyers','For accountants','For consultants','For investors'].map(l => ({ label:l, href:'#' })) },
     { label:'Research', href:'#' },
     { label:'News', href:'#' },
@@ -45,9 +45,9 @@
     line: "The last mile of AI: the world's best models, across every border of language, place, background and technical skill.",
     columns: [
       { title:'Products', items:[
-        {label:'Redrob Router',href:'#'},{label:'Redrob Chat',href:'#'},{label:'Redrob Code',href:'#'},{label:'Redrob Desk',href:'#'},
-        {label:'Redrob Office',href:'#'},{label:'Redrob Browser',href:'#'},{label:'Redrob Design',href:'#'},
-        {label:'Luma, by Redrob',href:'#',divider:true,external:true},{label:'Signal, by Redrob',href:'#',external:true},{label:'Kaabil, by Redrob',href:'#',external:true}] },
+        {label:'Redrob Chat',href:'#'},{label:'Redrob Cowork',href:'#'},{label:'Redrob Browser',href:'#'},{label:'Redrob Console',href:'#'},
+        {label:'Redrob Office',href:'#'},{label:'Redrob Design',href:'#'},{label:'Redrob Code',href:'#'},
+        {label:'Luma, by Redrob',href:'#',divider:true,external:true},{label:'Signal, by Redrob',href:'#',external:true},{label:'Kaabil, by Redrob',href:'#',external:true},{label:'Crew, by Redrob',href:'#',external:true}] },
       { title:'Solutions', items:[{label:'For founders',href:'#'},{label:'For small teams',href:'#'},{label:'For engineers',href:'#'},{label:'For designers',href:'#'},{label:'For product managers',href:'#'},{label:'For marketers',href:'#'},{label:'For sales teams',href:'#'},{label:'For recruiters',href:'#'},{label:'For HR teams',href:'#'},{label:'For lawyers',href:'#'},{label:'For accountants',href:'#'},{label:'For consultants',href:'#'},{label:'For investors',href:'#'}] },
       { title:'Company', items:[{label:'About Redrob',href:'#'},{label:'Research',href:'#'},{label:'News',href:'#'},{label:'Blog',href:'#'}] }
     ],
@@ -55,9 +55,8 @@
     legal: [ {label:'Privacy',href:'#'}, {label:'Terms',href:'#'}, {label:'Cookies',onClick:()=>{}}, {label:'Accessibility',href:'#'}, {label:'Company details',href:'#'} ] });
 
   function Screen() {
-    return h('div', {}, [
-      HEADER,
-
+    /* One PageShell per page: the skip link, the landmarks and lang (PageShell). */
+    return h(R.PageShell, { lang:'en', header: HEADER, footer: FOOTER }, [
       h(R.Band, { key: 'h', ground: 'sunken', size: 'lg' },
         h(R.StoryHeader, {
           customer: 'Northmoor', sector: 'Logistics, Rotterdam',
@@ -81,17 +80,17 @@
             { id: 's3', label: 'What changed' },
             { id: 's4', label: 'What is still hard' }
           ],
-          tags: [{ label: 'Redrob Office', href: '#' }, { label: 'Redrob Desk', href: '#' }, { label: 'Logistics', href: '#' }]
+          tags: [{ label: 'Redrob Office', href: '#' }, { label: 'Redrob Cowork', href: '#' }, { label: 'Logistics', href: '#' }]
         }, [
 
           h('h2', { key: 'h1', id: 's1' }, 'What the shift actually does'),
           h('p', { key: 'p1' }, 'At 23:00 the night shift at Rotterdam writes down what moved, what did not, and what the morning has to deal with. Fourteen sites do the same thing at their own hour. The pack is not a report anybody files. It is the thing a person reads at 06:00 before they touch a machine.'),
           h('p', { key: 'p2' }, 'Six of those sites do not work in Dutch. Until this year the pack reached them in English, translated by whoever on the night shift had the best English, which on a Tuesday was sometimes nobody.'),
 
-          h(R.Figure, { key: 'f1', src: DESK, alt: 'The Redrob Desk run that reads a folder of contracts, with the approval step waiting.',
+          h(R.Figure, { key: 'f1', src: DESK, alt: 'The Redrob Cowork run that reads a folder of contracts, with the approval step waiting.',
             ratio: '16 / 10',
-            caption: 'The same shape of run Northmoor uses: Desk reads the folder, says what it could not read, and waits before anything leaves the building.',
-            credit: 'Redrob Desk, as designed' }),
+            caption: 'The same shape of run Northmoor uses: Cowork reads the folder, says what it could not read, and waits before anything leaves the building.',
+            credit: 'Redrob Cowork, as designed' }),
 
           h('h2', { key: 'h2', id: 's2' }, 'Where the nine hours went'),
           h('p', { key: 'p3' }, 'Not in the writing. The Rotterdam pack took about 25 minutes to write. The nine hours were the four translations, the two rounds of somebody checking that the translation had not changed what a number meant, and the morning calls that happened when it had.'),
@@ -137,8 +136,7 @@
               href: '#', moreLabel: 'Read the whole story' },
               'The spec is in English and the shop floor works in Hindi. Both now read the same drawing.')
           ])
-        ])),
-      FOOTER
+        ]))
     ]);
   }
   ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));

@@ -1,6 +1,6 @@
 # @redrob-labs/ui - full reference
 
-Version 1.4.0. 145 React components on the Redrob Group Design System 2026, plus 260 icons.
+Version 1.5.0. 145 React components on the Redrob Group Design System 2026, plus 252 icons.
 
 ## Using the package
 
@@ -904,7 +904,7 @@ Confirmation that something happened, floating and brief.
 
 For an action that succeeded, and for an undo. Never for something the person must act on: a toast leaves, and anything that can disappear on its own cannot carry a requirement. That belongs in `Alert`.
 
-`aria-live="polite"` rather than assertive, so it is announced when the reader pauses instead of cutting across them for news they did not ask to hear twice.
+`aria-live="polite"` for every tone but `danger`, so it is announced when the reader pauses instead of cutting across them for news they did not ask to hear twice. `danger` is assertive, as `Alert`'s is: a failure the person needs now is the one case worth interrupting for.
 
 This renders one toast. Stacking, timing and dismissal are the app's, because a component that owned the timer would also have to own pausing it on hover and on focus.
 
@@ -3145,7 +3145,7 @@ Import: `import { AppShell } from '@redrob-labs/ui';`
 
 | Prop | Type | Required | Notes |
 | --- | --- | --- | --- |
-| `product` | `string` | no | Product name, e.g. `Desk`. Sets the product wash at the top of the sidebar. |
+| `product` | `string` | no | Product name, e.g. `Cowork`. Sets the product wash at the top of the sidebar. |
 | `mark` | `string` | no |  |
 | `markDark` | `string` | no |  |
 | `symbol` | `string` | no | The symbol alone, shown when the sidebar is folded. |
@@ -3469,7 +3469,7 @@ Exported types: `LegalSection`, `LegalRevision`.
 
 ## Icons
 
-`icons` is a record of 260 components keyed by name, each rendering at `1em` in `currentColor`. `iconNames` is the sorted list of keys and `svg` returns the raw markup for a name.
+`icons` is a record of 252 components keyed by name, each rendering at `1em` in `currentColor`. `iconNames` is the sorted list of keys and `svg` returns the raw markup for a name.
 
 ```tsx
 import { icons, iconNames } from '@redrob-labs/ui';

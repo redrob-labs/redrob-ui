@@ -33,7 +33,7 @@ export function ComposerMode(props: ComposerModeProps): React.ReactElement {
     {
       className: cx('rr-cmode', props.compact && 'rr-cmode--compact', props.className),
       role: 'radiogroup',
-      'aria-label': props.label || 'How Desk works on this message',
+      'aria-label': props.label || 'How Cowork works on this message',
     },
     modes.map((m) => {
       const on = value === m.value;

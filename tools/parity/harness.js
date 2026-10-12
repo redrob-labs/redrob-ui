@@ -217,7 +217,7 @@ function compositionNames() {
 }
 
 /**
- * Since the October 2026 delivery, the product screens (`ScreenDesk*`, `ScreenOffice*`, `ScreenCrew*`,
+ * Since the October 2026 delivery, the product screens (`ScreenCowork*`, `ScreenOffice*`, `ScreenCrew*`,
  * `ScreenDesign*`) no longer carry their case inline. Each preview `fetch`es a whole prototype app
  * (`../../prototypes/<product>/app.js`, 250 to 660 KB, with its own router and timers) and mounts it.
  * That is a running product, not a case: it needs a real DOM and a network path this harness does not

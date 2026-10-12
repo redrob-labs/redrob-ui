@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { PubItem, PubStory, pubYear } from '../../internal/publishing';
 import { NewsSection } from '../NewsSection/NewsSection';
 
@@ -49,7 +49,7 @@ export function PostList(props: PostListProps): React.ReactElement {
  * Renders null when empty rather than an empty list element.
  */
 function PostIndex(props: PostListProps): React.ReactElement | null {
-  const yid = React.useRef(nextId('rr-y')).current;
+  const yid = useStableId('rr-y');
   const items = props.items || [];
   if (!items.length) return null;
 

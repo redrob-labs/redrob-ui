@@ -6,13 +6,13 @@
   /* The site's one navigation (90-web.md, One navigation): the same on every page. */
   const NAV = [
     { label:'Products', items:[
-      { label:'Redrob Router',  href:'#', detail:'Sends each prompt to the model and harness that do it best' },
-      { label:'Redrob Chat',    href:'#', detail:'A conversation, with each question sent to the model that answers it best' },
-      { label:'Redrob Code',    href:'#', detail:'Writing and fixing code, with the model and harness that do it best' },
-      { label:'Redrob Desk',    href:'#', detail:'The agent that works in your own files, in place' },
-      { label:'Redrob Office',  href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
-      { label:'Redrob Browser', href:'#', detail:'A browser that finishes the task you give it' },
-      { label:'Redrob Design',  href:'#', detail:'Designs the whole product as one system, in the file' } ] },
+      { label:'Redrob Chat',     href:'#', detail:'A conversation, with each question sent to the model that answers it best' },
+      { label:'Redrob Cowork',   href:'#', detail:'The agent that works beside you, in your own files and apps' },
+      { label:'Redrob Browser',  href:'#', detail:'A browser that finishes the task you give it' },
+      { label:'Redrob Console',  href:'#', detail:'Where a team sees its AI: usage, spend, models and results' },
+      { label:'Redrob Office',   href:'#', detail:'Documents, sheets and decks that update when a fact changes' },
+      { label:'Redrob Design',   href:'#', detail:'Designs the whole product as one system, in the file' },
+      { label:'Redrob Code',     href:'#', detail:'An agent that writes and fixes code in your terminal' } ] },
     { label:'Solutions', items:['For founders','For small teams','For engineers','For designers','For product managers','For marketers','For sales teams','For recruiters','For HR teams','For lawyers','For accountants','For consultants','For investors'].map(l => ({ label:l, href:'#' })) },
     { label:'Research', href:'#' },
     { label:'News', href:'#' },
@@ -40,7 +40,7 @@
     blog: { src:'/_blob/f3ef20e54936926ab44d38c839baa830', webp:'/_blob/c06dff5afc8115b16d805d228bfd7efa 1200w, /_blob/cbc1837eec57f3fb75cd90d95398dd81 2400w',
       alt:'A jet engine on a test stand, three pipes driving water into the running fan.', caption:'Engine water ingestion test', label:LABEL, position:'60% 50%' }
   };
-  const DESK = { src:'/_blob/c9f7a1ca0f93453df21a0432cfdb1031', generated:false, label:'Redrob Desk, as designed', position:'0% 0%' };
+  const DESK = { src:'/_blob/b3c5023586b93302b5fa11e97c5ef689', generated:false, label:'Redrob Cowork, as designed', position:'0% 0%' };
   const RESEARCH = [
     { href:'#', kind:'Research', date:'22 September 2026', dateTime:'2026-09-22', title:'Which model wins which prompt, September 2026',
       summary:'Real prompts from real work, run through every model and harness Router can reach.',
@@ -54,7 +54,7 @@
       authors:['Min-seo Park'], finding:{ value:'23%', label:'of pages in the test set had text only in an image', period:'August 2026' }, paper:{ href:'#' } }
   ];
   const NEWS = [
-    { href:'#', kind:'Launch', date:'22 September 2026', dateTime:'2026-09-22', title:'Redrob Router opens to everyone',
+    { href:'#', kind:'Launch', date:'22 September 2026', dateTime:'2026-09-22', title:'Router opens to everyone in Console and Code',
       summary:'Every prompt goes to the model and harness that do it best, for less than the API alone. Free to start, in Korean and English.' },
     { href:'#', kind:'Product', date:'4 September 2026', dateTime:'2026-09-04', title:'Redrob Browser reads the scanned PDFs other tools skip' },
     { href:'#', kind:'Launch', date:'20 August 2026', dateTime:'2026-08-20', title:'Redrob Design opens to everyone' },
@@ -79,9 +79,9 @@
     line: "The last mile of AI: the world's best models, across every border of language, place, background and technical skill.",
     columns: [
       { title:'Products', items:[
-        {label:'Redrob Router',href:'#'},{label:'Redrob Chat',href:'#'},{label:'Redrob Code',href:'#'},{label:'Redrob Desk',href:'#'},
-        {label:'Redrob Office',href:'#'},{label:'Redrob Browser',href:'#'},{label:'Redrob Design',href:'#'},
-        {label:'Luma, by Redrob',href:'#',divider:true,external:true},{label:'Signal, by Redrob',href:'#',external:true},{label:'Kaabil, by Redrob',href:'#',external:true}] },
+        {label:'Redrob Chat',href:'#'},{label:'Redrob Cowork',href:'#'},{label:'Redrob Browser',href:'#'},{label:'Redrob Console',href:'#'},
+        {label:'Redrob Office',href:'#'},{label:'Redrob Design',href:'#'},{label:'Redrob Code',href:'#'},
+        {label:'Luma, by Redrob',href:'#',divider:true,external:true},{label:'Signal, by Redrob',href:'#',external:true},{label:'Kaabil, by Redrob',href:'#',external:true},{label:'Crew, by Redrob',href:'#',external:true}] },
       { title:'Solutions', items:[{label:'For founders',href:'#'},{label:'For small teams',href:'#'},{label:'For engineers',href:'#'},{label:'For designers',href:'#'},{label:'For product managers',href:'#'},{label:'For marketers',href:'#'},{label:'For sales teams',href:'#'},{label:'For recruiters',href:'#'},{label:'For HR teams',href:'#'},{label:'For lawyers',href:'#'},{label:'For accountants',href:'#'},{label:'For consultants',href:'#'},{label:'For investors',href:'#'}] },
       { title:'Company', items:[{label:'About Redrob',href:'#'},{label:'Research',href:'#'},{label:'News',href:'#'},{label:'Blog',href:'#'}] }
     ],
@@ -93,15 +93,15 @@
 
   /* The News index. Same frame; the archive falls into years. */
   function Screen() {
-    return h('div', null, [header,
+    /* One PageShell per page: the skip link, the landmarks and lang (PageShell). */
+    return h(R.PageShell, { lang:'en', header: header, footer: FOOTER }, [
       h(R.Band, { key:'b', size:'sm' }, [
         h(R.IndexHeader, { key:'ih', title:'News', image: STILL.news,
           lede:'Launches, product changes and company news from Seoul, Noida and New York.',
           topics: [{ label:'All', href:'#', current:true }, { label:'Launch', href:'#' }, { label:'Product', href:'#' }, { label:'Company', href:'#' }] }),
         h('div', { key:'sp', style:{ height:'72px' } }),
         h(R.PostList, { key:'pl', items: NEWS, group:'year' })
-      ]),
-      FOOTER
+      ])
     ]);
   }
   ReactDOM.createRoot(document.getElementById('root')).render(h(Screen));

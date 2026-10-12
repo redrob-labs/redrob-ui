@@ -559,7 +559,7 @@ export interface ModelPick {
   model: string;
   /** Shorter name for the composer trigger, e.g. "Opus 5.5" */
   short?: string;
-  /** Where the model runs, e.g. "Redrob Desk", "Claude Cowork", "ChatGPT Work" */
+  /** Where the model runs, e.g. "Redrob Cowork", "Claude Cowork", "ChatGPT Work" */
   harness: string;
   /** The effort it was ranked at */
   effort: Effort;
@@ -618,7 +618,7 @@ export interface ModelPickerProps extends Common {
   /** Redrob Auto: "I want to" gains "Match each message", and with nothing pinned the
    *  highest place that runs `here` answers each message. Choosing a row pins it. */
   auto?: boolean;
-  /** The harness this picker sits in, e.g. "Redrob Desk". Picks that run anywhere else
+  /** The harness this picker sits in, e.g. "Redrob Cowork". Picks that run anywhere else
    *  stay in the list at their true place, grayed out and not selectable. */
   here?: string;
   /** Controlled task: 'auto' (match each message) or a task id */
@@ -1943,7 +1943,7 @@ export interface AppShellNavItem {
  * one. Three regions - nav, work, context - a skip link, one `h1`, and the landmarks.
  * The rail drops at 1180px and the sidebar collapses to icons at 900px. */
 export interface AppShellProps extends Common {
-  /** The product name beside the lockup: Desk, Browser, Office, Design. */
+  /** The product name beside the lockup: Cowork, Browser, Office, Design. */
   product?: string;
   mark?: string;
   markDark?: string;
@@ -1999,6 +1999,9 @@ export interface BandProps {
    *  falling away. A ground, not a layer - content depth is Layer/strata. */
   ground?: 'base' | 'raised' | 'sunken' | 'brand' | 'wash' | 'deep';
   size?: 'sm' | 'lg';
+  /** A product key (bundle.js PRODUCT_KEYS): the band takes that product's grounds
+   *  (20-color.md). Every band on one product's own page; never with `threshold="spectrum"`. */
+  product?: 'chat' | 'cowork' | 'browser' | 'console' | 'office' | 'design' | 'code' | 'mail' | 'books' | 'jobs' | 'skill-tests' | 'passport' | 'craft';
   /** Draws the threshold on the 40 degree axis. At most one band per page. On `brand` it is
    *  the social cards' cut: the ground beyond it lit, a teal seam; `'spectrum'` adds the seven
    *  product lines after the seam (suite surfaces only). Elsewhere, one hairline. */
@@ -2546,7 +2549,7 @@ export declare const LegalDoc: ComponentType<LegalDocProps>;
 
 export interface PlaybookRowProps extends Common {
   name: ReactNode;
-  /** Two sentences on what Desk does, with Desk as the subject. */
+  /** Two sentences on what Cowork does, with Cowork as the subject. */
   summary?: ReactNode;
   icon?: ReactNode;
   /** The steps; the count and the "Asks you first" line are derived from them. */
@@ -2571,7 +2574,7 @@ export interface ConnectorCardProps extends Common {
   icon?: ReactNode;
   /** Only with the maker's written approval. */
   logo?: string;
-  /** One sentence: what Desk reads or does there. */
+  /** One sentence: what Cowork reads or does there. */
   description?: string;
   connected?: boolean;
   onConnect?: () => void;

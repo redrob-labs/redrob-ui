@@ -48,10 +48,10 @@ export function BarList(props: BarListProps): React.ReactElement {
   const fmt = props.format || defaultFormat;
   const hiddenLabel = props.hiddenLabel || 'Fewer than 3 people';
   const shown = rows.filter((r) => !r.hidden);
-  const max =
-    props.max != null
-      ? props.max
-      : Math.max.apply(null, [1].concat(shown.map((r) => Math.max(r.value || 0, r.reference || 0))));
+  // The largest value or reference. Not floored at 1: that suits percentages, but amounts under one
+  // (dollars, hours) drew as 2px stubs. Only a list with nothing above zero falls back to 1.
+  const largest = Math.max(0, ...shown.map((r) => Math.max(r.value || 0, r.reference || 0)));
+  const max = props.max != null ? props.max : largest > 0 ? largest : 1;
   const nav = props.onNavigate;
   return React.createElement('div', { className: cx('rr-barlist', props.className) }, [
     React.createElement(

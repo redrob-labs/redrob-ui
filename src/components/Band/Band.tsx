@@ -15,17 +15,16 @@ const BAND_GROUND: Record<string, string> = {
  * spectrum: that seam belongs to suite surfaces, not to one product's page.
  */
 const PRODUCT_GROUNDS: Record<string, 1> = {
-  router: 1,
   chat: 1,
-  code: 1,
-  desk: 1,
-  office: 1,
+  cowork: 1,
   browser: 1,
-  design: 1,
   console: 1,
+  office: 1,
+  design: 1,
+  code: 1,
 };
 
-export type BandProduct = 'router' | 'chat' | 'code' | 'desk' | 'office' | 'browser' | 'design' | 'console';
+export type BandProduct = 'chat' | 'cowork' | 'browser' | 'console' | 'office' | 'design' | 'code';
 
 export interface BandProps {
   /** Which ground this stretch of page sits on. */

@@ -10,7 +10,7 @@
   ];
   function Demo() {
     const [settled, setSettled] = React.useState(false);
-    return h('div', { style: { maxWidth: '760px' } }, h(R.Message, { role: 'assistant', author: 'Desk' }, h('div', null, [
+    return h('div', { style: { maxWidth: '760px' } }, h(R.Message, { role: 'assistant', author: 'Cowork' }, h('div', null, [
       h('p', { key: 1, style: { margin: '0 0 10px' } }, ['Clause 8.2 makes your promise to cover their losses unlimited. ',
         h(R.Opinion, { key: 'd', n: 1, views: VIEWS, defaultOpen: true, onSettle: () => setSettled(true) }, 'Clause 11.4 limits what you owe to 12 months of fees, but data breaches are outside that limit.'),
         ' Clause 14.1 lets them end the agreement on 30 days\' notice.']),

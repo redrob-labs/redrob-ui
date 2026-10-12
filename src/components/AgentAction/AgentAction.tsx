@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { icons } from '../../icons';
 
 const TOOL_STATE_LABEL: Record<string, string> = { running: 'Running', done: 'Done', error: 'Failed' };
@@ -30,7 +30,7 @@ export interface AgentActionProps {
 export function AgentAction(props: AgentActionProps): React.ReactElement {
   const state = props.state || 'done';
   const [open, setOpen] = React.useState(!!props.defaultOpen);
-  const id = React.useRef(nextId('rr-action')).current;
+  const id = useStableId('rr-action');
   const stateIcon = state === 'running' ? null : state === 'error' ? icons.danger : icons.success;
 
   return React.createElement('div', { className: cx('rr-action', props.className) }, [

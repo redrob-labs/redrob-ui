@@ -5,6 +5,12 @@
   var React = window.React;
   var h = React.createElement;
 
+  /* The thirteen products in suite order (20-color.md, Product colors): the launch seven, then the
+     next six. Band and AppShell accept these keys and nothing else. */
+  var PRODUCT_KEYS = ['chat', 'cowork', 'browser', 'console', 'office', 'design', 'code', 'mail', 'books', 'jobs', 'skill-tests', 'passport', 'craft'];
+  var PRODUCT_KEYS_GROUND = {}; PRODUCT_KEYS.forEach(function (k) { PRODUCT_KEYS_GROUND[k] = 1; });
+  var PRODUCT_KEY_RE = new RegExp('^(' + PRODUCT_KEYS.join('|') + ')$');
+
   function cx() {
     var out = [];
     for (var i = 0; i < arguments.length; i++) {
@@ -326,16 +332,6 @@
     network: function (p) { return svg(p, [h("path", { d: "M10 3.5 H13 A1 1 0 0 1 14 4.5 V7 A1 1 0 0 1 13 8 H11 A1 1 0 0 1 10 7 Z", key: "a" }), h("path", { d: "M3 15.5 H6 A1 1 0 0 1 7 16.5 V19 A1 1 0 0 1 6 20 H4 A1 1 0 0 1 3 19 Z", key: "b" }), h("path", { d: "M17 15.5 H20 A1 1 0 0 1 21 16.5 V19 A1 1 0 0 1 20 20 H18 A1 1 0 0 1 17 19 Z", key: "c" }), h("line", { x1: 10.6, y1: 8.6, x2: 5.2, y2: 15, key: "d" }), h("line", { x1: 13.4, y1: 8.6, x2: 18.8, y2: 15, key: "e" })]); },
     pin: function (p) { return svg(p, [h("path", { d: "M5.5 9.5 A6.5 6.5 0 1 1 18.5 9.5 C18.5 14.5 12 21 12 21 C12 21 5.5 14.5 5.5 9.5 Z", key: "a" }), h("path", { d: "M9.5 9.5 A2.5 2.5 0 1 1 14.5 9.5 A2.5 2.5 0 1 1 9.5 9.5", key: "b" })]); },
     anonymous: function (p) { return svg(p, [h("path", { d: "M16.15 7.34 A4.2 4.2 0 1 1 13.37 4.03", key: "a" }), h("path", { d: "M4.5 20.5C4.5 16.9 7.9 14.5 12 14.5C16.1 14.5 19.5 16.9 19.5 20.5", key: "b" }), h("rect", { x: 7.8, y: 6.9, width: 8.4, height: 2.4, fill: "currentColor", stroke: "none", key: "c" })]); },
-    // Canvas tools. Drawn to 45-icons.md with tools/generate/author-canvas-tools.py, which computes
-    // every raked line from the 40 degree rule rather than placing it by eye.
-    brush: function (p) { return svg(p, [h("line", { x1: 20, y1: 4, x2: 14.25, y2: 8.82, key: "a" }), h("polygon", { points: "15.28 10.05 13.36 11.66 8.88 13.32 11.3 9.2 13.22 7.59", key: "b" }), h("line", { x1: 3, y1: 21, x2: 8, y2: 21, key: "c" })]); },
-    fill: function (p) { return svg(p, h("path", { d: "M12 5.94 L16.21 10.96 A5.5 5.5 0 1 1 7.79 10.96 Z", key: "a" })); },
-    rectangle: function (p) { return svg(p, h("path", { d: "M3.5 6.5H18.5A2 2 0 0 1 20.5 8.5V15.5A2 2 0 0 1 18.5 17.5H5.5A2 2 0 0 1 3.5 15.5Z", key: "a" })); },
-    ellipse: function (p) { return svg(p, h("path", { d: "M3.5 12A8.5 6 0 1 1 20.5 12A8.5 6 0 1 1 3.5 12", key: "a" })); },
-    shape: function (p) { return svg(p, [h("path", { d: "M5 18C7 6 17 6 19 18", key: "a" }), h("rect", { x: 4, y: 18.5, width: 2, height: 2, fill: "currentColor", stroke: "none", key: "b" }), h("rect", { x: 18, y: 18.5, width: 2, height: 2, fill: "currentColor", stroke: "none", key: "c" })]); },
-    gradient: function (p) { return svg(p, h("polygon", { points: "3.5 20.5 20.5 20.5 20.5 6.24", key: "a" })); },
-    transform: function (p) { return svg(p, [h("rect", { x: 4, y: 4, width: 2, height: 2, fill: "currentColor", stroke: "none", key: "a" }), h("rect", { x: 18, y: 4, width: 2, height: 2, fill: "currentColor", stroke: "none", key: "b" }), h("rect", { x: 18, y: 18, width: 2, height: 2, fill: "currentColor", stroke: "none", key: "c" }), h("rect", { x: 4, y: 18, width: 2, height: 2, fill: "currentColor", stroke: "none", key: "d" }), h("line", { x1: 7.5, y1: 5, x2: 16.5, y2: 5, key: "e" }), h("line", { x1: 19, y1: 7.5, x2: 19, y2: 16.5, key: "f" }), h("line", { x1: 16.5, y1: 19, x2: 7.5, y2: 19, key: "g" }), h("line", { x1: 5, y1: 16.5, x2: 5, y2: 7.5, key: "h" })]); },
-    eyedropper: function (p) { return svg(p, [h("line", { x1: 15.5, y1: 8.5, x2: 19.33, y2: 5.29, key: "a" }), h("line", { x1: 17.56, y1: 10.95, x2: 13.44, y2: 6.05, key: "b" }), h("line", { x1: 15.5, y1: 8.5, x2: 8.22, y2: 14.61, key: "c" }), h("rect", { x: 5.46, y: 15.09, width: 2, height: 2, fill: "currentColor", stroke: "none", key: "d" })]); },
   };
 
   var TONE_ICON = { info: Icons.info, success: Icons.success, warning: Icons.warning, danger: Icons.danger };
@@ -1001,7 +997,7 @@
 
      The nine accent families are the palette. Redrob Blue is the brand's own
      signal and is not spent on an avatar. Every family's step 5 clears white
-     text at 4.5:1 - the lowest is teal at 6.28:1 - so the initials are legible
+     text at 4.5:1 - the lowest is teal at 6.28:1, the highest violet at 18.95:1 - so the initials are legible
      on every mark in the set, and the accent steps carry no per-theme value, so
      a person's mark is the same in light and dark. */
 
@@ -1034,6 +1030,7 @@
     return initials(t);
   }
 
+  /* FNV-1a: picks the family, stable forever for a seed. */
   function markHash(v) {
     var s = String(v == null ? '' : v), n = 2166136261;
     for (var i = 0; i < s.length; i++) { n ^= s.charCodeAt(i); n = (n * 16777619) >>> 0; }
@@ -1289,7 +1286,9 @@
     props = props || {};
     var tone = props.tone || 'info';
     var IconFn = TONE_ICON[tone] || Icons.info;
-    return h('div', { className: cx('rr-toast', 'rr-toast--' + tone, props.className), role: 'status', 'aria-live': 'polite' }, [
+    /* danger is assertive, as Alert's is; every other tone polite. */
+    var urgent = tone === 'danger';
+    return h('div', { className: cx('rr-toast', 'rr-toast--' + tone, props.className), role: urgent ? 'alert' : 'status', 'aria-live': urgent ? 'assertive' : 'polite' }, [
       h('span', { className: 'rr-toast__icon', key: 'i' }, IconFn({ width: '100%', height: '100%' })),
       h('div', { className: 'rr-toast__body', key: 'b' }, [
         h('div', { className: 'rr-toast__title', key: 't' }, props.title),
@@ -3657,7 +3656,7 @@
      `product` on a Band sets that product's light ground (on base or wash) or brand
      ground (on brand), with the cut in its colors when `threshold` is on. Never the
      spectrum: that seam belongs to suite surfaces. */
-  var PRODUCTS_GROUND = { router: 1, chat: 1, code: 1, desk: 1, office: 1, browser: 1, design: 1 };
+  var PRODUCTS_GROUND = PRODUCT_KEYS_GROUND;
 
   function Band(props) {
     props = props || {};
@@ -5351,7 +5350,7 @@
   /* ---- AppShell ------------------------------------------------------ */
 
   /* The frame a product screen lives in. PageShell is the website's; this is the
-     other one, and until a real Desk screen was built there was no other one, so
+     other one, and until a real Cowork screen was built there was no other one, so
      eighteen agent surfaces had nowhere to sit and the first screen hand-rolled
      forty lines of chrome. Three regions: nav on the left, the work in the middle,
      context on the right. The rail is optional and drops first. */
@@ -5362,8 +5361,8 @@
     /* The product's light, entering from the top of the sidebar where its name sits
        (20-color.md). The attribute is all the component knows; the colors are the
        product-<p>-wash tokens, mapped in bundle.css. The name itself stays ink. */
-    var pkey = props.product ? String(props.product).toLowerCase().replace(/^redrob\s+/, '') : null;
-    if (pkey && !/^(router|chat|code|desk|office|browser|design)$/.test(pkey)) pkey = null;
+    var pkey = props.product ? String(props.product).toLowerCase().replace(/^redrob\s+/, '').replace(/\s+/g, '-') : null;
+    if (pkey && !PRODUCT_KEY_RE.test(pkey)) pkey = null;
     /* Folding: the sidebar becomes a tray of icons. Remembered per browser when uncontrolled. */
     var foldControlled = props.collapsed !== undefined;
     var fs = React.useState(function () {
@@ -5547,8 +5546,8 @@
 
 
   /* =====================================================================
-     How Desk works for you. Redrob Auto lives in ModelPicker; these are
-     the other things Desk does for every message (privacy, memory, Plan
+     How Cowork works for you. Redrob Auto lives in ModelPicker; these are
+     the other things Cowork does for every message (privacy, memory, Plan
      or Run, and Cross-check), and the receipts it leaves in the chat. Two
      rules run through all of them: nothing happens while a person types
      (every check runs after Send), and the product speaks in plain words.
@@ -5623,7 +5622,7 @@
   var PRIVACY_LEVELS = [
     { id: 'standard', label: 'Standard', n: 1, detail: 'ID, bank and card numbers are left out.' },
     { id: 'high', label: 'High', n: 2, detail: 'Standard, plus names, phone numbers, emails, clients and projects are swapped for placeholders.' },
-    { id: 'strict', label: 'Strict', n: 3, detail: 'High, plus addresses, amounts and dates. Nothing can be sent from the web or a phone, where the check cannot run.' }
+    { id: 'strict', label: 'Strict', n: 3, detail: 'High, plus addresses, amounts and dates.' }
   ];
 
   function PrivacyLevels(props) {
@@ -5650,14 +5649,14 @@
     var lvl = levels.filter(function (l) { return l.id === (props.level || 'high'); })[0] || levels[1];
     if (props.state === 'off') {
       return h('div', { className: cx('rr-privacy', props.className) }, [
-        h(ProtectionStatus, { key: 'c', tone: 'warn', icon: Icons.shield({ width: 28, height: 28 }), title: props.offTitle || 'Privacy protection is off here' },
-          props.offText || 'It runs on your laptop, so it only works in the Redrob desktop app. On the web, what you send goes to the AI as written.'),
+        h(ProtectionStatus, { key: 'c', tone: 'warn', icon: Icons.shield({ width: 28, height: 28 }), title: props.offTitle || 'Privacy protection is off' },
+          props.offText || 'What you send goes to the AI as written.'),
         props.foot ? h('div', { key: 'f', className: 'rr-panelfoot' }, props.foot) : null
       ]);
     }
     return h('div', { className: cx('rr-privacy', props.className) }, [
       props.card !== false ? h(ProtectionStatus, { key: 'c', tone: 'safe', icon: Icons.shieldCheck({ width: 28, height: 28 }),
-        title: (props.onLabel || 'Privacy protection is on') + ': ' + lvl.label, live: props.running || 'Running on this laptop' }, props.summary) : null,
+        title: (props.onLabel || 'Privacy protection is on') + ': ' + lvl.label, live: props.running || 'Running' }, props.summary) : null,
       props.lede !== false ? h('p', { key: 'l', className: 'rr-panellede' }, props.lede ||
         'A small privacy AI runs on your own laptop, not in the cloud. When you press Send, it reads the message first and swaps private details for placeholders, so the AI that answers never sees them. When the answer comes back, your laptop puts the real names back.') : null,
       props.showLevels !== false ? h(PrivacyLevels, { key: 'v', levels: levels, level: lvl.id }) : null,
@@ -5705,8 +5704,8 @@
      needs and writes a plan that runs only when you say so; Run starts at
      once. A per-message choice, so it sits where the message is sent. */
   var COMPOSER_MODES = [
-    { value: 'plan', label: 'Plan', icon: 'route', hint: 'Desk asks what it needs and writes a plan. Nothing runs until you say so.' },
-    { value: 'run', label: 'Run', icon: 'play', hint: 'Desk starts at once.' }
+    { value: 'plan', label: 'Plan', icon: 'route', hint: 'Cowork asks what it needs and writes a plan. Nothing runs until you say so.' },
+    { value: 'run', label: 'Run', icon: 'play', hint: 'Cowork starts at once.' }
   ];
 
   function ComposerMode(props) {
@@ -5714,7 +5713,7 @@
     var modes = props.options || COMPOSER_MODES;
     var sv = React.useState(props.defaultValue || modes[0].value);
     var value = props.value !== undefined ? props.value : sv[0];
-    return h('div', { className: cx('rr-cmode', props.compact && 'rr-cmode--compact', props.className), role: 'radiogroup', 'aria-label': props.label || 'How Desk works on this message' },
+    return h('div', { className: cx('rr-cmode', props.compact && 'rr-cmode--compact', props.className), role: 'radiogroup', 'aria-label': props.label || 'How Cowork works on this message' },
       modes.map(function (m) {
         var on = value === m.value;
         var icon = m.icon && Icons[m.icon] ? Icons[m.icon]({ width: 13, height: 13, 'aria-hidden': 'true' }) : null;
@@ -5768,7 +5767,7 @@
     }
     return h('div', { className: cx('rr-xcheck', props.className) }, [
       props.title ? h('p', { key: 'h', className: 'rr-xcheck__title' }, props.title) : null,
-      h('p', { key: 'l', className: 'rr-panellede' }, props.lede || 'After Desk answers, AIs from other companies check its work. Every check says who ran it.'),
+      h('p', { key: 'l', className: 'rr-panellede' }, props.lede || 'After Cowork answers, AIs from other companies check its work. Every check says who ran it.'),
       checks.map(function (c) {
         var cur = value[c.id] || 'off';
         return h('div', { key: c.id, className: 'rr-xcheck__row', role: 'group', 'aria-labelledby': 'rr-xc-' + c.id }, [
@@ -6071,7 +6070,7 @@
           ]);
         }),
         h('span', { key: 'a', className: 'rr-dispute__actions' }, [
-          props.onSettle ? h(Button, { key: 'b', size: 'sm', variant: 'secondary', onClick: function () { set(false); props.onSettle(); } }, props.settleLabel || 'Ask Desk to settle it') : null,
+          props.onSettle ? h(Button, { key: 'b', size: 'sm', variant: 'secondary', onClick: function () { set(false); props.onSettle(); } }, props.settleLabel || 'Ask Cowork to settle it') : null,
           h(Button, { key: 'c', size: 'sm', variant: 'ghost', onClick: function () { set(false); } }, props.closeLabel || 'Close')
         ])
       ]) : null
@@ -6112,7 +6111,7 @@
 
   /* ---- MemorySaved ----------------------------------------------------- */
 
-  /* Said in the chat, once, whenever Desk writes something down, with Undo
+  /* Said in the chat, once, whenever Cowork writes something down, with Undo
      beside it. Nothing is remembered silently. */
   function MemorySaved(props) {
     props = props || {};
@@ -6192,7 +6191,7 @@
 
   /* ==========================================================================
      Playbooks, scheduling and connectors
-     The pieces Desk uses to save a way of working, run it on a clock, and say
+     The pieces Cowork uses to save a way of working, run it on a clock, and say
      which apps it may reach.
      ========================================================================== */
 
@@ -6224,7 +6223,7 @@
     ]);
   }
 
-  /* ---- ConnectorCard: an app Desk can reach ------------------------------ */
+  /* ---- ConnectorCard: an app Cowork can reach ------------------------------ */
 
   function ConnectorCard(props) {
     props = props || {};
@@ -6283,9 +6282,11 @@
     var at = props.now || new Date();
     return h(Combobox, {
       id: props.id, label: props.label || 'Time zone', size: props.size || 'sm', hint: props.hint, className: props.className,
+      error: props.error, invalid: props.invalid, required: props.required, disabled: props.disabled,
       value: props.value, defaultValue: props.defaultValue, placeholder: props.placeholder || 'Search a city',
       emptyText: props.emptyText || 'No city by that name',
-      onChange: function (v, o) { if (v && props.onChange) props.onChange(v, o); },
+      /* onChange(zone), as index.d.ts types it: the option is only the zone and its label. */
+      onChange: function (v) { if (v && props.onChange) props.onChange(v); },
       options: zones.map(function (z) { var o = tzOffset(z[0], at); return { value: z[0], label: z[1] + (o ? ' (' + o + ')' : '') }; })
     });
   }

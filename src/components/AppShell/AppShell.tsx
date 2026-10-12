@@ -17,7 +17,7 @@ export interface AppShellNavItem {
 }
 
 export interface AppShellProps {
-  /** Product name, e.g. `Desk`. Sets the product wash at the top of the sidebar. */
+  /** Product name, e.g. `Cowork`. Sets the product wash at the top of the sidebar. */
   product?: string;
   mark?: string;
   markDark?: string;
@@ -93,8 +93,8 @@ export function AppShell(props: AppShellProps): React.ReactElement {
   const nav = props.nav || [];
   const railId = 'rr-shell-rail';
 
-  let pkey = props.product ? String(props.product).toLowerCase().replace(/^redrob\s+/, '') : null;
-  if (pkey && !/^(router|chat|code|desk|office|browser|design|console)$/.test(pkey)) pkey = null;
+  let pkey = props.product ? String(props.product).toLowerCase().replace(/^redrob\s+/, '').replace(/\s+/g, '-') : null;
+  if (pkey && !/^(chat|cowork|browser|console|office|design|code)$/.test(pkey)) pkey = null;
 
   const foldControlled = props.collapsed !== undefined;
   const [heldFold, setHeldFold] = React.useState<boolean>(() => {

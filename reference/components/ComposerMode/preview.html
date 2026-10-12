@@ -5,7 +5,7 @@
   const R = window.Redrob;
   const I = R.icons;
   const PROFESSIONS = [ { id:'lawyer', label:'Lawyer', tasks:[ { id:'review', label:'Review contracts', title:'Top 5 for a lawyer reviewing contracts', picks:[
-    { id:'r-1', model:'Claude Opus 5.5', short:'Opus 5.5', harness:'Redrob Desk', effort:{ label:'High', level:3, of:5 },
+    { id:'r-1', model:'Claude Opus 5.5', short:'Opus 5.5', harness:'Redrob Cowork', effort:{ label:'High', level:3, of:5 },
       why:'Reads the whole folder, clause by clause, and quotes rather than summarizes.' } ] } ] } ];
   const label = (t) => h('div', { style: { fontSize: '12px', fontWeight: 600, color: 'var(--ink-secondary)', margin: '0 0 8px' } }, t);
 
@@ -15,7 +15,7 @@
       h(R.ComposerMode, { key: 'm', value: m, onChange: set }),
       h(R.ModelPicker, { key: 'p', professions: PROFESSIONS, placement: 'top', align: 'end' })]);
     return h('div', { style: { maxWidth: '720px', display: 'flex', flexDirection: 'column', gap: '24px' } }, [
-      h('div', { key: 1 }, [label(mode === 'plan' ? 'Plan: Desk asks, then writes a plan. Nothing runs until you say so.' : 'Run: Desk starts at once'),
+      h('div', { key: 1 }, [label(mode === 'plan' ? 'Plan: Cowork asks, then writes a plan. Nothing runs until you say so.' : 'Run: Cowork starts at once'),
         h(R.Composer, { key: 'c', defaultValue: 'Can we end the Seorin MSA by email next week? We want out by the end of November.',
           context: h('span', { className: 'rr-composer__chip' }, [h(I.folder, { key: 'i', width: 14, height: 14 }), h('span', { key: 't' }, 'Seorin MSA')]),
           tools: tools('a', mode, setMode) })]),

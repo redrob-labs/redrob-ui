@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { applyTheme, themeTarget, THEME_OPTS, ThemeMode } from '../../internal/theme';
 import { icons, IconName } from '../../icons';
 
@@ -58,7 +58,7 @@ export function ThemeSwitch(props: ThemeSwitchProps): React.ReactElement {
 
   const [held, setHeld] = React.useState<ThemeMode>(initial);
   const mode = props.value !== undefined ? props.value : held;
-  const name = React.useRef(nextId('rr-theme')).current;
+  const name = useStableId('rr-theme');
 
   React.useEffect(() => {
     if (!props.storageKey) return;

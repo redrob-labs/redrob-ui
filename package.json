@@ -67,6 +67,7 @@
     "floating:check": "yarn build && node tools/check/floating.js",
     "shell:check": "node tools/check/shell.js",
     "insights:check": "node tools/check/insights.js",
+    "ids:check": "node tools/check/ssr-ids.js",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {

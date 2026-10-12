@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { docLocale } from '../../internal/datetime';
 import { niceMax, seriesColor } from '../../internal/chart';
 import { Table } from '../Table/Table';
@@ -57,7 +57,7 @@ export interface ChartProps {
  * and a summary to everyone else, so the numbers have to be reachable without it.
  */
 export function Chart(props: ChartProps): React.ReactElement {
-  const id = React.useRef(nextId('rr-chart')).current;
+  const id = useStableId('rr-chart');
   const kind = props.kind || 'bar';
   const series = props.series || [];
   const labels = props.labels || [];

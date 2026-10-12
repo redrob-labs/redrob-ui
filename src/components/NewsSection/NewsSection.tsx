@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cx } from '../../internal/cx';
-import { nextId } from '../../internal/ids';
+import { useStableId } from '../../internal/ids';
 import { PubImage, pubPicture } from '../../internal/pubPicture';
 import { icons } from '../../icons';
 
@@ -42,7 +42,9 @@ export interface NewsSectionProps {
 export function NewsSection(props: NewsSectionProps): React.ReactElement {
   const lead = props.lead;
   const items = (props.items || []).slice(0, 3);
-  const headId = React.useRef(props.id ? `${props.id}-h` : nextId('rr-news-h')).current;
+  // The hook runs even when `id` is given, so the hook order does not depend on a prop.
+  const autoHeadId = useStableId('rr-news-h');
+  const headId = props.id ? `${props.id}-h` : autoHeadId;
 
   return React.createElement(
     'section',

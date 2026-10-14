@@ -155,6 +155,23 @@ export function placeFloating(anchor: HTMLElement, el: HTMLElement, options: Flo
   return side;
 }
 
+/**
+ * Whether a scroll came from inside the overlay and so must not reposition it.
+ *
+ * The scroll listener is capture-phase on the window, so it hears every scroll in the document,
+ * including the overlay scrolling its own content when the overlay is its own scroll container (a
+ * status panel, a long menu). An interior scroll never moves the trigger, so repositioning on it is
+ * pointless - and re-running `placeFloating` rewrites the overlay's inline geometry and `max-height`
+ * mid-scroll, which snaps its `scrollTop` back to the top. The overlay then appears to clip to its
+ * first line and cannot be scrolled. So an event whose target is the overlay itself or anything
+ * inside it is ignored; a scroll from anywhere else (the trigger moved) still repositions.
+ */
+export function scrollIsInside(floating: HTMLElement | null | undefined, target: EventTarget | null): boolean {
+  if (!floating || !target) return false;
+  const node = target as Node;
+  return floating === node || floating.contains(node);
+}
+
 const useIsoLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
 /**
@@ -192,9 +209,18 @@ export function useFloating(
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(run);
     }
+    // The scroll listener is capture-phase on the window, so it fires for every scroll in the
+    // document, including the overlay scrolling its own content. `scrollIsInside` filters those out:
+    // an interior scroll never moves the trigger, and repositioning on it snaps the overlay's
+    // scrollTop back to the top (see the helper's note). Only an outside scroll repositions.
+    function onScroll(event: Event): void {
+      const [, el] = findRef.current();
+      if (scrollIsInside(el, event.target)) return;
+      schedule();
+    }
     run();
     window.addEventListener('resize', schedule);
-    window.addEventListener('scroll', schedule, true);
+    window.addEventListener('scroll', onScroll, true);
     const [anchor, el] = findRef.current();
     const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(schedule) : null;
     if (observer && el) observer.observe(el);
@@ -202,7 +228,7 @@ export function useFloating(
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener('resize', schedule);
-      window.removeEventListener('scroll', schedule, true);
+      window.removeEventListener('scroll', onScroll, true);
       if (observer) observer.disconnect();
       if (placed) clear(placed);
     };

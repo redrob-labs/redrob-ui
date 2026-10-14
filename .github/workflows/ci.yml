@@ -116,6 +116,16 @@ jobs:
       - name: Assert the two sheets do not disagree on a token
         run: yarn supersession:check
 
+      # Overlay placement (src/internal/useFloating.ts) runs after render in the browser, so neither
+      # the parity gate (which compares markup) nor tsc can see it work or break. These two checks
+      # exercise the placement arithmetic and the scroll filter against stand-in rects/nodes: the
+      # second guards the Cross-check bug, where an overlay that scrolls its own content was
+      # repositioned mid-scroll and snapped back to its first line.
+      - name: Assert overlays are placed inside the window
+        run: yarn floating:check
+      - name: Assert an overlay's own scroll does not reposition it
+        run: yarn floating-scroll:check
+
   parity:
     name: parity against the reference bundle
     runs-on: ubuntu-latest

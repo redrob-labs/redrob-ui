@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1
+
+### Fixed
+- `useFloating`: an overlay that scrolls its **own** content (`ComposerStatus`'s panel, a long `Menu`/`Select` list) is no longer repositioned mid-scroll. The hook's scroll listener is capture-phase on the window, so it also heard the overlay's interior scroll and re-ran `placeFloating`, which rewrote the inline geometry and `max-height` and snapped `scrollTop` back to the top -- the Cross-check panel appeared to clip to its first line and could not be scrolled. An interior scroll never moves the trigger, so it is now ignored (`scrollIsInside`, exported); a scroll from the trigger or any outside container repositions exactly as before. Applies to every `useFloating` consumer: `Menu`, `Select`, `Combobox`, `ModelPicker`, `DatePicker`, `TimePicker`, `Tooltip`. Markup and parity are unchanged; `yarn floating:check` and the new `yarn floating-scroll:check` now run in CI.
+
 ## 1.5.0
 
 Brings the library to the Redrob Group Design System 2026 delivery that renames the **Cowork** product (formerly **Desk**) and recolours the band and spectrum grounds. Nothing is removed from the public surface, and every repository-ahead correction is kept.

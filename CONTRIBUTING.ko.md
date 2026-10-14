@@ -20,18 +20,17 @@ yarn build && yarn test
 기본 브랜치는 `develop`이고 모든 변경이 먼저 여기로 들어옵니다. `main`은 릴리스된 상태이며
 승격 풀 리퀘스트로만 움직입니다.
 
-작업 브랜치는 `<type>/<짧은-슬러그>`입니다. `gitflow` 워크플로가 실제로 검사하는 이
-저장소의 타입 목록은 다음과 같습니다.
+작업 브랜치는 `<type>/<짧은-슬러그>`입니다. 타입은 공유 `gitflow` 워크플로가 검사하는
+조직 공통 목록입니다.
 
 ```
-feat fix chore docs test refactor perf hotfix release
+feat fix chore docs test refactor perf ci build sync hotfix release
 ```
 
-`sync` 타입은 없습니다. 이 저장소는 포크가 아니라 상류에서 받아올 것이 없습니다.
-
-타입 목록은 조직 안에서도 저장소마다 다르고, 검사는 추측을 통과시키지 않습니다. 게이트는
-`.github/workflows/gitflow.yml`의 `ALLOWED_TYPES`이고 위 목록은 그 설명입니다. 둘이
-어긋나면 워크플로가 맞고 이 문서가 낡은 것입니다.
+이 목록은 redrob-labs의 모든 저장소에서 같고, 검사는 추측을 통과시키지 않습니다. 게이트는
+[redrob-labs/.github](https://github.com/redrob-labs/.github/blob/main/.github/workflows/gitflow.yml)의
+재사용 워크플로이고, 이 저장소의 `.github/workflows/gitflow.yml`은 그것을 호출만 합니다. 위
+목록은 그 설명입니다. 둘이 어긋나면 워크플로가 맞고 이 문서가 낡은 것입니다.
 
 브랜치 이름은 무엇을 바꾸는지를 말하며, 누가·무엇이 만들었는지를 말하지 않습니다. 에이전트
 이름이나 도구 이름은 타입이 아닙니다.

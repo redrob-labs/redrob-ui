@@ -4824,6 +4824,55 @@ ol.rr-guide__cardlist { list-style: decimal; }
 .rr-seg button[aria-checked="true"] { background: var(--surface-raised); color: var(--ink-primary); box-shadow: var(--shadow-sm); }
 .rr-seg button:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: 2px; }
 
+/* ---- Status panels: compact density + consumer malleability -----------------------------------------
+   The three safeguard panels (Privacy, Memory, Cross-check) ship a roomy settings-page layout by default
+   and a `compact` one for a composer popover, where a chip opens them in a few hundred pixels. The words
+   never change between the two; only the room they take. Each root also reads three custom properties, so a
+   downstream app can tune padding, inner gap and width from its own stylesheet without overriding rules or
+   reaching through `rr-` internals: `--rr-panel-pad` (root padding), `--rr-panel-gap` (space between parts)
+   and `--rr-panel-maxw` (width). Each falls back to today's value, so unset means unchanged. The canonical
+   `.rr-xcheck` rule lives later in the file; it reads the same two of these so Cross-check honours them too. */
+.rr-privacy, .rr-memscope, .rr-xcheck {
+  gap: var(--rr-panel-gap, var(--space-4));
+  padding: var(--rr-panel-pad, 0);
+}
+.rr-privacy, .rr-memscope { max-width: var(--rr-panel-maxw, none); }
+
+/* A smaller status card: the composer popover cannot spend 28px of icon and a 17px title on a header the
+   chip already names. Its padding is the card's own, not the panel's `--rr-panel-pad`. */
+.rr-scard--sm { grid-template-columns: 20px minmax(0, 1fr); gap: 10px; padding: var(--space-3); border-radius: var(--radius-md); }
+.rr-scard--sm .rr-scard__icon svg { width: 20px; height: 20px; }
+.rr-scard--sm .rr-scard__title { font-size: 14px; line-height: 20px; }
+.rr-scard--sm .rr-scard__sub { margin-top: 1px; font-size: 12px; line-height: 18px; }
+
+/* Compact Privacy / Memory / Cross-check: tighter gaps, a smaller lede, the privacy levels in one column
+   so three cards do not force the popover wide. Doubled class on each so the compact gap outranks the
+   canonical `.rr-xcheck` rule that sets the roomy gap later in the file. */
+.rr-privacy.rr-privacy--compact, .rr-memscope.rr-memscope--compact, .rr-xcheck.rr-xcheck--compact { gap: var(--rr-panel-gap, var(--space-3)); }
+.rr-privacy--compact .rr-panellede, .rr-memscope--compact .rr-panellede, .rr-xcheck--compact .rr-panellede { font-size: 13px; line-height: 20px; }
+.rr-privacy--compact .rr-privacy__levels { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
+.rr-privacy--compact .rr-privacy__level { padding: var(--space-2) var(--space-3); }
+.rr-memscope--compact .rr-memscope__options { gap: var(--space-2); }
+.rr-xcheck--compact .rr-xcheck__row { gap: var(--space-1); padding-bottom: var(--space-3); }
+.rr-xcheck--compact .rr-xcheck__name { font-size: 14px; line-height: 20px; }
+.rr-xcheck--compact .rr-xcheck__text { font-size: 13px; line-height: 20px; }
+.rr-xcheck--compact .rr-xcheck__note { font-size: 12px; line-height: 18px; }
+
+/* A privacy level the person can choose: the same card, now a native radio inside a <label>. The platform
+   gives arrow-key movement, a single Tab stop and grouping; the <input> is hidden and the card itself shows
+   the checked and focus states. The read-only <div> path is unchanged. */
+label.rr-privacy__level { position: relative; display: block; color: inherit; cursor: pointer; }
+.rr-privacy__levelinput { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; clip: rect(0 0 0 0); clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
+.rr-privacy__leveldetail { display: block; margin: 6px 0 0; font-size: 12px; line-height: 18px; color: var(--ink-secondary); }
+label.rr-privacy__level:hover:not([data-on="true"]) { border-color: color-mix(in srgb, var(--status-success) 40%, var(--border-subtle)); }
+label.rr-privacy__level:has(.rr-privacy__levelinput:focus-visible) { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: 2px; }
+/* Locked: the radios still show and read, but choosing does nothing (guarded in JS); dim without greying out. */
+label.rr-privacy__level:has(.rr-privacy__levelinput[aria-disabled="true"]) { cursor: default; }
+.rr-privacy__levellocked { margin: var(--space-1) 0 0; font-size: 12px; line-height: 18px; color: var(--ink-secondary); }
+@media (forced-colors: active) {
+  label.rr-privacy__level[data-on="true"] { outline: 2px solid Highlight; }
+}
+
 /* ---- AnswerReceipt ---- */
 .rr-receipt { display: flex; flex-direction: column; gap: var(--space-2); }
 .rr-receipt__row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
@@ -5173,7 +5222,7 @@ a.rr-pbrow:hover, button.rr-pbrow:hover { border-color: var(--border-strong); }
 .rr-composer__tools > .rr-cmode + * { margin-left: 4px; }
 
 /* ---- CrossCheckSetting ------------------------------------------------- */
-.rr-xcheck { display: flex; flex-direction: column; gap: var(--space-4); max-width: 560px; }
+.rr-xcheck { display: flex; flex-direction: column; gap: var(--rr-panel-gap, var(--space-4)); max-width: var(--rr-panel-maxw, 560px); }
 .rr-xcheck__title { margin: 0; font-size: 16px; line-height: 24px; font-weight: 600; color: var(--ink-primary); }
 .rr-xcheck__row { display: flex; flex-direction: column; gap: var(--space-2); padding-bottom: var(--space-4); border-bottom: 1px solid var(--border-subtle); }
 .rr-xcheck__name { margin: 0; font-size: 15px; line-height: 22px; font-weight: 600; color: var(--ink-primary); }

@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.6.0
+
+The three composer safeguard panels -- `PrivacyProtection`, `MemoryScope`, `CrossCheckSetting` -- gain a compact density and a set of hooks that let a downstream app fit and restyle them inside a composer popover rather than only on a settings page. Every change is additive and opt-in: a consumer that passes none of the new props renders exactly as before. Parity against the delivery is unchanged -- `yarn test` reports 123 components + 10 compositions, markup identical for every `preview.html` case, after a `yarn build` that exited 0 (the two are run in the same sitting, because parity can pass on a red `tsc`). Parity compares markup only, so the opt-in paths and the CSS hooks are covered by a new `safeguards:check` instead.
+
+### Added
+- **`compact?: boolean`** on all three panels -- a density modifier (a `rr-<panel>--compact` class), not the auto-at-560px behaviour `ComposerMode.compact` has. It tightens the layout for a small surface -- a smaller status card (new `ProtectionStatus size='sm'`), less space between parts, the privacy levels in a single column -- without changing a word of the copy. A settings page leaves it off and keeps the roomy layout.
+- **`ProtectionStatus size='sm'`** -- a third size beside `md`/`lg`, for a card in a popover a chip already names. Used by the three panels' `compact` mode; available to any consumer.
+- **Selectable privacy levels.** `PrivacyProtection` gains `onLevelChange?: (level: string) => void`, `locked?: boolean` and `lockedText?: ReactNode`. When `onLevelChange` is set, the level list becomes a `radiogroup` of **native `<input type="radio">`** inside labels -- so arrow-key movement, a single Tab stop, grouping and `checked` come from the platform, matching `MemoryScope`. The panel is controlled: pass the chosen id back as `level`. `locked` marks a team-policy level `aria-disabled` (not `disabled`, so it stays reachable by keyboard and screen reader) and states the reason under the levels (`lockedText`, default "Set by your team's policy."). Omitted, the list stays the display-only `role="list"` it was, so a product that sets the level by policy is unaffected.
+- **`slotClassName`** on all three panels -- a map whose classes are *added* to the matching element (never replacing the `rr-` class), so a consumer can restyle one part without overriding the whole panel or reaching through internals that may move. The slots differ per panel: `PrivacyProtection` has `card`, `lede`, `levels`, `last`, `foot`; `MemoryScope` has `card`, `lede`, `options`, `foot`; `CrossCheckSetting` has `lede`, `note`, `foot`.
+- **Three CSS custom properties** read by each panel root -- `--rr-panel-pad` (the root's padding), `--rr-panel-gap` (space between its parts) and `--rr-panel-maxw` (its width). All three apply to `PrivacyProtection`, `MemoryScope` **and** `CrossCheckSetting`. Each falls back to the previous fixed value, so unset means unchanged.
+- `CrossCheckSetting`'s `lede` and `whenItMatters` now accept `false` to hide them, matching `PrivacyProtection`/`MemoryScope`. Only literal `false` hides; a value or an empty string keeps the default sentence. (A consumer wanting no explanatory prose in a tight popover could not previously remove these, because the component fell back to its default text for any falsy value.)
+
+### Notes
+- `reference/components/index.d.ts` is extended with the new members for `ProtectionStatus` and the three panels. These are repository-ahead additions to the vendored contract (as 1.5.0 kept its repository-ahead corrections); they are purely additive, so the next delivery sync keeps them unless the delivery introduces the same props.
+
 ## 1.5.1
 
 ### Fixed

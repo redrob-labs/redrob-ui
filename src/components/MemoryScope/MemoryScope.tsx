@@ -26,6 +26,10 @@ export interface MemoryScopeProps {
   summary?: React.ReactNode;
   lede?: React.ReactNode | false;
   foot?: React.ReactNode;
+  /** Tightens the panel for a composer popover: a smaller status card and less space between parts. */
+  compact?: boolean;
+  /** Class names added to the panel's parts, so a consumer restyles one without overriding the whole panel. */
+  slotClassName?: { card?: string; lede?: string; options?: string; foot?: string };
   className?: string;
   onChange?: (value: string, option: MemoryScopeOption) => void;
 }
@@ -49,13 +53,16 @@ export function MemoryScope(props: MemoryScopeProps): React.ReactElement {
   const name = useStableId('rr-memscope');
   const cur = options.filter((o) => o.value === value)[0] || ({} as MemoryScopeOption);
   const off = cur.off;
+  const slot = props.slotClassName || {};
 
-  return React.createElement('div', { className: cx('rr-memscope', props.className) }, [
+  return React.createElement('div', { className: cx('rr-memscope', props.compact && 'rr-memscope--compact', props.className) }, [
     React.createElement(
       ProtectionStatus,
       {
         key: 'c',
         tone: off ? 'plain' : 'brand',
+        size: props.compact ? 'sm' : undefined,
+        className: slot.card,
         icon: icons.bookOpen({ width: 28, height: 28 }),
         title: off
           ? props.offTitle || 'Memory is off for this chat'
@@ -68,7 +75,7 @@ export function MemoryScope(props: MemoryScopeProps): React.ReactElement {
     props.lede !== false
       ? React.createElement(
           'p',
-          { key: 'l', className: 'rr-panellede' },
+          { key: 'l', className: cx('rr-panellede', slot.lede) },
           props.lede ||
             'Most AI apps keep what they learn about you inside one AI, from one company. Redrob keeps your memory separately, so every AI reads the same notes before it answers. Switch AI mid-chat, or to a model that does not exist yet, and nothing has to be explained again.',
         )
@@ -77,7 +84,7 @@ export function MemoryScope(props: MemoryScopeProps): React.ReactElement {
       'div',
       {
         key: 's',
-        className: 'rr-memscope__options',
+        className: cx('rr-memscope__options', slot.options),
         role: 'radiogroup',
         'aria-label': props.label || 'Which memory this chat uses',
       },
@@ -100,7 +107,7 @@ export function MemoryScope(props: MemoryScopeProps): React.ReactElement {
         ]),
       ),
     ),
-    props.foot ? React.createElement('div', { key: 'f', className: 'rr-panelfoot' }, props.foot) : null,
+    props.foot ? React.createElement('div', { key: 'f', className: cx('rr-panelfoot', slot.foot) }, props.foot) : null,
   ]);
 }
 

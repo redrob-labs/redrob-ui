@@ -3815,12 +3815,32 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
   display: grid;
   grid-template-columns: 232px minmax(0, 1fr) 300px;
   min-height: 100%;
-  background: var(--rr-shell-surface, var(--surface-base));
+  background: var(--surface-base);
   font-family: var(--font-sans);
   color: var(--ink-primary);
 }
 .rr-shell--norail { grid-template-columns: 232px minmax(0, 1fr); }
-.rr-shell[data-surface="flat"] { --rr-shell-surface: var(--surface-base); }
+/* Round 1.7.0: `surface="flat"` joins the shell-owned regions into one continuous ground, so a
+   downstream app no longer overrides four DS surface classes to get a flat workspace. ONLY the flat
+   selector reads --rr-shell-surface: raised keeps plain tokens, so a stray hook on an ancestor can
+   never flatten a raised shell, and raised regions keep exactly their 1.6.0 backgrounds. An app
+   tunes the flat ground by setting --rr-shell-surface anywhere above the shell -- no class override. */
+.rr-shell[data-surface="flat"],
+.rr-shell[data-surface="flat"] .rr-shell__side,
+.rr-shell[data-surface="flat"] .rr-shell__main,
+.rr-shell[data-surface="flat"] .rr-shell__work,
+.rr-shell[data-surface="flat"] .rr-shell__foot,
+.rr-shell[data-surface="flat"] .rr-shell__rail { background: var(--rr-shell-surface, var(--surface-base)); }
+/* Dark theme: the flat side must also win over the more specific dark raised rule
+   ([data-theme=dark] .rr-shell__side), hence the theme-scoped selector here. */
+[data-theme="dark"] .rr-shell[data-surface="flat"] .rr-shell__side { background: var(--rr-shell-surface, var(--surface-base)); }
+/* Flat makes the sidebar the same ground as the nav rows, so the default hover/current/fold states
+   (which rely on the sidebar being sunken) go invisible. Give them their own ground in flat -- tunable
+   via --rr-shell-nav-active -- so wayfinding and the selected-row contrast survive. Dark already uses
+   sunken on a base side, so it is unaffected. */
+.rr-shell[data-surface="flat"] .rr-shell__nav a:hover,
+.rr-shell[data-surface="flat"] .rr-shell__nav a[aria-current],
+.rr-shell[data-surface="flat"] .rr-shell__fold:hover { background: var(--rr-shell-nav-active, var(--surface-sunken)); }
 
 .rr-shell__skip {
   position: absolute; left: -9999px; top: 0; z-index: 100;
@@ -3834,10 +3854,10 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
    gets raised instead, which is the direction elevation actually runs there. */
 .rr-shell__side {
   border-right: 1px solid var(--border-subtle);
-  background: var(--rr-shell-surface, var(--surface-sunken));
+  background: var(--surface-sunken);
   display: flex; flex-direction: column; min-width: 0;
 }
-[data-theme="dark"] .rr-shell__side { background: var(--rr-shell-surface, var(--surface-raised)); }
+[data-theme="dark"] .rr-shell__side { background: var(--surface-raised); }
 
 /* Product theming (20-color.md). data-product on the shell maps the product's roles
    onto four generic variables; the wash tokens carry their own dark value. The light
@@ -3861,6 +3881,10 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
   background-image: linear-gradient(180deg, color-mix(in srgb, var(--product-wash) 55%, transparent) 0, transparent 132px);
 }
 .rr-shell[data-surface="flat"] .rr-shell__side { background-image: none; }
+/* The dark product-wash rule above is (0,4,0), more specific than the flat rule, so flat alone would
+   not remove the wash in dark. Match its specificity to guarantee flat is one continuous ground in
+   both themes -- the band at the top of the sidebar is exactly the seam flat exists to remove. */
+[data-theme="dark"] .rr-shell[data-surface="flat"][data-product] .rr-shell__side { background-image: none; }
 
 .rr-shell__brand { display: flex; align-items: center; gap: var(--space-2); min-width: 0; overflow: hidden;
   padding: var(--space-5) var(--space-4) var(--space-4); }
@@ -3891,7 +3915,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-shell__aside { padding: var(--space-4) var(--space-2) var(--space-4); min-width: 0; }
 .rr-shell__aside--folded { display: none; }
 
-.rr-shell__main { display: flex; flex-direction: column; min-width: 0; background: var(--rr-shell-surface, var(--surface-base)); }
+.rr-shell__main { display: flex; flex-direction: column; min-width: 0; }
 .rr-shell__top {
   display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
   padding: var(--space-3) var(--space-6); border-bottom: 1px solid var(--border-subtle);
@@ -3905,7 +3929,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
    1100px, which is twice a readable line. The website caps at --rail-max; product had
    nothing, so it gets its own, narrower, because a work column is read not scanned. */
 .rr-shell__work { padding: var(--space-6); display: flex; flex-direction: column;
-  background: var(--rr-shell-surface, var(--surface-base)); gap: var(--space-6); min-width: 0; flex: 1 1 auto; }
+  gap: var(--space-6); min-width: 0; flex: 1 1 auto; }
 .rr-shell__work > * { max-width: var(--work-max, 860px); }
 .rr-shell__work--full > * { max-width: none; }
 /* The work region takes programmatic focus from the skip link. Hiding the ring
@@ -3915,12 +3939,12 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-shell__work { min-width: 0; }
 
 .rr-shell__foot { margin-top: auto; border-top: 1px solid var(--border-subtle);
-  padding: var(--space-4) var(--space-6) var(--space-5); background: var(--rr-shell-surface, var(--surface-base));
+  padding: var(--space-4) var(--space-6) var(--space-5); background: var(--surface-base);
   display: flex; flex-direction: column; gap: var(--space-3); }
 .rr-shell__foot > * { max-width: var(--work-max, 860px); }
 
 .rr-shell__rail { border-left: 1px solid var(--border-subtle); padding: var(--space-5) var(--space-5) var(--space-6);
-  background: var(--rr-shell-surface, var(--surface-base)); display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
+  display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
 
 /* The rail drops first, then the sidebar narrows. Nothing reflows into a hamburger
    here: that is the consumer's call and depends on the product. */
@@ -4749,10 +4773,12 @@ ol.rr-guide__cardlist { list-style: decimal; }
 
 /* ---- ComposerStatus ---- */
 .rr-cstatus { position: relative; }
-.rr-cstatus[data-density="compact"] { --rr-cstatus-gap: var(--space-1); }
 .rr-cstatus__row { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 var(--space-1); }
 .rr-cstatus__item { display: inline-flex; align-items: center; gap: var(--rr-cstatus-gap, 7px); height: 30px; padding: 0 var(--space-3); border: 0; border-radius: var(--radius-full);
   background: none; font: inherit; font-size: 13px; color: var(--ink-secondary); cursor: pointer; white-space: nowrap; }
+/* Round 1.7.0: compact tightens the chip gap. The default lives in the FALLBACK, not a root
+   declaration, so a downstream app can set --rr-cstatus-gap on any ancestor and win. */
+.rr-cstatus[data-density="compact"] .rr-cstatus__item { gap: var(--rr-cstatus-gap, var(--space-1)); }
 .rr-cstatus__item:hover, .rr-cstatus__item[aria-expanded="true"] { background: var(--surface-sunken); }
 .rr-cstatus__item:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: 2px; }
 .rr-cstatus__icon { display: inline-flex; color: var(--ink-muted); }
@@ -4764,7 +4790,20 @@ ol.rr-guide__cardlist { list-style: decimal; }
 .rr-cstatus__panel { position: absolute; z-index: 30; left: 0; right: 0; bottom: calc(100% + var(--space-2));
   max-height: min(600px, 72vh); overflow-y: auto; overscroll-behavior: contain;
   padding: var(--rr-cstatus-panel-pad, var(--space-5)); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); background: var(--surface-raised); box-shadow: var(--shadow-lg); }
+/* Round 1.7.0: once the panel is FLOATED (useFloating sets data-side), it is anchored to the active
+   chip button for x, so it must NOT span the row. Give it a real, readable width -- tunable by a
+   downstream app via --rr-cstatus-panel-w with no DS-class override. The closed / SSR / small-screen
+   fallback keeps left:0;right:0 above, so default markup and parity are unchanged. */
+.rr-cstatus__panel[data-side] { left: auto; right: auto; width: min(var(--rr-cstatus-panel-w, 480px), calc(100vw - 16px)); }
+/* data-align is a styling hook mirroring the `align` prop; JS does the real positioning when floated,
+   but these keep the non-floated fallback (SSR / skipBelow / anchor-null) aligned too. */
+.rr-cstatus[data-align="center"] .rr-cstatus__panel:not([data-side]) { left: 50%; right: auto; transform: translateX(-50%); }
+.rr-cstatus[data-align="end"] .rr-cstatus__panel:not([data-side]) { left: auto; right: 0; }
 @media (max-width: 720px) { .rr-cstatus__name { display: none; } }
+/* Round 1.7.0 (a11y): in compact density the name is the chip's ONLY visible label (value + level are
+   dropped and the icon is aria-hidden), so it must stay visible even below 720px -- otherwise the
+   button would have no accessible name. */
+@media (max-width: 720px) { .rr-cstatus[data-density="compact"] .rr-cstatus__name { display: inline; } }
 
 /* Level bars and the running light */
 .rr-bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }

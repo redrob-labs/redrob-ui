@@ -60,9 +60,12 @@ ok(inset.includes('rr-shell--drag'), 'dragRegion marks the shell');
 const noInset = render({ collapsed: false });
 ok(!/rr-shell--inset|rr-shell--drag|style=/.test(noInset.split('>')[0]), 'no windowInset/dragRegion: no class, no inline style on the root');
 const css = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'dist', 'styles', 'system.css'), 'utf8');
-ok(/\.rr-shell\[data-surface="flat"\][^{]*\{[^}]*--rr-shell-surface: var\(--surface-base\)/.test(css), 'flat shell sets the surface custom property');
-ok((css.match(/background: var\(--rr-shell-surface,/g) || []).length >= 5, 'shell-owned regions read the surface custom property');
-ok(/\.rr-shell\[data-surface="flat"\] \.rr-shell__side[^{]*\{[^}]*background-image: none/.test(css), 'flat shell removes the inset product wash');
+ok(/\.rr-shell\[data-surface="flat"\][^{]*,[\s\S]*?\.rr-shell__side[\s\S]*?\{[^}]*background: var\(--rr-shell-surface, var\(--surface-base\)\)/.test(css), 'flat joins the shell regions onto one --rr-shell-surface ground');
+ok(!/\.rr-shell \{[^}]*var\(--rr-shell-surface/.test(css) && /\.rr-shell \{[\s\S]*?background: var\(--surface-base\)/.test(css), 'raised reads plain tokens, not the hook (a stray hook cannot flatten raised)');
+ok(/\.rr-shell\[data-surface="flat"\] \.rr-shell__side[^{]*\{[^}]*background-image: none/.test(css), 'flat removes the inset product wash in light');
+ok(/\[data-theme="dark"\] \.rr-shell\[data-surface="flat"\]\[data-product\] \.rr-shell__side[^{]*\{[^}]*background-image: none/.test(css), 'flat removes the product wash in dark too (beats the more specific dark rule)');
+ok(/\[data-theme="dark"\] \.rr-shell\[data-surface="flat"\] \.rr-shell__side[^{]*\{[^}]*background: var\(--rr-shell-surface/.test(css), 'dark flat side wins over the dark raised side');
+ok(/\.rr-shell\[data-surface="flat"\] \.rr-shell__nav a\[aria-current\][\s\S]*?background: var\(--rr-shell-nav-active, var\(--surface-sunken\)\)/.test(css), 'flat gives nav hover/current their own ground so wayfinding survives');
 ok(/\.rr-shell--drag \.rr-shell__brand[^{]*\{[^}]*app-region: drag/.test(css) && /app-region: no-drag/.test(css), 'drag region keeps its controls clickable');
 
 // Console is the eighth product. It wears the brand ramp, so its wash must resolve to Redrob Blue's

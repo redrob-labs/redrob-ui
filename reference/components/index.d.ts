@@ -801,9 +801,16 @@ export interface ComposerStatusProps extends Common {
   open?: string | null;
   defaultOpen?: string | null;
   onOpenChange?: (id: string | null) => void;
-  /** Lines the open panel up with its active status button. Defaults to `start`. */
+  /**
+   * Lines the open panel up with its active status button. Defaults to `start`. Reflected as a
+   * `data-align` attribute (non-default only) for the fallback; live positioning is done in JS.
+   */
   align?: 'start' | 'center' | 'end';
-  /** `compact` renders only each item's icon and name. Defaults to `full`. */
+  /**
+   * `compact` shows each chip as icon + name only: the value is kept for assistive tech (visually
+   * hidden) and the level bars are dropped; the live indicator stays. Defaults to `full`. Sets
+   * `data-density="compact"` and reads `--rr-cstatus-gap` for the chip spacing.
+   */
   density?: 'full' | 'compact';
 }
 export interface ProtectionStatusProps extends Common { title: ReactNode; icon?: ReactNode; tone?: 'safe' | 'warn' | 'brand' | 'plain'; size?: 'sm' | 'md' | 'lg'; live?: string; as?: string; children?: ReactNode; }
@@ -1965,7 +1972,13 @@ export interface AppShellNavItem {
 export interface AppShellProps extends Common {
   /** The product name beside the lockup: Cowork, Browser, Office, Design. */
   product?: string;
-  /** `flat` joins the shell-owned regions into one surface. Defaults to the raised, inset frame. */
+  /**
+   * `flat` joins the shell-owned regions (sidebar, work, rail, foot) into one continuous surface so a
+   * downstream app no longer overrides several DS surface classes. Defaults to `raised` (the inset
+   * frame, unchanged from 1.6.0). Flat sets `data-surface="flat"` and reads `--rr-shell-surface`
+   * (default `--surface-base`) for the ground and `--rr-shell-nav-active` for the nav hover/current
+   * state -- set either on any ancestor to retint without a class override.
+   */
   surface?: 'raised' | 'flat';
   mark?: string;
   markDark?: string;

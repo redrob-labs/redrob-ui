@@ -1676,8 +1676,8 @@ Import: `import { ComposerStatus } from '@redrob-labs/ui';`
 | `defaultOpen` | `string \| null` | no |  |
 | `className` | `string` | no |  |
 | `onOpenChange` | `(id: string \| null) => void` | no |  |
-| `align` | `'start' \| 'center' \| 'end'` | no | Lines the open panel up with its active status button. Defaults to `start`. |
-| `density` | `'full' \| 'compact'` | no | `compact` renders only each item's icon and name. Defaults to `full`. |
+| `align` | `'start' \| 'center' \| 'end'` | no | Lines the open panel up with its active status button. Defaults to `start`. Also reflected as a `data-align` attribute (only for a non-default value) so a consumer can style the fallback; the live positioning is done in JS. |
+| `density` | `'full' \| 'compact'` | no | `compact` shows each chip as icon + name only: the value is kept for assistive tech (visually hidden) and the level bars are dropped; the live indicator stays. Defaults to `full` (value + level visible). Sets `data-density="compact"` and reads `--rr-cstatus-gap` for the chip spacing. |
 
 Exported types: `ComposerStatusItem`.
 
@@ -3159,7 +3159,7 @@ Import: `import { AppShell } from '@redrob-labs/ui';`
 | Prop | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `product` | `string` | no | Product name, e.g. `Cowork`. Sets the product wash at the top of the sidebar. |
-| `surface` | `'raised' \| 'flat'` | no | `flat` joins the shell-owned regions into one surface. Defaults to the raised, inset frame. |
+| `surface` | `'raised' \| 'flat'` | no | `flat` joins the shell-owned regions (sidebar, work, rail, foot) into one continuous surface, so a downstream app that wants a flat workspace no longer has to override several DS surface classes. Defaults to `raised`, the inset frame with a sunken sidebar (unchanged from 1.6.0). Flat sets `data-surface="flat"` and reads `--rr-shell-surface` (default `--surface-base`) for the ground and `--rr-shell-nav-active` for the nav hover/current state -- set either on any ancestor to retint without a class override. |
 | `mark` | `string` | no |  |
 | `markDark` | `string` | no |  |
 | `symbol` | `string` | no | The symbol alone, shown when the sidebar is folded. |

@@ -19,7 +19,14 @@ export interface AppShellNavItem {
 export interface AppShellProps {
   /** Product name, e.g. `Cowork`. Sets the product wash at the top of the sidebar. */
   product?: string;
-  /** `flat` joins the shell-owned regions into one surface. Defaults to the raised, inset frame. */
+  /**
+   * `flat` joins the shell-owned regions (sidebar, work, rail, foot) into one continuous surface, so
+   * a downstream app that wants a flat workspace no longer has to override several DS surface classes.
+   * Defaults to `raised`, the inset frame with a sunken sidebar (unchanged from 1.6.0). Flat sets
+   * `data-surface="flat"` and reads `--rr-shell-surface` (default `--surface-base`) for the ground and
+   * `--rr-shell-nav-active` for the nav hover/current state -- set either on any ancestor to retint
+   * without a class override.
+   */
   surface?: 'raised' | 'flat';
   mark?: string;
   markDark?: string;

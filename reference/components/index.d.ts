@@ -795,7 +795,15 @@ export interface ComposerStatusItem {
   panelLabel?: string;
   onClick?: () => void;
 }
-export interface ComposerStatusProps extends Common { items: ComposerStatusItem[]; label?: string; open?: string | null; defaultOpen?: string | null; onOpenChange?: (id: string | null) => void; }
+export interface ComposerStatusProps extends Common {
+  items: ComposerStatusItem[];
+  label?: string;
+  open?: string | null;
+  defaultOpen?: string | null;
+  onOpenChange?: (id: string | null) => void;
+  /** Lines the open panel up with its active status button. Defaults to `start`. */
+  align?: 'start' | 'center' | 'end';
+}
 export interface ProtectionStatusProps extends Common { title: ReactNode; icon?: ReactNode; tone?: 'safe' | 'warn' | 'brand' | 'plain'; size?: 'sm' | 'md' | 'lg'; live?: string; as?: string; children?: ReactNode; }
 export interface PrivacyLevel { id: string; label: string; n: number; detail: string; }
 export interface PrivacyProtectionProps extends Common {

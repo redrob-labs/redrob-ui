@@ -15,7 +15,7 @@
 const path = require('path');
 const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
-const { PrivacyProtection, MemoryScope, CrossCheckSetting } = require(
+const { ComposerStatus, PrivacyProtection, MemoryScope, CrossCheckSetting } = require(
   path.join(__dirname, '..', '..', 'dist', 'index.js'),
 );
 
@@ -26,6 +26,18 @@ const ok = (name, cond, detail) => {
 };
 const render = (el) => renderToStaticMarkup(el);
 const el = React.createElement;
+
+
+// ---- ComposerStatus: active-trigger anchoring and opt-in alignment -----------------------------
+const statusItems = [{ id: 'memory', name: 'Memory', value: 'On', panel: el('p', null, 'Panel') }];
+const statusDefault = render(el(ComposerStatus, { items: statusItems }));
+const statusEnd = render(el(ComposerStatus, { items: statusItems, align: 'end' }));
+ok('ComposerStatus default emits no data-align', !/data-align=/.test(statusDefault), 'default markup must stay unchanged');
+ok('ComposerStatus align emits data-align', /data-align="end"/.test(statusEnd), 'non-default alignment should be targetable');
+const composerStatusJs = require('fs').readFileSync(path.join(__dirname, '..', '..', 'dist', 'components', 'ComposerStatus', 'ComposerStatus.js'), 'utf8');
+ok('ComposerStatus anchors to the active button', /buttons\.current\[cur\.id\]/.test(composerStatusJs), 'the row root must not be the floating anchor');
+const systemCss = require('fs').readFileSync(path.join(__dirname, '..', '..', 'dist', 'styles', 'system.css'), 'utf8');
+ok('ComposerStatus exposes panel padding', /--rr-cstatus-panel-pad/.test(systemCss), 'panel padding should have a custom-property hook');
 
 // ---- PrivacyProtection: read-only (default) vs selectable levels ------------------------------
 const roLevels = render(el(PrivacyProtection, { state: 'on', level: 'high' }));

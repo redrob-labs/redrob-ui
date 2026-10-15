@@ -28,6 +28,8 @@ export interface ComposerStatusProps {
   defaultOpen?: string | null;
   className?: string;
   onOpenChange?: (id: string | null) => void;
+  /** Lines the open panel up with its active status button. Defaults to `start`. */
+  align?: 'start' | 'center' | 'end';
 }
 
 /**
@@ -51,13 +53,17 @@ export function ComposerStatus(props: ComposerStatusProps): React.ReactElement {
 
   const close = React.useCallback(() => set(null), [props.open]);
   const ref = useDismiss<HTMLDivElement>(!!open, close);
+  const buttons = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const cur = items.filter((x) => x.id === open)[0];
   // Above the row by default, below it when there is more room there: a composer in the middle of an
   // empty chat has little space above it, and the panel used to run off the top of its column.
   useFloating(
     !!(cur && cur.panel),
-    () => [ref.current, ref.current && ref.current.querySelector<HTMLElement>(':scope > .rr-cstatus__panel')],
-    { side: 'top', align: 'start', matchWidth: 'exact', fitHeight: true },
+    () => [
+      cur ? buttons.current[cur.id] : null,
+      ref.current && ref.current.querySelector<HTMLElement>(':scope > .rr-cstatus__panel'),
+    ],
+    { side: 'top', align: props.align || 'start', matchWidth: 'exact', fitHeight: true },
   );
 
   return React.createElement(
@@ -67,6 +73,7 @@ export function ComposerStatus(props: ComposerStatusProps): React.ReactElement {
       ref,
       role: 'group',
       'aria-label': props.label || 'How this chat is handled',
+      'data-align': props.align && props.align !== 'start' ? props.align : undefined,
     },
     [
       React.createElement(
@@ -78,6 +85,7 @@ export function ComposerStatus(props: ComposerStatusProps): React.ReactElement {
             {
               key: x.id,
               type: 'button',
+              ref: (button: HTMLButtonElement | null): void => { buttons.current[x.id] = button; },
               className: cx('rr-cstatus__item', `rr-cstatus__item--${x.tone || 'plain'}`),
               'aria-expanded': String(open === x.id),
               'aria-haspopup': x.panel ? 'dialog' : undefined,

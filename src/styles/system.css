@@ -4760,7 +4760,7 @@ ol.rr-guide__cardlist { list-style: decimal; }
 .rr-cstatus__item--warn .rr-cstatus__icon, .rr-cstatus__item--warn .rr-cstatus__value { color: var(--status-warning); }
 .rr-cstatus__panel { position: absolute; z-index: 30; left: 0; right: 0; bottom: calc(100% + var(--space-2));
   max-height: min(600px, 72vh); overflow-y: auto; overscroll-behavior: contain;
-  padding: var(--space-5); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); background: var(--surface-raised); box-shadow: var(--shadow-lg); }
+  padding: var(--rr-cstatus-panel-pad, var(--space-5)); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); background: var(--surface-raised); box-shadow: var(--shadow-lg); }
 @media (max-width: 720px) { .rr-cstatus__name { display: none; } }
 
 /* Level bars and the running light */

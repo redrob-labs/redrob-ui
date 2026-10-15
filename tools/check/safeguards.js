@@ -39,6 +39,16 @@ ok('ComposerStatus anchors to the active button', /buttons\.current\[cur\.id\]/.
 const systemCss = require('fs').readFileSync(path.join(__dirname, '..', '..', 'dist', 'styles', 'system.css'), 'utf8');
 ok('ComposerStatus exposes panel padding', /--rr-cstatus-panel-pad/.test(systemCss), 'panel padding should have a custom-property hook');
 
+
+const densityItems = [{ id: 'privacy', name: 'Privacy', value: 'High', level: { n: 3, of: 3 } }];
+const statusFull = render(el(ComposerStatus, { items: densityItems }));
+const statusCompact = render(el(ComposerStatus, { items: densityItems, density: 'compact' }));
+ok('ComposerStatus full emits no data-density', !/data-density=/.test(statusFull), 'default markup must stay unchanged');
+ok('ComposerStatus full keeps value and level', /rr-cstatus__value/.test(statusFull) && /rr-bars/.test(statusFull), 'full density should render current detail');
+ok('ComposerStatus compact emits data-density', /data-density="compact"/.test(statusCompact), 'compact density should be targetable');
+ok('ComposerStatus compact omits value and level', !/rr-cstatus__value|rr-bars/.test(statusCompact), 'compact density should render icon and name only');
+ok('ComposerStatus exposes compact gap', /--rr-cstatus-gap/.test(systemCss), 'compact spacing should have a custom-property hook');
+
 // ---- PrivacyProtection: read-only (default) vs selectable levels ------------------------------
 const roLevels = render(el(PrivacyProtection, { state: 'on', level: 'high' }));
 ok('read-only levels are a role="list"', /role="list"/.test(roLevels) && !/role="radiogroup"/.test(roLevels), 'default must stay a list');

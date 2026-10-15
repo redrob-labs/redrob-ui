@@ -30,6 +30,8 @@ export interface ComposerStatusProps {
   onOpenChange?: (id: string | null) => void;
   /** Lines the open panel up with its active status button. Defaults to `start`. */
   align?: 'start' | 'center' | 'end';
+  /** `compact` renders only each item's icon and name. Defaults to `full`. */
+  density?: 'full' | 'compact';
 }
 
 /**
@@ -74,6 +76,7 @@ export function ComposerStatus(props: ComposerStatusProps): React.ReactElement {
       role: 'group',
       'aria-label': props.label || 'How this chat is handled',
       'data-align': props.align && props.align !== 'start' ? props.align : undefined,
+      'data-density': props.density === 'compact' ? 'compact' : undefined,
     },
     [
       React.createElement(
@@ -103,8 +106,10 @@ export function ComposerStatus(props: ComposerStatusProps): React.ReactElement {
                   )
                 : null,
               React.createElement('span', { key: 'n', className: 'rr-cstatus__name' }, x.name),
-              React.createElement('span', { key: 'v', className: 'rr-cstatus__value' }, x.value),
-              x.level
+              props.density !== 'compact'
+                ? React.createElement('span', { key: 'v', className: 'rr-cstatus__value' }, x.value)
+                : null,
+              props.density !== 'compact' && x.level
                 ? React.createElement(StatusBars, { key: 'b', n: x.level.n, of: x.level.of, tone: x.tone })
                 : null,
               x.live

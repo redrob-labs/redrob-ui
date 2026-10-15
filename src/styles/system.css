@@ -4749,8 +4749,9 @@ ol.rr-guide__cardlist { list-style: decimal; }
 
 /* ---- ComposerStatus ---- */
 .rr-cstatus { position: relative; }
+.rr-cstatus[data-density="compact"] { --rr-cstatus-gap: var(--space-1); }
 .rr-cstatus__row { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 var(--space-1); }
-.rr-cstatus__item { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 var(--space-3); border: 0; border-radius: var(--radius-full);
+.rr-cstatus__item { display: inline-flex; align-items: center; gap: var(--rr-cstatus-gap, 7px); height: 30px; padding: 0 var(--space-3); border: 0; border-radius: var(--radius-full);
   background: none; font: inherit; font-size: 13px; color: var(--ink-secondary); cursor: pointer; white-space: nowrap; }
 .rr-cstatus__item:hover, .rr-cstatus__item[aria-expanded="true"] { background: var(--surface-sunken); }
 .rr-cstatus__item:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: 2px; }

@@ -803,6 +803,8 @@ export interface ComposerStatusProps extends Common {
   onOpenChange?: (id: string | null) => void;
   /** Lines the open panel up with its active status button. Defaults to `start`. */
   align?: 'start' | 'center' | 'end';
+  /** `compact` renders only each item's icon and name. Defaults to `full`. */
+  density?: 'full' | 'compact';
 }
 export interface ProtectionStatusProps extends Common { title: ReactNode; icon?: ReactNode; tone?: 'safe' | 'warn' | 'brand' | 'plain'; size?: 'sm' | 'md' | 'lg'; live?: string; as?: string; children?: ReactNode; }
 export interface PrivacyLevel { id: string; label: string; n: number; detail: string; }

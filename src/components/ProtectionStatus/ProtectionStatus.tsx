@@ -5,7 +5,8 @@ export interface ProtectionStatusProps {
   icon?: React.ReactNode;
   /** `safe` on, `warn` off or degraded, `brand` a feature in force, `plain` neutral. */
   tone?: 'safe' | 'warn' | 'brand' | 'plain';
-  size?: 'md' | 'lg';
+  /** `sm` for a composer popover where a chip already names the panel; `lg` to head a settings page. Default `md`. */
+  size?: 'sm' | 'md' | 'lg';
   /** Text beside a live dot: what is running right now. */
   live?: string;
   /** Element for the title, when the card opens a section. */
@@ -31,6 +32,7 @@ export function ProtectionStatus(props: ProtectionStatusProps): React.ReactEleme
         'rr-scard',
         `rr-scard--${props.tone || 'safe'}`,
         props.size === 'lg' && 'rr-scard--lg',
+        props.size === 'sm' && 'rr-scard--sm',
         props.className,
       ),
     },

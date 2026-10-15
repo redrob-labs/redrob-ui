@@ -33,6 +33,31 @@ export interface PrivacyProtectionProps {
    */
   offText?: React.ReactNode;
   foot?: React.ReactNode;
+  /**
+   * Tightens the panel for a small surface - a composer popover rather than a settings page: a smaller status
+   * card, less space between parts, the levels in one column. The words are unchanged; only the room they take
+   * is. A page that heads a whole section leaves it off.
+   */
+  compact?: boolean;
+  /**
+   * Lets the person choose the level in this panel, instead of only reading the admin's. When set, the level
+   * list becomes selectable and calls this with the chosen id. The panel is controlled: pass the chosen id
+   * back as `level`, or the radio announces a change and nothing moves. Omit it where the level is policy and
+   * the panel only reports it - the default, and what a product without a per-person setting should keep.
+   */
+  onLevelChange?: (level: string) => void;
+  /**
+   * With `onLevelChange`, true means a team policy fixes the level: it still shows and stays reachable by
+   * keyboard and screen reader, but choosing another does nothing.
+   */
+  locked?: boolean;
+  /** The reason the level is fixed, shown under the levels when `locked`. Default "Set by your team's policy." */
+  lockedText?: React.ReactNode;
+  /**
+   * Class names for the panel's own parts, so a consumer can restyle one without overriding the whole panel or
+   * reaching through `rr-` internals that may move. Each is added to its element; nothing is replaced.
+   */
+  slotClassName?: { card?: string; lede?: string; levels?: string; last?: string; foot?: string };
   className?: string;
 }
 
@@ -53,31 +78,37 @@ export interface PrivacyProtectionProps {
  */
 export function PrivacyProtection(props: PrivacyProtectionProps): React.ReactElement {
   const levels = props.levels || PRIVACY_LEVELS;
-  const lvl = levels.filter((l) => l.id === (props.level || 'high'))[0] || levels[1];
+  const lvl = levels.filter((l) => l.id === (props.level || 'high'))[0] || levels[1] || levels[0];
+  const slot = props.slotClassName || {};
+  const root = cx('rr-privacy', props.compact && 'rr-privacy--compact', props.className);
 
   if (props.state === 'off') {
-    return React.createElement('div', { className: cx('rr-privacy', props.className) }, [
+    return React.createElement('div', { className: root }, [
       React.createElement(
         ProtectionStatus,
         {
           key: 'c',
           tone: 'warn',
+          size: props.compact ? 'sm' : undefined,
+          className: slot.card,
           icon: icons.shield({ width: 28, height: 28 }),
           title: props.offTitle || 'Privacy protection is off',
         },
         props.offText || 'What you send goes to the AI as written.',
       ),
-      props.foot ? React.createElement('div', { key: 'f', className: 'rr-panelfoot' }, props.foot) : null,
+      props.foot ? React.createElement('div', { key: 'f', className: cx('rr-panelfoot', slot.foot) }, props.foot) : null,
     ]);
   }
 
-  return React.createElement('div', { className: cx('rr-privacy', props.className) }, [
+  return React.createElement('div', { className: root }, [
     props.card !== false
       ? React.createElement(
           ProtectionStatus,
           {
             key: 'c',
             tone: 'safe',
+            size: props.compact ? 'sm' : undefined,
+            className: slot.card,
             icon: icons.shieldCheck({ width: 28, height: 28 }),
             title: `${props.onLabel || 'Privacy protection is on'}: ${lvl.label}`,
             live: props.running || 'Running',
@@ -88,16 +119,24 @@ export function PrivacyProtection(props: PrivacyProtectionProps): React.ReactEle
     props.lede !== false
       ? React.createElement(
           'p',
-          { key: 'l', className: 'rr-panellede' },
+          { key: 'l', className: cx('rr-panellede', slot.lede) },
           props.lede ||
             'A small privacy AI runs on your own laptop, not in the cloud. When you press Send, it reads the message first and swaps private details for placeholders, so the AI that answers never sees them. When the answer comes back, your laptop puts the real names back.',
         )
       : null,
     props.showLevels !== false
-      ? React.createElement(PrivacyLevels, { key: 'v', levels, level: lvl.id })
+      ? React.createElement(PrivacyLevels, {
+          key: 'v',
+          levels,
+          level: lvl.id,
+          className: slot.levels,
+          onSelect: props.onLevelChange,
+          locked: props.locked,
+          lockedText: props.lockedText,
+        })
       : null,
     props.last
-      ? React.createElement('p', { key: 'x', className: 'rr-privacy__last' }, [
+      ? React.createElement('p', { key: 'x', className: cx('rr-privacy__last', slot.last) }, [
           React.createElement(
             'span',
             { key: 'i', 'aria-hidden': 'true' },
@@ -106,7 +145,7 @@ export function PrivacyProtection(props: PrivacyProtectionProps): React.ReactEle
           React.createElement('span', { key: 't' }, props.last),
         ])
       : null,
-    props.foot ? React.createElement('div', { key: 'f', className: 'rr-panelfoot' }, props.foot) : null,
+    props.foot ? React.createElement('div', { key: 'f', className: cx('rr-panelfoot', slot.foot) }, props.foot) : null,
   ]);
 }
 

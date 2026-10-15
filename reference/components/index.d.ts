@@ -796,7 +796,7 @@ export interface ComposerStatusItem {
   onClick?: () => void;
 }
 export interface ComposerStatusProps extends Common { items: ComposerStatusItem[]; label?: string; open?: string | null; defaultOpen?: string | null; onOpenChange?: (id: string | null) => void; }
-export interface ProtectionStatusProps extends Common { title: ReactNode; icon?: ReactNode; tone?: 'safe' | 'warn' | 'brand' | 'plain'; size?: 'md' | 'lg'; live?: string; as?: string; children?: ReactNode; }
+export interface ProtectionStatusProps extends Common { title: ReactNode; icon?: ReactNode; tone?: 'safe' | 'warn' | 'brand' | 'plain'; size?: 'sm' | 'md' | 'lg'; live?: string; as?: string; children?: ReactNode; }
 export interface PrivacyLevel { id: string; label: string; n: number; detail: string; }
 export interface PrivacyProtectionProps extends Common {
   /** 'off' where the check cannot run: the web and phones */
@@ -814,9 +814,19 @@ export interface PrivacyProtectionProps extends Common {
   last?: ReactNode;
   foot?: ReactNode;
   onLabel?: string; offTitle?: string; offText?: ReactNode;
+  /** Tightens the panel for a composer popover: smaller status card, less space, levels in one column. */
+  compact?: boolean;
+  /** Lets the person choose the level here; called with the chosen id. Omit where the level is policy-only. */
+  onLevelChange?: (level: string) => void;
+  /** With `onLevelChange`, a team policy fixes the level: it shows and stays reachable but cannot be changed. */
+  locked?: boolean;
+  /** The reason the level is fixed, shown under the levels when `locked`. Default "Set by your team's policy." */
+  lockedText?: ReactNode;
+  /** Class names added to the panel's parts, so a consumer restyles one without overriding the whole panel. */
+  slotClassName?: { card?: string; lede?: string; levels?: string; last?: string; foot?: string };
 }
 export interface MemoryScopeOption { value: string; label: ReactNode; detail?: ReactNode; summary?: ReactNode; off?: boolean; }
-export interface MemoryScopeProps extends Common { options: MemoryScopeOption[]; value?: string; defaultValue?: string; onChange?: (value: string, option: MemoryScopeOption) => void; summary?: ReactNode; lede?: ReactNode | false; foot?: ReactNode; label?: string; onTitle?: string; offTitle?: string; offText?: ReactNode; }
+export interface MemoryScopeProps extends Common { options: MemoryScopeOption[]; value?: string; defaultValue?: string; onChange?: (value: string, option: MemoryScopeOption) => void; summary?: ReactNode; lede?: ReactNode | false; foot?: ReactNode; label?: string; onTitle?: string; offTitle?: string; offText?: ReactNode; compact?: boolean; slotClassName?: { card?: string; lede?: string; options?: string; foot?: string }; }
 /** Plan or Run, in the composer bar beside the ModelPicker. */
 export interface ComposerModeOption { value: 'plan' | 'run' | string; label: string; /** An icon name from `icons` */ icon?: string; hint?: string; }
 export interface ComposerModeProps extends Common { value?: string; defaultValue?: string; onChange?: (value: string, option: ComposerModeOption) => void; options?: ComposerModeOption[]; /** Icons only, labels kept for screen readers. Automatic below 560px. */ compact?: boolean; label?: string; }
@@ -824,7 +834,7 @@ export type CrossCheckLevel = 'off' | 'auto' | 'always';
 /** One level per check, keyed by check id. The default checks are `factCheck` and `challenge`. */
 export type CrossCheckValue = Record<string, CrossCheckLevel | string>;
 export interface CrossCheckDefinition { id: string; name: ReactNode; text: ReactNode; }
-export interface CrossCheckSettingProps extends Common { value?: CrossCheckValue; defaultValue?: CrossCheckValue; onChange?: (value: CrossCheckValue, changed: string) => void; checks?: CrossCheckDefinition[]; levels?: Array<{ value: string; label: string }>; title?: ReactNode; lede?: ReactNode; /** What When it matters means, under the checks */ whenItMatters?: ReactNode; foot?: ReactNode; }
+export interface CrossCheckSettingProps extends Common { value?: CrossCheckValue; defaultValue?: CrossCheckValue; onChange?: (value: CrossCheckValue, changed: string) => void; checks?: CrossCheckDefinition[]; levels?: Array<{ value: string; label: string }>; title?: ReactNode; lede?: ReactNode | false; /** What When it matters means, under the checks */ whenItMatters?: ReactNode | false; foot?: ReactNode; compact?: boolean; slotClassName?: { lede?: string; note?: string; foot?: string }; }
 export interface PlanQuestion { id: string; question: ReactNode; options: ReactNode[]; /** Several answers allowed */ multi?: boolean; /** An option index, or indexes when multi */ defaultValue?: number | number[]; }
 export interface PlanQuestionsProps extends Common { questions: PlanQuestion[]; value?: Record<string, number | number[] | null>; defaultValue?: Record<string, number | number[] | null>; onChange?: (value: Record<string, number | number[] | null>) => void; onSubmit?: (value: Record<string, number | number[] | null>) => void; /** Folds to one line once answered */ done?: boolean; summary?: ReactNode; submitLabel?: string; hint?: ReactNode; anyLabel?: string; label?: string; }
 export type PlanItem = ReactNode | { id?: string; /** Bold words that open the item */ lead?: ReactNode; text: ReactNode; note?: ReactNode; editable?: boolean };

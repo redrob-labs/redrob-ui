@@ -126,6 +126,14 @@ jobs:
       - name: Assert an overlay's own scroll does not reposition it
         run: yarn floating-scroll:check
 
+      # Parity renders each safeguard panel's one preview case, which passes none of the opt-in props
+      # this release adds, so it is blind to all of them: the compact density, the selectable privacy
+      # levels (native radios, aria-disabled when locked, not disabled), the slotClassName map and the
+      # lede/whenItMatters=false opt-outs. This renders those paths and asserts their markup, plus that
+      # a panel given none of them renders exactly as before.
+      - name: Assert the safeguard panels' opt-in props render
+        run: yarn safeguards:check
+
   parity:
     name: parity against the reference bundle
     runs-on: ubuntu-latest

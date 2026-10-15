@@ -15,6 +15,13 @@ export interface FloatingOptions {
   matchWidth?: 'min' | 'exact';
   /** At or below this window width the stylesheet's own small-screen layout is left alone. */
   skipBelow?: number;
+  /**
+   * An identity for the current anchor. When it changes while the overlay stays open, the placement
+   * re-runs and re-observes the new anchor. Needed when one open overlay moves between triggers (a
+   * status row where switching chips keeps a panel open) - without it the layout effect, keyed on
+   * open going false->true, never fires on a trigger swap and the overlay stays at the first trigger.
+   */
+  key?: string | number | null;
   /** The box to keep the overlay in. Defaults to `visibleBox`. For tests and unusual hosts. */
   boundary?: (el: HTMLElement) => { top: number; left: number; right: number; bottom: number };
 }
@@ -187,7 +194,7 @@ export function useFloating(
 ): void {
   const findRef = React.useRef(find);
   findRef.current = find;
-  const { side, align, gap, fitHeight, matchWidth, skipBelow, boundary } = options;
+  const { side, align, gap, fitHeight, matchWidth, skipBelow, key, boundary } = options;
   const boundaryRef = React.useRef(boundary);
   boundaryRef.current = boundary;
 
@@ -232,5 +239,5 @@ export function useFloating(
       if (observer) observer.disconnect();
       if (placed) clear(placed);
     };
-  }, [open, side, align, gap, fitHeight, matchWidth, skipBelow]);
+  }, [open, side, align, gap, fitHeight, matchWidth, skipBelow, key]);
 }

@@ -28,6 +28,18 @@ export interface ComposerStatusProps {
   defaultOpen?: string | null;
   className?: string;
   onOpenChange?: (id: string | null) => void;
+  /**
+   * Lines the open panel up with its active status button. Defaults to `start`. Also reflected as a
+   * `data-align` attribute (only for a non-default value) so a consumer can style the fallback;
+   * the live positioning is done in JS.
+   */
+  align?: 'start' | 'center' | 'end';
+  /**
+   * `compact` shows each chip as icon + name only: the value is kept for assistive tech (visually
+   * hidden) and the level bars are dropped; the live indicator stays. Defaults to `full` (value +
+   * level visible). Sets `data-density="compact"` and reads `--rr-cstatus-gap` for the chip spacing.
+   */
+  density?: 'full' | 'compact';
 }
 
 /**
@@ -51,13 +63,21 @@ export function ComposerStatus(props: ComposerStatusProps): React.ReactElement {
 
   const close = React.useCallback(() => set(null), [props.open]);
   const ref = useDismiss<HTMLDivElement>(!!open, close);
+  const buttons = React.useRef<Map<string, HTMLButtonElement>>(new Map());
   const cur = items.filter((x) => x.id === open)[0];
-  // Above the row by default, below it when there is more room there: a composer in the middle of an
-  // empty chat has little space above it, and the panel used to run off the top of its column.
+  // The panel opens ABOVE the row by default (flips below when there is more room there: a composer
+  // in the middle of an empty chat has little space above it). It is anchored to the OPEN item's
+  // button so it lines up under the chip it belongs to, not the row. Width is NOT matched to the
+  // anchor -- a chip is ~90px, far too narrow for the panel -- it is set in CSS once placed
+  // (`.rr-cstatus__panel[data-side]`, tunable via `--rr-cstatus-panel-w`). `key` is the open item's
+  // id so switching from one open chip to another re-runs placement onto the new button.
   useFloating(
     !!(cur && cur.panel),
-    () => [ref.current, ref.current && ref.current.querySelector<HTMLElement>(':scope > .rr-cstatus__panel')],
-    { side: 'top', align: 'start', matchWidth: 'exact', fitHeight: true },
+    () => [
+      cur ? buttons.current.get(cur.id) ?? null : null,
+      ref.current && ref.current.querySelector<HTMLElement>(':scope > .rr-cstatus__panel'),
+    ],
+    { side: 'top', align: props.align || 'start', fitHeight: true, key: cur ? cur.id : null },
   );
 
   return React.createElement(
@@ -67,6 +87,8 @@ export function ComposerStatus(props: ComposerStatusProps): React.ReactElement {
       ref,
       role: 'group',
       'aria-label': props.label || 'How this chat is handled',
+      'data-align': props.align && props.align !== 'start' ? props.align : undefined,
+      'data-density': props.density === 'compact' ? 'compact' : undefined,
     },
     [
       React.createElement(
@@ -78,6 +100,10 @@ export function ComposerStatus(props: ComposerStatusProps): React.ReactElement {
             {
               key: x.id,
               type: 'button',
+              ref: (button: HTMLButtonElement | null): void => {
+                if (button) buttons.current.set(x.id, button);
+                else buttons.current.delete(x.id);
+              },
               className: cx('rr-cstatus__item', `rr-cstatus__item--${x.tone || 'plain'}`),
               'aria-expanded': String(open === x.id),
               'aria-haspopup': x.panel ? 'dialog' : undefined,
@@ -95,8 +121,19 @@ export function ComposerStatus(props: ComposerStatusProps): React.ReactElement {
                   )
                 : null,
               React.createElement('span', { key: 'n', className: 'rr-cstatus__name' }, x.name),
-              React.createElement('span', { key: 'v', className: 'rr-cstatus__value' }, x.value),
-              x.level
+              props.density === 'compact'
+                ? // Compact hides the value VISUALLY but keeps it for assistive tech, so a screen
+                  // reader still hears "Privacy High", not just "Privacy". Dropping it entirely took
+                  // the current setting out of the button's accessible name.
+                  x.value
+                  ? React.createElement(
+                      'span',
+                      { key: 'v', className: 'rr-cstatus__value rr-visually-hidden' },
+                      x.value,
+                    )
+                  : null
+                : React.createElement('span', { key: 'v', className: 'rr-cstatus__value' }, x.value),
+              props.density !== 'compact' && x.level
                 ? React.createElement(StatusBars, { key: 'b', n: x.level.n, of: x.level.of, tone: x.tone })
                 : null,
               x.live

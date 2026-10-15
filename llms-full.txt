@@ -1,6 +1,6 @@
 # @redrob-labs/ui - full reference
 
-Version 1.6.0. 145 React components on the Redrob Group Design System 2026, plus 252 icons.
+Version 1.7.0. 145 React components on the Redrob Group Design System 2026, plus 252 icons.
 
 ## Using the package
 
@@ -1676,6 +1676,8 @@ Import: `import { ComposerStatus } from '@redrob-labs/ui';`
 | `defaultOpen` | `string \| null` | no |  |
 | `className` | `string` | no |  |
 | `onOpenChange` | `(id: string \| null) => void` | no |  |
+| `align` | `'start' \| 'center' \| 'end'` | no | Lines the open panel up with its active status button. Defaults to `start`. |
+| `density` | `'full' \| 'compact'` | no | `compact` renders only each item's icon and name. Defaults to `full`. |
 
 Exported types: `ComposerStatusItem`.
 
@@ -3157,6 +3159,7 @@ Import: `import { AppShell } from '@redrob-labs/ui';`
 | Prop | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `product` | `string` | no | Product name, e.g. `Cowork`. Sets the product wash at the top of the sidebar. |
+| `surface` | `'raised' \| 'flat'` | no | `flat` joins the shell-owned regions into one surface. Defaults to the raised, inset frame. |
 | `mark` | `string` | no |  |
 | `markDark` | `string` | no |  |
 | `symbol` | `string` | no | The symbol alone, shown when the sidebar is folded. |

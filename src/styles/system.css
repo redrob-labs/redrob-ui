@@ -3815,11 +3815,12 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
   display: grid;
   grid-template-columns: 232px minmax(0, 1fr) 300px;
   min-height: 100%;
-  background: var(--surface-base);
+  background: var(--rr-shell-surface, var(--surface-base));
   font-family: var(--font-sans);
   color: var(--ink-primary);
 }
 .rr-shell--norail { grid-template-columns: 232px minmax(0, 1fr); }
+.rr-shell[data-surface="flat"] { --rr-shell-surface: var(--surface-base); }
 
 .rr-shell__skip {
   position: absolute; left: -9999px; top: 0; z-index: 100;
@@ -3833,10 +3834,10 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
    gets raised instead, which is the direction elevation actually runs there. */
 .rr-shell__side {
   border-right: 1px solid var(--border-subtle);
-  background: var(--surface-sunken);
+  background: var(--rr-shell-surface, var(--surface-sunken));
   display: flex; flex-direction: column; min-width: 0;
 }
-[data-theme="dark"] .rr-shell__side { background: var(--surface-raised); }
+[data-theme="dark"] .rr-shell__side { background: var(--rr-shell-surface, var(--surface-raised)); }
 
 /* Product theming (20-color.md). data-product on the shell maps the product's roles
    onto four generic variables; the wash tokens carry their own dark value. The light
@@ -3859,6 +3860,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 [data-theme="dark"] .rr-shell[data-product] .rr-shell__side {
   background-image: linear-gradient(180deg, color-mix(in srgb, var(--product-wash) 55%, transparent) 0, transparent 132px);
 }
+.rr-shell[data-surface="flat"] .rr-shell__side { background-image: none; }
 
 .rr-shell__brand { display: flex; align-items: center; gap: var(--space-2); min-width: 0; overflow: hidden;
   padding: var(--space-5) var(--space-4) var(--space-4); }
@@ -3889,7 +3891,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-shell__aside { padding: var(--space-4) var(--space-2) var(--space-4); min-width: 0; }
 .rr-shell__aside--folded { display: none; }
 
-.rr-shell__main { display: flex; flex-direction: column; min-width: 0; }
+.rr-shell__main { display: flex; flex-direction: column; min-width: 0; background: var(--rr-shell-surface, var(--surface-base)); }
 .rr-shell__top {
   display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
   padding: var(--space-3) var(--space-6); border-bottom: 1px solid var(--border-subtle);
@@ -3903,7 +3905,7 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
    1100px, which is twice a readable line. The website caps at --rail-max; product had
    nothing, so it gets its own, narrower, because a work column is read not scanned. */
 .rr-shell__work { padding: var(--space-6); display: flex; flex-direction: column;
-  gap: var(--space-6); min-width: 0; flex: 1 1 auto; }
+  background: var(--rr-shell-surface, var(--surface-base)); gap: var(--space-6); min-width: 0; flex: 1 1 auto; }
 .rr-shell__work > * { max-width: var(--work-max, 860px); }
 .rr-shell__work--full > * { max-width: none; }
 /* The work region takes programmatic focus from the skip link. Hiding the ring
@@ -3913,12 +3915,12 @@ a.rr-article__author:focus-visible { outline: var(--focus-ring-width) solid var(
 .rr-shell__work { min-width: 0; }
 
 .rr-shell__foot { margin-top: auto; border-top: 1px solid var(--border-subtle);
-  padding: var(--space-4) var(--space-6) var(--space-5); background: var(--surface-base);
+  padding: var(--space-4) var(--space-6) var(--space-5); background: var(--rr-shell-surface, var(--surface-base));
   display: flex; flex-direction: column; gap: var(--space-3); }
 .rr-shell__foot > * { max-width: var(--work-max, 860px); }
 
 .rr-shell__rail { border-left: 1px solid var(--border-subtle); padding: var(--space-5) var(--space-5) var(--space-6);
-  display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
+  background: var(--rr-shell-surface, var(--surface-base)); display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
 
 /* The rail drops first, then the sidebar narrows. Nothing reflows into a hamburger
    here: that is the consumer's call and depends on the product. */

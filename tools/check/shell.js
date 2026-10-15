@@ -45,6 +45,13 @@ ok(!plain.includes('rr-shell__aside--folded'), 'no asideFolded prop: no folded a
 const plainFolded = render({ collapsed: true });
 ok(!plainFolded.includes('rr-shell__aside--folded'), 'folded without asideFolded: as before, nothing extra');
 
+
+// surface: raised stays attribute-free; flat is targetable and joins shell-owned regions.
+const raisedSurface = render({ collapsed: false });
+const flatSurface = render({ collapsed: false, surface: 'flat' });
+ok(!/data-surface=/.test(raisedSurface.split('>')[0]), 'raised surface emits no data-surface attribute');
+ok(/data-surface="flat"/.test(flatSurface.split('>')[0]), 'flat surface emits data-surface="flat"');
+
 // windowInset / dragRegion: custom properties and classes only when asked for.
 const inset = render({ collapsed: false, windowInset: { top: 28, end: 140 }, dragRegion: true });
 ok(inset.includes('rr-shell--inset') && inset.includes('--rr-shell-inset-top:28px') && inset.includes('--rr-shell-inset-end:140px') && inset.includes('--rr-shell-inset-end-h:40px'),
@@ -53,6 +60,9 @@ ok(inset.includes('rr-shell--drag'), 'dragRegion marks the shell');
 const noInset = render({ collapsed: false });
 ok(!/rr-shell--inset|rr-shell--drag|style=/.test(noInset.split('>')[0]), 'no windowInset/dragRegion: no class, no inline style on the root');
 const css = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'dist', 'styles', 'system.css'), 'utf8');
+ok(/\.rr-shell\[data-surface="flat"\][^{]*\{[^}]*--rr-shell-surface: var\(--surface-base\)/.test(css), 'flat shell sets the surface custom property');
+ok((css.match(/background: var\(--rr-shell-surface,/g) || []).length >= 5, 'shell-owned regions read the surface custom property');
+ok(/\.rr-shell\[data-surface="flat"\] \.rr-shell__side[^{]*\{[^}]*background-image: none/.test(css), 'flat shell removes the inset product wash');
 ok(/\.rr-shell--drag \.rr-shell__brand[^{]*\{[^}]*app-region: drag/.test(css) && /app-region: no-drag/.test(css), 'drag region keeps its controls clickable');
 
 // Console is the eighth product. It wears the brand ramp, so its wash must resolve to Redrob Blue's

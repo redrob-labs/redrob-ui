@@ -1963,6 +1963,8 @@ export interface AppShellNavItem {
 export interface AppShellProps extends Common {
   /** The product name beside the lockup: Cowork, Browser, Office, Design. */
   product?: string;
+  /** `flat` joins the shell-owned regions into one surface. Defaults to the raised, inset frame. */
+  surface?: 'raised' | 'flat';
   mark?: string;
   markDark?: string;
   nav?: AppShellNavItem[];

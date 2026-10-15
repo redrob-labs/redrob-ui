@@ -19,6 +19,8 @@ export interface AppShellNavItem {
 export interface AppShellProps {
   /** Product name, e.g. `Cowork`. Sets the product wash at the top of the sidebar. */
   product?: string;
+  /** `flat` joins the shell-owned regions into one surface. Defaults to the raised, inset frame. */
+  surface?: 'raised' | 'flat';
   mark?: string;
   markDark?: string;
   /** The symbol alone, shown when the sidebar is folded. */
@@ -146,6 +148,7 @@ export function AppShell(props: AppShellProps): React.ReactElement {
       ),
       style: insetStyle as React.CSSProperties | undefined,
       'data-product': pkey || undefined,
+      'data-surface': props.surface === 'flat' ? 'flat' : undefined,
     },
     [
       React.createElement(

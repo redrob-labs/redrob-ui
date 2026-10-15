@@ -15,7 +15,7 @@
 const path = require('path');
 const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
-const { PrivacyProtection, MemoryScope, CrossCheckSetting } = require(
+const { ComposerStatus, PrivacyProtection, MemoryScope, CrossCheckSetting } = require(
   path.join(__dirname, '..', '..', 'dist', 'index.js'),
 );
 
@@ -26,6 +26,31 @@ const ok = (name, cond, detail) => {
 };
 const render = (el) => renderToStaticMarkup(el);
 const el = React.createElement;
+
+
+// ---- ComposerStatus: active-trigger anchoring and opt-in alignment -----------------------------
+const statusItems = [{ id: 'memory', name: 'Memory', value: 'On', panel: el('p', null, 'Panel') }];
+const statusDefault = render(el(ComposerStatus, { items: statusItems }));
+const statusEnd = render(el(ComposerStatus, { items: statusItems, align: 'end' }));
+ok('ComposerStatus default emits no data-align', !/data-align=/.test(statusDefault), 'default markup must stay unchanged');
+ok('ComposerStatus align emits data-align', /data-align="end"/.test(statusEnd), 'non-default alignment should be targetable');
+const composerStatusJs = require('fs').readFileSync(path.join(__dirname, '..', '..', 'dist', 'components', 'ComposerStatus', 'ComposerStatus.js'), 'utf8');
+ok('ComposerStatus anchors to the active button', /buttons\.current\.get\(cur\.id\)/.test(composerStatusJs) && !/\[\s*ref\.current\s*,/.test(composerStatusJs), 'the open item button, not the row root, is the floating anchor');
+ok('ComposerStatus panel is not width-matched to the chip', !/matchWidth/.test(composerStatusJs), 'anchoring to a chip must not force the panel to the chip width');
+const systemCss = require('fs').readFileSync(path.join(__dirname, '..', '..', 'dist', 'styles', 'system.css'), 'utf8');
+ok('ComposerStatus exposes panel padding', /--rr-cstatus-panel-pad/.test(systemCss), 'panel padding should have a custom-property hook');
+
+
+const densityItems = [{ id: 'privacy', name: 'Privacy', value: 'High', level: { n: 3, of: 3 } }];
+const statusFull = render(el(ComposerStatus, { items: densityItems }));
+const statusCompact = render(el(ComposerStatus, { items: densityItems, density: 'compact' }));
+ok('ComposerStatus full emits no data-density', !/data-density=/.test(statusFull), 'default markup must stay unchanged');
+ok('ComposerStatus full keeps value and level', /rr-cstatus__value/.test(statusFull) && /rr-bars/.test(statusFull), 'full density should render current detail');
+ok('ComposerStatus compact emits data-density', /data-density="compact"/.test(statusCompact), 'compact density should be targetable');
+ok('ComposerStatus compact drops the level bars', !/rr-bars/.test(statusCompact), 'compact density should not render the level bars');
+ok('ComposerStatus compact keeps the value for AT (visually hidden)', /rr-cstatus__value rr-visually-hidden/.test(statusCompact), 'compact keeps the setting in the accessible name, hidden only visually');
+ok('ComposerStatus compact keeps the name', /rr-cstatus__name/.test(statusCompact), 'the name is the chip\u2019s visible label in compact');
+ok('ComposerStatus exposes compact gap', /--rr-cstatus-gap/.test(systemCss), 'compact spacing should have a custom-property hook');
 
 // ---- PrivacyProtection: read-only (default) vs selectable levels ------------------------------
 const roLevels = render(el(PrivacyProtection, { state: 'on', level: 'high' }));

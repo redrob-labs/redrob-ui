@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.7.0
+
+Three opt-in malleability hooks let applications place composer status panels against the control that opened them, flatten an AppShell workspace into one continuous surface, and show composer status chips as icon + name. Defaults retain the 1.6.0 markup and appearance; the reference bundle is unchanged and parity remains byte-identical for every delivery case.
+
+### Added
+- **`ComposerStatus align?: 'start' | 'center' | 'end'`** controls panel alignment against the active item's button (default `start`). Non-default alignment emits `data-align`; `--rr-cstatus-panel-pad` lets consumers tune panel padding without overriding DS classes.
+- **`AppShell surface?: 'raised' | 'flat'`** joins shell-owned regions (sidebar, work, rail, foot) into one sheet when set to `flat`, emits `data-surface="flat"`, and exposes `--rr-shell-surface` (the ground) and `--rr-shell-nav-active` (the nav hover/current state) for a consumer-selected tint without a class override. Flat removes the product wash in both themes and keeps the nav hover/current/fold states visible. Raised mode remains attribute-free, reads plain tokens (so a stray hook cannot flatten it), and keeps the existing inset surfaces and product wash byte-for-byte.
+- **`ComposerStatus density?: 'full' | 'compact'`** shows each chip as icon + name in compact mode: the value is kept for assistive tech (visually hidden) and the level bars are dropped, so a screen reader still hears the setting; the live indicator stays. Emits `data-density="compact"` and exposes `--rr-cstatus-gap` for chip spacing. Full mode is unchanged (value and level visible).
+
+### Fixed
+- `ComposerStatus` now anchors an open floating panel to that item's trigger button instead of the status-row root, so later chips no longer open panels aligned far to their left.
+
+### Notes
+- `reference/components/index.d.ts` documents the repository-ahead additive props. Focused `safeguards:check` and `shell:check` assertions cover opt-in markup, CSS hooks, and active-button anchoring that the default-only parity cases do not exercise.
+
 ## 1.6.0
 
 The three composer safeguard panels -- `PrivacyProtection`, `MemoryScope`, `CrossCheckSetting` -- gain a compact density and a set of hooks that let a downstream app fit and restyle them inside a composer popover rather than only on a settings page. Every change is additive and opt-in: a consumer that passes none of the new props renders exactly as before. Parity against the delivery is unchanged -- `yarn test` reports 123 components + 10 compositions, markup identical for every `preview.html` case, after a `yarn build` that exited 0 (the two are run in the same sitting, because parity can pass on a red `tsc`). Parity compares markup only, so the opt-in paths and the CSS hooks are covered by a new `safeguards:check` instead.

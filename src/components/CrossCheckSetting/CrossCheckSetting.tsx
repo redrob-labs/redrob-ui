@@ -16,10 +16,15 @@ export interface CrossCheckSettingProps {
   checks?: CrossCheckDefinition[];
   levels?: Array<{ value: string; label: string }>;
   title?: React.ReactNode;
-  lede?: React.ReactNode;
-  /** What When it matters means, under the checks. */
-  whenItMatters?: React.ReactNode;
+  /** `false` hides the explanation. */
+  lede?: React.ReactNode | false;
+  /** What When it matters means, under the checks. `false` hides it. */
+  whenItMatters?: React.ReactNode | false;
   foot?: React.ReactNode;
+  /** Tightens the panel for a composer popover: tighter rows and a smaller lede and note. */
+  compact?: boolean;
+  /** Class names added to the panel's parts, so a consumer restyles one without overriding the whole panel. */
+  slotClassName?: { lede?: string; note?: string; foot?: string };
   className?: string;
 }
 /**
@@ -39,18 +44,21 @@ export function CrossCheckSetting(props: CrossCheckSettingProps): React.ReactEle
   const levels = props.levels || CROSS_CHECK_LEVELS;
   const [held, setHeld] = React.useState<CrossCheckValue>(props.defaultValue || CROSS_CHECK_DEFAULT);
   const value = props.value !== undefined ? props.value : held;
+  const slot = props.slotClassName || {};
   function set(id: string, v: string): void {
     const next: CrossCheckValue = { ...value, [id]: v };
     if (props.value === undefined) setHeld(next);
     if (props.onChange) props.onChange(next, id);
   }
-  return React.createElement('div', { className: cx('rr-xcheck', props.className) }, [
+  return React.createElement('div', { className: cx('rr-xcheck', props.compact && 'rr-xcheck--compact', props.className) }, [
     props.title ? React.createElement('p', { key: 'h', className: 'rr-xcheck__title' }, props.title) : null,
-    React.createElement(
-      'p',
-      { key: 'l', className: 'rr-panellede' },
-      props.lede || 'After Cowork answers, AIs from other companies check its work. Every check says who ran it.',
-    ),
+    props.lede !== false
+      ? React.createElement(
+          'p',
+          { key: 'l', className: cx('rr-panellede', slot.lede) },
+          props.lede || 'After Cowork answers, AIs from other companies check its work. Every check says who ran it.',
+        )
+      : null,
     checks.map((c) => {
       const cur = value[c.id] || 'off';
       return React.createElement(
@@ -84,13 +92,15 @@ export function CrossCheckSetting(props: CrossCheckSettingProps): React.ReactEle
         ],
       );
     }),
-    React.createElement(
-      'p',
-      { key: 'm', className: 'rr-xcheck__note' },
-      props.whenItMatters ||
-        'When it matters means answers you will rely on or pass on: a decision, a number, a claim about a rule or a fact, or anything you will send to someone. Quick questions, drafts and brainstorming are left alone. The checkers are the next best AIs for the task, from other companies than the one that answered.',
-    ),
-    props.foot ? React.createElement('div', { key: 'f', className: 'rr-panelfoot' }, props.foot) : null,
+    props.whenItMatters !== false
+      ? React.createElement(
+          'p',
+          { key: 'm', className: cx('rr-xcheck__note', slot.note) },
+          props.whenItMatters ||
+            'When it matters means answers you will rely on or pass on: a decision, a number, a claim about a rule or a fact, or anything you will send to someone. Quick questions, drafts and brainstorming are left alone. The checkers are the next best AIs for the task, from other companies than the one that answered.',
+        )
+      : null,
+    props.foot ? React.createElement('div', { key: 'f', className: cx('rr-panelfoot', slot.foot) }, props.foot) : null,
   ]);
 }
 /** What the status line says for a value: the shared level, "On", "1 of 2 on" or "Off". */

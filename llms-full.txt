@@ -1,6 +1,6 @@
 # @redrob-labs/ui - full reference
 
-Version 1.5.1. 145 React components on the Redrob Group Design System 2026, plus 252 icons.
+Version 1.6.0. 145 React components on the Redrob Group Design System 2026, plus 252 icons.
 
 ## Using the package
 
@@ -1980,7 +1980,7 @@ Import: `import { ProtectionStatus } from '@redrob-labs/ui';`
 | `title` | `React.ReactNode` | yes |  |
 | `icon` | `React.ReactNode` | no |  |
 | `tone` | `'safe' \| 'warn' \| 'brand' \| 'plain'` | no | `safe` on, `warn` off or degraded, `brand` a feature in force, `plain` neutral. |
-| `size` | `'md' \| 'lg'` | no |  |
+| `size` | `'sm' \| 'md' \| 'lg'` | no | `sm` for a composer popover where a chip already names the panel; `lg` to head a settings page. Default `md`. |
 | `live` | `string` | no | Text beside a live dot: what is running right now. |
 | `as` | `keyof React.JSX.IntrinsicElements` | no | Element for the title, when the card opens a section. |
 | `className` | `string` | no |  |
@@ -2030,6 +2030,11 @@ Import: `import { PrivacyProtection } from '@redrob-labs/ui';`
 | `offTitle` | `React.ReactNode` | no | Default "Privacy protection is off". |
 | `offText` | `React.ReactNode` | no | Default "What you send goes to the AI as written." Say why it is off and where it would work, when the product knows ("It runs on your laptop, so it only works in the desktop app."); the default cannot know, so it says only the consequence. |
 | `foot` | `React.ReactNode` | no |  |
+| `compact` | `boolean` | no | Tightens the panel for a small surface - a composer popover rather than a settings page: a smaller status card, less space between parts, the levels in one column. The words are unchanged; only the room they take is. A page that heads a whole section leaves it off. |
+| `onLevelChange` | `(level: string) => void` | no | Lets the person choose the level in this panel, instead of only reading the admin's. When set, the level list becomes selectable and calls this with the chosen id. The panel is controlled: pass the chosen id back as `level`, or the radio announces a change and nothing moves. Omit it where the level is policy and the panel only reports it - the default, and what a product without a per-person setting should keep. |
+| `locked` | `boolean` | no | With `onLevelChange`, true means a team policy fixes the level: it still shows and stays reachable by keyboard and screen reader, but choosing another does nothing. |
+| `lockedText` | `React.ReactNode` | no | The reason the level is fixed, shown under the levels when `locked`. Default "Set by your team's policy." |
+| `slotClassName` | `{ card?: string; lede?: string; levels?: string; last?: string; foot?: string }` | no | Class names for the panel's own parts, so a consumer can restyle one without overriding the whole panel or reaching through `rr-` internals that may move. Each is added to its element; nothing is replaced. |
 | `className` | `string` | no |  |
 
 #### MemoryScope
@@ -2054,6 +2059,8 @@ Import: `import { MemoryScope } from '@redrob-labs/ui';`
 | `summary` | `React.ReactNode` | no |  |
 | `lede` | `React.ReactNode \| false` | no |  |
 | `foot` | `React.ReactNode` | no |  |
+| `compact` | `boolean` | no | Tightens the panel for a composer popover: a smaller status card and less space between parts. |
+| `slotClassName` | `{ card?: string; lede?: string; options?: string; foot?: string }` | no | Class names added to the panel's parts, so a consumer restyles one without overriding the whole panel. |
 | `className` | `string` | no |  |
 | `onChange` | `(value: string, option: MemoryScopeOption) => void` | no |  |
 
@@ -2077,9 +2084,11 @@ Import: `import { CrossCheckSetting } from '@redrob-labs/ui';`
 | `checks` | `CrossCheckDefinition[]` | no |  |
 | `levels` | `Array<{ value: string; label: string }>` | no |  |
 | `title` | `React.ReactNode` | no |  |
-| `lede` | `React.ReactNode` | no |  |
-| `whenItMatters` | `React.ReactNode` | no | What When it matters means, under the checks. |
+| `lede` | `React.ReactNode \| false` | no | `false` hides the explanation. |
+| `whenItMatters` | `React.ReactNode \| false` | no | What When it matters means, under the checks. `false` hides it. |
 | `foot` | `React.ReactNode` | no |  |
+| `compact` | `boolean` | no | Tightens the panel for a composer popover: tighter rows and a smaller lede and note. |
+| `slotClassName` | `{ lede?: string; note?: string; foot?: string }` | no | Class names added to the panel's parts, so a consumer restyles one without overriding the whole panel. |
 | `className` | `string` | no |  |
 
 #### SecondOpinionSetting

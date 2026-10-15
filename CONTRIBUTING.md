@@ -20,18 +20,18 @@ yarn build && yarn test
 `develop` is the default branch and every change lands there first. `main` is the released
 state and only ever moves through a promotion pull request.
 
-Working branches are `<type>/<short-slug>`. This repository's types, which are the list the
+Working branches are `<type>/<short-slug>`. The types are the organization-wide list the shared
 `gitflow` workflow enforces:
 
 ```
-feat fix chore docs test refactor perf hotfix release
+feat fix chore docs test refactor perf ci build sync hotfix release
 ```
 
-There is no `sync` type: this is not a fork, so nothing arrives from upstream.
-
-The type list differs per repository across the organization, and the check fails a guess. The
-gate is `ALLOWED_TYPES` in `.github/workflows/gitflow.yml`; this table is the explanation. If
-the two ever disagree, the workflow is right and this file is stale.
+The list is the same in every redrob-labs repository, and the check fails a guess. The gate is
+the reusable workflow in
+[redrob-labs/.github](https://github.com/redrob-labs/.github/blob/main/.github/workflows/gitflow.yml);
+this repository's `.github/workflows/gitflow.yml` only calls it, and this table is the
+explanation. If the two ever disagree, the workflow is right and this file is stale.
 
 A branch name says what the change is, not who or what made it. An agent or tool name is not a
 type.

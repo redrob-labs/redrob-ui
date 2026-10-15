@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { StatusBars } from './StatusBars';
+import { cx } from './cx';
+import { useStableId } from './ids';
 
 /**
  * The three protection levels, each saying exactly what is left out.
@@ -42,32 +44,112 @@ export function PrivacyLevels(props: {
   level?: string;
   label?: string;
   yoursLabel?: React.ReactNode;
+  /**
+   * Lets the person pick the level here, rather than only reading the admin's choice. When set, each level
+   * becomes a native radio: the list is a `radiogroup`, every level an `<input type="radio">` the pointer and
+   * the keyboard choose - one Tab stop into the group, arrow keys to move and select. Omit it and the list
+   * stays read-only exactly as before - the default, because most products set the level by policy and the
+   * panel only reports it.
+   */
+  onSelect?: (id: string) => void;
+  /**
+   * With `onSelect`, true means a team policy fixes the level: the radios still show and stay focusable so a
+   * person can read which one is set, but choosing another does nothing. They are marked `aria-disabled`, not
+   * `disabled`, so a keyboard or screen-reader user can still reach and read them.
+   */
+  locked?: boolean;
+  /** The reason the level is fixed, shown under the levels when `locked`. Default "Set by your team's policy." */
+  lockedText?: React.ReactNode;
+  /** Added to the levels container, so a consumer can target it without reaching through internals. */
+  className?: string;
 }): React.ReactElement {
   const levels = props.levels || PRIVACY_LEVELS;
+  const pick = props.onSelect;
+  const name = useStableId('rr-privacy-level');
   return React.createElement(
     'div',
-    { className: 'rr-privacy__levels', role: 'list', 'aria-label': props.label || 'Protection levels' },
-    levels.map((l) => {
-      const on = l.id === props.level;
-      return React.createElement(
-        'div',
-        { key: l.id, role: 'listitem', className: 'rr-privacy__level', 'data-on': String(on) },
-        [
-          React.createElement('div', { key: 'h', className: 'rr-privacy__levelhead' }, [
+    {
+      className: cx('rr-privacy__levels', props.className),
+      // A list when it only reports the level, a radiogroup when the person can choose one.
+      role: pick ? 'radiogroup' : 'list',
+      'aria-label': props.label || 'Protection levels',
+      // A locked group still reads, but nothing in it can be changed.
+      'aria-readonly': pick && props.locked ? 'true' : undefined,
+    },
+    [
+      ...levels.map((l) => {
+        const on = l.id === props.level;
+        const labelId = `${name}-${l.id}-label`;
+        const detailId = `${name}-${l.id}-detail`;
+        const head = React.createElement(
+          pick ? 'span' : 'div',
+          { key: 'h', className: 'rr-privacy__levelhead' },
+          [
             React.createElement(StatusBars, { key: 'b', n: l.n, of: levels.length, tone: 'safe' }),
-            React.createElement('b', { key: 'l' }, l.label),
+            React.createElement('b', { key: 'l', id: pick ? labelId : undefined }, l.label),
             on
               ? React.createElement(
                   'span',
-                  { key: 'c', className: 'rr-privacy__yours' },
+                  {
+                    key: 'c',
+                    className: 'rr-privacy__yours',
+                    // aria-checked already carries this when the level is a radio.
+                    'aria-hidden': pick ? 'true' : undefined,
+                  },
                   props.yoursLabel || 'Your level',
                 )
               : null,
-          ]),
-          React.createElement('p', { key: 'p' }, l.detail),
-        ],
-      );
-    }),
+          ],
+        );
+        const body = React.createElement(
+          pick ? 'span' : 'p',
+          { key: 'p', id: pick ? detailId : undefined, className: pick ? 'rr-privacy__leveldetail' : undefined },
+          l.detail,
+        );
+        if (!pick) {
+          return React.createElement(
+            'div',
+            { key: l.id, role: 'listitem', className: 'rr-privacy__level', 'data-on': String(on) },
+            [head, body],
+          );
+        }
+        // A native radio, label-wrapped, so arrow-key movement, a single Tab stop, grouping and `checked`
+        // come from the platform. `locked` keeps it focusable but inert (aria-disabled + a guarded onChange).
+        return React.createElement(
+          'label',
+          {
+            key: l.id,
+            className: 'rr-privacy__level',
+            'data-on': String(on),
+            'aria-labelledby': labelId,
+            'aria-describedby': l.detail ? detailId : undefined,
+          },
+          [
+            React.createElement('input', {
+              key: 'r',
+              className: 'rr-privacy__levelinput',
+              type: 'radio',
+              name,
+              checked: on,
+              'aria-disabled': props.locked ? 'true' : undefined,
+              onChange: () => {
+                if (props.locked) return;
+                pick(l.id);
+              },
+            }),
+            head,
+            body,
+          ],
+        );
+      }),
+      pick && props.locked
+        ? React.createElement(
+            'p',
+            { key: 'locked', className: 'rr-privacy__levellocked' },
+            props.lockedText || "Set by your team's policy.",
+          )
+        : null,
+    ],
   );
 }
 

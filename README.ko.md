@@ -143,6 +143,43 @@ React Native는 `div`와 CSS 클래스가 아니라 네이티브 뷰로 그립�
 규격 자기 문서가 그 숫자들은 힌디 독자의 검토를 아직 못 받았다고 적어 뒀습니다. 그래서 조용히 한 줄
 넣을 일이 아니라 의식적으로 내릴 결정입니다.
 
+## 앱 아이콘
+
+2026 앱 아이콘이 패키지에 같이 들어 있습니다. 그룹 아이콘, 출시 제품 일곱 개(Chat, Cowork, Browser,
+Console, Office, Design, Code), 크리에이티브 앱 네 개(Film, Shape, CAD, Canvas)입니다. 아이콘마다
+배포물의 마스터 SVG 다섯 개를 바이트 그대로 담았습니다.
+
+| 변형 | 용도 |
+| --- | --- |
+| `icon-web`, `icon-web-dark` | 슈퍼타원으로 마스킹한 것. 웹 페이지, 마케팅, 제품 UI |
+| `icon`, `icon-dark` | 마스킹하지 않은 1024 정사각형. 마스크를 직접 씌우는 플랫폼용 |
+| `symbol` | 흰 심볼만. 단색 레이어용 |
+
+```javascript
+import { AppIcon, appIcons, appIconUrl } from '@redrob-labs/ui';
+
+// `base`는 앱이 패키지의 app-icons/ 폴더를 서빙하는 위치입니다.
+<AppIcon icon="cowork" base="/app-icons" size={32} />
+
+// 번들러로 파일을 바로 가져와도 됩니다.
+import cowork from '@redrob-labs/ui/app-icons/redrob-cowork/redrob-cowork-icon-web.svg';
+```
+
+`AppIcon`은 `Mark`의 라이트/다크 전환 위에 얹은 `<img>`라서, 로고 락업처럼 `data-theme`와 `tone`을
+따릅니다. SVG를 인라인으로 넣지 않습니다. 파일마다 내부 id가 같아서, 한 문서에 두 개를 인라인으로 넣으면
+두 번째 아이콘이 첫 번째 아이콘의 마스크로 그려지기 때문입니다. `base`는 필수입니다. 정적 파일을 어디서
+서빙하는지는 앱만 알기 때문입니다. 파일 경로를 받아 URL을 돌려주는 함수를 넘겨도 됩니다.
+
+**Film, Shape, CAD, Canvas는 아직 디자인 시스템 승인을 받지 않았습니다.** 각 앱에서 쓸 수 있도록
+넣어 두었고 `appIcons[key].approved === false`로 표시됩니다. `AppShell`, `Band`, 토큰에는 제품으로
+등록하지 않았습니다. 아직 이 네 제품의 색 램프가 없습니다. 타일은 모든 제품이 Redrob Blue이고, 제품별
+색 램프를 따르지 않습니다.
+
+네이티브 빌드는 `@redrob-labs/ui/app-icons/manifest.json`을 읽으면 됩니다. 파일마다 sha256이 적혀 있어서
+가져다 쓰는 저장소가 바이트를 고정할 수 있습니다. 같은 배포물의 플랫폼 패키징(appiconset, icns, 안드로이드
+mipmap, ico, MSIX, 파비콘)은 넣지 않았습니다. 약 38MB의 바이너리이고, 패키징하는 앱의 저장소에 있어야 할
+파일입니다. 새 배포물을 반영하는 방법은 `src/brand/app-icons/README.md`에 있습니다.
+
 ## 모듈 형식 두 가지
 
 CommonJS와 ESM을 둘 다 내고 `exports` 표로 골라 줍니다. 형식만 갖춘 게 아닙니다.

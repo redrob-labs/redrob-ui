@@ -147,6 +147,44 @@ declares none of it, and neither does ours: 0 Hindi tokens on both sides, byte-i
 choosing leading values, and the spec says its own numbers are unreviewed by a Hindi reader — so it is
 a decision to take deliberately, not a line to add quietly.
 
+## App icons
+
+The 2026 app icons ship with the package: the group icon, the launch seven (Chat, Cowork, Browser,
+Console, Office, Design, Code) and the four creative apps (Film, Shape, CAD, Canvas). Each has the
+delivery's five master SVGs, byte for byte:
+
+| variant | use |
+| --- | --- |
+| `icon-web`, `icon-web-dark` | masked to the superellipse: pages, marketing, product UI |
+| `icon`, `icon-dark` | the unmasked 1024 square, for a platform that applies its own mask |
+| `symbol` | the white symbol alone, for a mono layer |
+
+```javascript
+import { AppIcon, appIcons, appIconUrl } from '@redrob-labs/ui';
+
+// `base` is wherever the app serves the package's app-icons/ folder.
+<AppIcon icon="cowork" base="/app-icons" size={32} />
+
+// Or a file directly, through a bundler:
+import cowork from '@redrob-labs/ui/app-icons/redrob-cowork/redrob-cowork-icon-web.svg';
+```
+
+`AppIcon` is an `<img>` on `Mark`'s light/dark switch, so it follows `data-theme` and `tone` like the
+lockup. It never inlines the SVG: every file defines the same internal ids, and two inlined in one
+document draw the second with the first one's mask. `base` is required, because only the app knows
+where it serves static files; it also takes a function from a file's path to its URL.
+
+**Film, Shape, CAD and Canvas are not yet approved in the design system.** They ship so their apps
+can use them, with `appIcons[key].approved === false`, and they are not products to `AppShell`,
+`Band` or the tokens: no colour ramp exists for them yet. The tile is Redrob Blue for every product
+and does not follow the per-product ramps.
+
+A native build reads `@redrob-labs/ui/app-icons/manifest.json`, which lists every file with its
+sha256 so a vendoring repository can pin the bytes. The platform packaging from the same delivery
+(appiconset, icns, Android mipmaps, ico, MSIX, favicons) is not here: about 38 MB of binaries that
+belong in the repository of the app being packaged. `src/brand/app-icons/README.md` says how to take
+a new delivery.
+
 ## Both module formats
 
 The package ships CommonJS and ESM, selected through the `exports` map. This is not a formality:

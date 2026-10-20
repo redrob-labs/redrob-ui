@@ -54,6 +54,12 @@ jobs:
       - name: Assert the generated icons are up to date
         run: yarn icons:check
 
+      # The app icons are a delivery's SVGs, copied byte for byte, and the typed table and
+      # manifest.json describe them with a sha256 each. This fails on a stale table, a missing or
+      # extra file, and an SVG that is not a self-contained 1024 drawing (script, external url).
+      - name: Assert the app icons match their table
+        run: yarn app-icons:check
+
       # `tokens.json` is committed and is what a consumer in another repository reads, so a change to
       # `tokens.css` that is not regenerated leaves the browser's C++ chrome and an Android app on the
       # old colours while the web moves. Nothing else can see that, because CSS still resolves fine.

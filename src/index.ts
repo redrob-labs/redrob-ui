@@ -17,6 +17,11 @@ export { Mark } from './components/Mark/Mark';
 export type { MarkProps } from './components/Mark/Mark';
 export { MarkReveal } from './components/MarkReveal/MarkReveal';
 export type { MarkRevealProps } from './components/MarkReveal/MarkReveal';
+/* Beyond the delivery: the 2026 app icons, as files under `./app-icons/*` and a typed table. */
+export { AppIcon } from './components/AppIcon/AppIcon';
+export type { AppIconProps } from './components/AppIcon/AppIcon';
+export { appIcons, appIconKeys, appIconPath, appIconUrl } from './brand';
+export type { AppIconEntry, AppIconFile, AppIconKey, AppIconVariant, AppIconBase } from './brand';
 export { Layer, LayerContext, LAYER_MEANS } from './components/Layer/Layer';
 export type { LayerProps } from './components/Layer/Layer';
 export { Illustration } from './components/Illustration/Illustration';

@@ -44,10 +44,10 @@ jobs:
           for f in dist/index.js dist/index.d.ts dist/icons/index.js dist/esm/index.js dist/esm/package.json; do
             [ -s "$f" ] || { echo "::error::$f is missing or empty after build"; exit 1; }
           done
-          for d in dist/styles dist/fonts dist/native; do
+          for d in dist/styles dist/fonts dist/native dist/brand/app-icons; do
             [ -d "$d" ] && [ -n "$(ls -A "$d")" ] || { echo "::error::$d is missing or empty after build"; exit 1; }
           done
-          echo "dist entry, esm entry, types, styles, fonts and native headers present"
+          echo "dist entry, esm entry, types, styles, fonts, native headers and app icons present"
 
       # The icon module is generated from the delivery's own table. A hand-edit would be silently
       # overwritten by the next `yarn icons`, so the checked-in file must match the generator.
@@ -59,6 +59,11 @@ jobs:
       # extra file, and an SVG that is not a self-contained 1024 drawing (script, external url).
       - name: Assert the app icons match their table
         run: yarn app-icons:check
+
+      # The same table held against dist/: the build copies the folder with a plain `cp`, so this
+      # proves every file arrived with its sha256 intact and resolves through `./app-icons/*`.
+      - name: Assert the built app icons match their manifest
+        run: yarn app-icons:dist:check
 
       # `tokens.json` is committed and is what a consumer in another repository reads, so a change to
       # `tokens.css` that is not regenerated leaves the browser's C++ chrome and an Android app on the

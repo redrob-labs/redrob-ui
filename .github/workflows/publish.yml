@@ -110,10 +110,10 @@ jobs:
           # `"type": "module"` marker: without it Node parses the ESM tree as CommonJS and every export
           # is a syntax error, so shipping it is not optional.
           for f in dist/index.js dist/index.d.ts dist/esm/index.js dist/esm/package.json \
-                   dist/styles/tokens.json dist/native/redrob_tokens.h; do
+                   dist/styles/tokens.json dist/native/redrob_tokens.h dist/brand/app-icons/manifest.json; do
             [ -s "$f" ] || { echo "::error::$f is missing or empty; refusing to publish an incomplete package"; exit 1; }
           done
-          for d in dist/styles dist/fonts dist/native; do
+          for d in dist/styles dist/fonts dist/native dist/brand/app-icons; do
             [ -d "$d" ] && [ -n "$(ls -A "$d")" ] || { echo "::error::$d is missing or empty"; exit 1; }
           done
 

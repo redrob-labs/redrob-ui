@@ -38,6 +38,7 @@
     "./preflight.css": "./dist/styles/preflight.css",
     "./tokens.json": "./dist/styles/tokens.json",
     "./fonts/*": "./dist/fonts/*",
+    "./app-icons/*": "./dist/brand/app-icons/*",
     "./native/*": "./dist/native/*",
     "./package.json": "./package.json"
   },
@@ -49,13 +50,14 @@
     "dist/esm/styles/*.css"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc && tsc -p tsconfig.esm.json && node tools/build/esm-extensions.js && node tools/generate/tokens.js && node tools/generate/native-icons.js && mkdir -p dist/styles dist/fonts && cp src/styles/*.css src/styles/*.json dist/styles/ && cp src/fonts/*.woff2 dist/fonts/",
+    "build": "rm -rf dist && tsc && tsc -p tsconfig.esm.json && node tools/build/esm-extensions.js && node tools/generate/tokens.js && node tools/generate/native-icons.js && mkdir -p dist/styles dist/fonts dist/brand && cp src/styles/*.css src/styles/*.json dist/styles/ && cp src/fonts/*.woff2 dist/fonts/ && cp -R src/brand/app-icons dist/brand/",
     "test": "node tools/parity/run.js --quiet",
     "test:self": "node tools/parity/run.js --self --quiet",
     "icons": "node tools/generate/icons.js",
     "icons:check": "node tools/generate/icons.js --check",
     "app-icons": "node tools/generate/app-icons.js",
     "app-icons:check": "node tools/generate/app-icons.js --check",
+    "app-icons:dist:check": "node tools/check/app-icons.js",
     "tokens": "node tools/generate/tokens.js",
     "tokens:check": "node tools/generate/tokens.js --check",
     "docs": "yarn build && node tools/docs/build.js",

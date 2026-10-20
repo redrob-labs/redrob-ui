@@ -6,3 +6,5 @@
 *.png binary
 *.jpg binary
 *.ico binary
+# The app icons are a delivery's files, kept byte for byte so their sha256 in manifest.json holds.
+src/brand/app-icons/**/*.svg -text

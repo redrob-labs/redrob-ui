@@ -1,0 +1,395 @@
+{
+  "variants": [
+    "icon",
+    "icon-dark",
+    "icon-web",
+    "icon-web-dark",
+    "symbol"
+  ],
+  "icons": [
+    {
+      "key": "redrob",
+      "name": "Redrob",
+      "approved": true,
+      "files": {
+        "icon": {
+          "path": "redrob/redrob-icon.svg",
+          "bytes": 1454,
+          "sha256": "572e331fe3175438c723440fed0e555ce4e671f1d13b11dcd1041e13f924ec92"
+        },
+        "icon-dark": {
+          "path": "redrob/redrob-icon-dark.svg",
+          "bytes": 2248,
+          "sha256": "3b404c4ac05cb901ac69429bd33d0831357a73fe7c7da67af2edeb6a9c0015aa"
+        },
+        "icon-web": {
+          "path": "redrob/redrob-icon-web.svg",
+          "bytes": 4134,
+          "sha256": "33a664b1f70f44006f19f684026728b003db5e72c6cb40b732cb43d9da229589"
+        },
+        "icon-web-dark": {
+          "path": "redrob/redrob-icon-web-dark.svg",
+          "bytes": 4928,
+          "sha256": "867a3ff84240079d9f641e29b7b3c4c2c2965444f6f3fea8c6440ee17083a500"
+        },
+        "symbol": {
+          "path": "redrob/redrob-symbol.svg",
+          "bytes": 662,
+          "sha256": "ece95470ac1019cbafd2525ae1486970d31a9e5976cf0ab6dd7b9f21d87f0be1"
+        }
+      }
+    },
+    {
+      "key": "chat",
+      "name": "Redrob Chat",
+      "approved": true,
+      "files": {
+        "icon": {
+          "path": "redrob-chat/redrob-chat-icon.svg",
+          "bytes": 1361,
+          "sha256": "62c13bd213ccbce7f58fd01bf6249ca95d6ce089fb12a6b0575721212395612a"
+        },
+        "icon-dark": {
+          "path": "redrob-chat/redrob-chat-icon-dark.svg",
+          "bytes": 2155,
+          "sha256": "d5d7181dad7bcfbda5a76ae056173344cd8aeb30a2ebb6ac61799a8e02586471"
+        },
+        "icon-web": {
+          "path": "redrob-chat/redrob-chat-icon-web.svg",
+          "bytes": 4041,
+          "sha256": "7dc0a439bed6f7db876689148e17205b981dd2496620838a662985b5bbfaad2b"
+        },
+        "icon-web-dark": {
+          "path": "redrob-chat/redrob-chat-icon-web-dark.svg",
+          "bytes": 4835,
+          "sha256": "97b32f346b13f430bc12cde844abe3d31bdf9273bbe1fd4dad58c287c81f9a9c"
+        },
+        "symbol": {
+          "path": "redrob-chat/redrob-chat-symbol.svg",
+          "bytes": 569,
+          "sha256": "06612a524ea4f7dcedb57e399e3ac4fc9475f6bd876ac3473a5ebc573ff49b8b"
+        }
+      }
+    },
+    {
+      "key": "cowork",
+      "name": "Redrob Cowork",
+      "approved": true,
+      "files": {
+        "icon": {
+          "path": "redrob-cowork/redrob-cowork-icon.svg",
+          "bytes": 1705,
+          "sha256": "0f0303c18433d327fae25232d590a3283900e1afbbab3465b669981a1ac8cd10"
+        },
+        "icon-dark": {
+          "path": "redrob-cowork/redrob-cowork-icon-dark.svg",
+          "bytes": 2499,
+          "sha256": "459b0da19a835c3e1daf0001f66e674c76ad426b6128631a534ddb672bbe71aa"
+        },
+        "icon-web": {
+          "path": "redrob-cowork/redrob-cowork-icon-web.svg",
+          "bytes": 4385,
+          "sha256": "e2b985d0b238d6f33bfba9ad9c4ce84a7139939f448212c53305216635e5a7a0"
+        },
+        "icon-web-dark": {
+          "path": "redrob-cowork/redrob-cowork-icon-web-dark.svg",
+          "bytes": 5179,
+          "sha256": "9a63ec67188b0ca8a856978badace0687ddf8866d120caee32194a48252ffd73"
+        },
+        "symbol": {
+          "path": "redrob-cowork/redrob-cowork-symbol.svg",
+          "bytes": 913,
+          "sha256": "0238acce0015aa4ca339f75f511c5dc8fb05260b28e90ce146938dd5ed9849de"
+        }
+      }
+    },
+    {
+      "key": "browser",
+      "name": "Redrob Browser",
+      "approved": true,
+      "files": {
+        "icon": {
+          "path": "redrob-browser/redrob-browser-icon.svg",
+          "bytes": 2083,
+          "sha256": "017841c0c856d6b6e7eab34c8db6f6f48d53ce20d915732c7eeafbecf43d2c29"
+        },
+        "icon-dark": {
+          "path": "redrob-browser/redrob-browser-icon-dark.svg",
+          "bytes": 2877,
+          "sha256": "d0427ef27a2b2403c55d3fbc0ff0b8e9cbe28a8f26ce8e8c11c0514f71867db5"
+        },
+        "icon-web": {
+          "path": "redrob-browser/redrob-browser-icon-web.svg",
+          "bytes": 4763,
+          "sha256": "1ce12193746cdeb767c058300dc9f3e7756ea187f53a8f2671480e620c91db8e"
+        },
+        "icon-web-dark": {
+          "path": "redrob-browser/redrob-browser-icon-web-dark.svg",
+          "bytes": 5557,
+          "sha256": "c07d56e3930e7d41c9b9c1db7c6db5cc919a5a28d88a10b43527d32e5a8960d9"
+        },
+        "symbol": {
+          "path": "redrob-browser/redrob-browser-symbol.svg",
+          "bytes": 1291,
+          "sha256": "6795142062e0130ac6bd9187cfe51997f1f4b88a6d951effb0dcb7078c22a05e"
+        }
+      }
+    },
+    {
+      "key": "console",
+      "name": "Redrob Console",
+      "approved": true,
+      "files": {
+        "icon": {
+          "path": "redrob-console/redrob-console-icon.svg",
+          "bytes": 4445,
+          "sha256": "b2565e3c2d91a580933453ed424cc44e73c4048f66065147b25bf23336e640df"
+        },
+        "icon-dark": {
+          "path": "redrob-console/redrob-console-icon-dark.svg",
+          "bytes": 5239,
+          "sha256": "15fb7e28d31db36b67328d13cc0ed3e5d71b1ea488fb9cce8bd2c9e27569702d"
+        },
+        "icon-web": {
+          "path": "redrob-console/redrob-console-icon-web.svg",
+          "bytes": 7125,
+          "sha256": "5be032922578de13c60e32369592e6113be47673e4bbd0dc2db343d2791c7837"
+        },
+        "icon-web-dark": {
+          "path": "redrob-console/redrob-console-icon-web-dark.svg",
+          "bytes": 7919,
+          "sha256": "eb1eb34c86f919698f8ca931d1c74e5fe764298b57cfaba965a7d6ac0dd34260"
+        },
+        "symbol": {
+          "path": "redrob-console/redrob-console-symbol.svg",
+          "bytes": 3653,
+          "sha256": "bbae4d094c0854458daf9d9609da798bca43d78588ac77a99e93c855b05b25ef"
+        }
+      }
+    },
+    {
+      "key": "office",
+      "name": "Redrob Office",
+      "approved": true,
+      "files": {
+        "icon": {
+          "path": "redrob-office/redrob-office-icon.svg",
+          "bytes": 1604,
+          "sha256": "4593e09d0bca1b5aec458a4adfbe9ec2bac75b391c3721cbaf3668afd47a67e2"
+        },
+        "icon-dark": {
+          "path": "redrob-office/redrob-office-icon-dark.svg",
+          "bytes": 2398,
+          "sha256": "c962a15da8a30c5d207e7e7a33f2991ba881458b5d48f4c6e2ccd1413ffacaaf"
+        },
+        "icon-web": {
+          "path": "redrob-office/redrob-office-icon-web.svg",
+          "bytes": 4284,
+          "sha256": "5351591c18bc4e938558f0293f570da16da36c502bbfec63de557fc71f44c398"
+        },
+        "icon-web-dark": {
+          "path": "redrob-office/redrob-office-icon-web-dark.svg",
+          "bytes": 5078,
+          "sha256": "d5e8574e9f9e9d6fcb7cbce841a96350099595b695316c5d5f8b67755ee45bb0"
+        },
+        "symbol": {
+          "path": "redrob-office/redrob-office-symbol.svg",
+          "bytes": 812,
+          "sha256": "0a54d3969fe1a6398576757ac2fd0c45365289e026e4224d7f35446d95582596"
+        }
+      }
+    },
+    {
+      "key": "design",
+      "name": "Redrob Design",
+      "approved": true,
+      "files": {
+        "icon": {
+          "path": "redrob-design/redrob-design-icon.svg",
+          "bytes": 1445,
+          "sha256": "cda29888615fb76f9eb78a84bbf5c7a55c1b9a1ca9a874599d897f03674320e9"
+        },
+        "icon-dark": {
+          "path": "redrob-design/redrob-design-icon-dark.svg",
+          "bytes": 2239,
+          "sha256": "cacc5ddbe0dec06972043bb76dd5e7c2c92bb9128462e9fa4d753139a4cae0cc"
+        },
+        "icon-web": {
+          "path": "redrob-design/redrob-design-icon-web.svg",
+          "bytes": 4125,
+          "sha256": "97f6c7120409bcc9455475a3cd7e73af0d2171440433a81953cbaf1a65dac384"
+        },
+        "icon-web-dark": {
+          "path": "redrob-design/redrob-design-icon-web-dark.svg",
+          "bytes": 4919,
+          "sha256": "37f61bb70a89e8ce39a4decbfb19af38d3531441aa218dc87635659aeac23e33"
+        },
+        "symbol": {
+          "path": "redrob-design/redrob-design-symbol.svg",
+          "bytes": 653,
+          "sha256": "302684346293819e18ff7e5cac740ad818b7e713c48e9634778b4ea35fe64ed3"
+        }
+      }
+    },
+    {
+      "key": "code",
+      "name": "Redrob Code",
+      "approved": true,
+      "files": {
+        "icon": {
+          "path": "redrob-code/redrob-code-icon.svg",
+          "bytes": 1455,
+          "sha256": "b553166c03cc7b422be79b82170ff5d58704307e6a5fb32ef8ae080b3d2cfef8"
+        },
+        "icon-dark": {
+          "path": "redrob-code/redrob-code-icon-dark.svg",
+          "bytes": 2249,
+          "sha256": "06256e9cb8afc2592b756f9a5c9245e78c44dccc52c6f9f3a3032033e74850a0"
+        },
+        "icon-web": {
+          "path": "redrob-code/redrob-code-icon-web.svg",
+          "bytes": 4135,
+          "sha256": "0a9840bb44ac1307014d59b9e33e279b1568cbf51137745a437d7c4fbd755dcc"
+        },
+        "icon-web-dark": {
+          "path": "redrob-code/redrob-code-icon-web-dark.svg",
+          "bytes": 4929,
+          "sha256": "c9dd2dff9c6e4bc274c42f2d41856b573d659a55941aa30af0ca81421f249e57"
+        },
+        "symbol": {
+          "path": "redrob-code/redrob-code-symbol.svg",
+          "bytes": 663,
+          "sha256": "46e540cabb49046377851fe2e76f8d4bfdd2696cde3f01efea3f6978fcc3fae5"
+        }
+      }
+    },
+    {
+      "key": "film",
+      "name": "Redrob Film",
+      "approved": false,
+      "files": {
+        "icon": {
+          "path": "redrob-film/redrob-film-icon.svg",
+          "bytes": 15070,
+          "sha256": "d581febaab1121f09662952bd75c8419a3d145fd591e85959be73bac68960711"
+        },
+        "icon-dark": {
+          "path": "redrob-film/redrob-film-icon-dark.svg",
+          "bytes": 15864,
+          "sha256": "626841f412d8ec6443b8214ea9e8624011ab2597507413fcccd0a6f443afc541"
+        },
+        "icon-web": {
+          "path": "redrob-film/redrob-film-icon-web.svg",
+          "bytes": 17750,
+          "sha256": "ebf56534f9ec6ad0c818b83ac91fb66a093acc3854187f444b78ef5dbff70bd1"
+        },
+        "icon-web-dark": {
+          "path": "redrob-film/redrob-film-icon-web-dark.svg",
+          "bytes": 18544,
+          "sha256": "12981b69892f54daeeec830fb6a4ef0a9c9de1db89033390603541d5a596704e"
+        },
+        "symbol": {
+          "path": "redrob-film/redrob-film-symbol.svg",
+          "bytes": 14278,
+          "sha256": "ed30f2a65234b62ab18606cc33fe7785e38dd11d56fa71c73fba261a8e039e6d"
+        }
+      }
+    },
+    {
+      "key": "shape",
+      "name": "Redrob Shape",
+      "approved": false,
+      "files": {
+        "icon": {
+          "path": "redrob-shape/redrob-shape-icon.svg",
+          "bytes": 23601,
+          "sha256": "d8de1fdd062a2acf1f39641b7bf00f252ea08b32f1d3911009c51e62bfe2c862"
+        },
+        "icon-dark": {
+          "path": "redrob-shape/redrob-shape-icon-dark.svg",
+          "bytes": 24395,
+          "sha256": "404f1f64dd431f39322cbb859917df4c12e7acb3c9625959ba594ab67665e832"
+        },
+        "icon-web": {
+          "path": "redrob-shape/redrob-shape-icon-web.svg",
+          "bytes": 26281,
+          "sha256": "219ac68e2c37a40fb3e63b93312ad239fe9a11def551ca3f86cc7b8d58d06e6a"
+        },
+        "icon-web-dark": {
+          "path": "redrob-shape/redrob-shape-icon-web-dark.svg",
+          "bytes": 27075,
+          "sha256": "1d3751dbdbb40d4b8f6ebdd0d00f77e03bfa040cba8992afe4ae810779017798"
+        },
+        "symbol": {
+          "path": "redrob-shape/redrob-shape-symbol.svg",
+          "bytes": 22809,
+          "sha256": "e23f6094b977dd4141dbabecc47653df3b5a486ae0963717948435e6123dda17"
+        }
+      }
+    },
+    {
+      "key": "cad",
+      "name": "Redrob CAD",
+      "approved": false,
+      "files": {
+        "icon": {
+          "path": "redrob-cad/redrob-cad-icon.svg",
+          "bytes": 19409,
+          "sha256": "8b65bfa541b7e053015fc5fce2d61144eca8c0d73667685e4153a36a6cf85db1"
+        },
+        "icon-dark": {
+          "path": "redrob-cad/redrob-cad-icon-dark.svg",
+          "bytes": 20203,
+          "sha256": "e5b570a1e98d8500af0daee3897d91dedef702cea99005d2f34882714da3143f"
+        },
+        "icon-web": {
+          "path": "redrob-cad/redrob-cad-icon-web.svg",
+          "bytes": 22089,
+          "sha256": "664ff7cd83c8e1667dd7c41a7542a061c7d4e8d5196b676ad6f7072d598a85a2"
+        },
+        "icon-web-dark": {
+          "path": "redrob-cad/redrob-cad-icon-web-dark.svg",
+          "bytes": 22883,
+          "sha256": "bd6eb1e4b3d6b0e080c2d0277a7fce93f4ece987f846ad4ef84f1e0fbc4bd473"
+        },
+        "symbol": {
+          "path": "redrob-cad/redrob-cad-symbol.svg",
+          "bytes": 18617,
+          "sha256": "cdebee7345fbce1179902e1c04c56c9c14a790b5995fbad77b37a0e770b5fcb1"
+        }
+      }
+    },
+    {
+      "key": "canvas",
+      "name": "Redrob Canvas",
+      "approved": false,
+      "files": {
+        "icon": {
+          "path": "redrob-canvas/redrob-canvas-icon.svg",
+          "bytes": 55894,
+          "sha256": "c85a73b30e9c26af7fcb1222f479e00a849166cb63849e24f8e4ce7f2f9278c3"
+        },
+        "icon-dark": {
+          "path": "redrob-canvas/redrob-canvas-icon-dark.svg",
+          "bytes": 56688,
+          "sha256": "c9abbbd68a54baa29ce1a4ec4926321c893b78b25e4d73bb0fe44273ee4cb5e6"
+        },
+        "icon-web": {
+          "path": "redrob-canvas/redrob-canvas-icon-web.svg",
+          "bytes": 58574,
+          "sha256": "1c0878b003927a459a365db32ba6e4c30959eb822d62335590f36ddbb83f07e2"
+        },
+        "icon-web-dark": {
+          "path": "redrob-canvas/redrob-canvas-icon-web-dark.svg",
+          "bytes": 59368,
+          "sha256": "b1d94a288fbc20bc38a2d4ecd1b78b7c6ebed43ec3a3f70b07a0495aba503a54"
+        },
+        "symbol": {
+          "path": "redrob-canvas/redrob-canvas-symbol.svg",
+          "bytes": 55102,
+          "sha256": "1e9372ce5e8d971c35a07748518d22a86d17efda67c8a84f4799c31515977863"
+        }
+      }
+    }
+  ]
+}

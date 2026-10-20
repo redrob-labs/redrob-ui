@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.8.0
+
+The 2026 app icons: the group icon, the launch seven and, new, Redrob Film, Shape, CAD and Canvas. Until now the library carried no product icons at all - the reference previews point at `/_blob/` files that are not in the repository. Everything is additive; the reference bundle is unchanged and parity remains byte-identical for every delivery case.
+
+### Added
+- **`src/brand/app-icons/`**: the delivery's five master SVGs per icon (`icon`, `icon-dark`, `icon-web`, `icon-web-dark`, `symbol`), 12 icons, 60 files, copied byte for byte. Shipped as **`@redrob-labs/ui/app-icons/*`**, with a `manifest.json` that lists every file and its sha256 for a native consumer (Canvas's Qt build) to pin.
+- **`AppIcon`** `{ icon, base, variant?, size?, alt?, tone?, className? }`: an `<img>` on `Mark`'s light/dark switch. `variant` is `web` (default), `tile` or `symbol`; `alt` defaults to the product name; `base` is required (a URL prefix or a path -> URL function), because only the app knows where its static files live.
+- **`appIcons`, `appIconKeys`, `appIconPath(key, variant)`, `appIconUrl(key, variant, base)`** and the types `AppIconKey`, `AppIconVariant`, `AppIconEntry`, `AppIconFile`, `AppIconBase`.
+- **`yarn app-icons` / `app-icons:check`** (`tools/generate/app-icons.js`) regenerate and check the typed table and manifest. The check refuses a missing, extra or unknown file or folder, and any SVG that is not a self-contained 1024 drawing (script, event handler, external `href` or `url()`). **`yarn app-icons:dist:check`** holds `dist/` to the manifest, resolves every file through the exports map, and renders `AppIcon`. Both run in CI; publish refuses a build without `dist/brand/app-icons`.
+
+### Notes
+- Film, Shape, CAD and Canvas are "not yet approved in the design system" (the delivery's README). They carry `approved: false` and are **not** added to `AppShell`, `Band` or the product tokens: no colour ramp exists for them. Their SVGs are 80-280 KB per product against 13-28 KB for the launch seven (curves flattened to line segments); they ship as delivered and should be re-exported by design rather than optimized here.
+- The icon tile is Redrob Blue for every product; the per-product token ramps (Cowork orange, etc.) are unchanged.
+- The delivery's platform packaging (Apple, Android, Windows, web PNG/ICO; about 38 MB) is deliberately not vendored. It belongs in each app's repository.
+
 ## 1.7.0
 
 Three opt-in malleability hooks let applications place composer status panels against the control that opened them, flatten an AppShell workspace into one continuous surface, and show composer status chips as icon + name. Defaults retain the 1.6.0 markup and appearance; the reference bundle is unchanged and parity remains byte-identical for every delivery case.

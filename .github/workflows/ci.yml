@@ -16,8 +16,55 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Decides whether the heavy jobs below have anything to check. A pull request that only edits
+  # docs (*.md, docs/, LICENSE*, CHANGELOG*) or only bumps the root package.json "version" line
+  # reports heavy=false, and every heavy job is skipped. A skipped job counts as passing for a
+  # required check, so the required names below stay satisfied. reference/ is parity input, never
+  # docs. workflow_dispatch always runs everything.
+  changes:
+    name: changes
+    runs-on: ubuntu-latest
+    outputs:
+      heavy: ${{ steps.diff.outputs.heavy }}
+    steps:
+      # The pull_request checkout is the merge commit; depth 2 brings its first parent (the base),
+      # so a two-dot diff works without the merge base a depth-1 three-dot diff would need.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Classify the changed files
+        id: diff
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" != "pull_request" ]; then
+            echo "heavy=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          heavy=false
+          while IFS= read -r f; do
+            [ -n "$f" ] || continue
+            case "$f" in
+              reference/*) heavy=true ;;
+              *.md|docs/*|LICENSE*|CHANGELOG*|VERSION|REDROB_VERSION|*-version.txt) ;;
+              package.json)
+                # Any added/removed line other than a "version": line makes it heavy.
+                if git diff -U0 HEAD^1 HEAD -- package.json \
+                  | grep -E '^[+-]' | grep -vE '^(\+\+\+|---) ' \
+                  | grep -vqE '^[+-][[:space:]]*"version":[[:space:]]*"[^"]*",?[[:space:]]*$'; then
+                  heavy=true
+                fi ;;
+              *) heavy=true ;;
+            esac
+            echo "$f -> heavy=$heavy"
+          done < <(git diff --name-only HEAD^1 HEAD)
+          echo "heavy=$heavy" >> "$GITHUB_OUTPUT"
+
   build:
     name: typecheck and build
+    needs: changes
+    if: needs.changes.outputs.heavy == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -145,6 +192,8 @@ jobs:
 
   parity:
     name: parity against the reference bundle
+    needs: changes
+    if: needs.changes.outputs.heavy == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -176,6 +225,8 @@ jobs:
 
   docs:
     name: docs are up to date
+    needs: changes
+    if: needs.changes.outputs.heavy == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -168,7 +168,7 @@ export interface AppIconFile {
 }
 
 /** An icon and its files. */
-export interface AppIcon {
+export interface AppIconEntry {
   key: AppIconKey;
   /** The product's full name, used as the image's accessible name. */
   name: string;
@@ -181,7 +181,7 @@ export interface AppIcon {
 }
 
 /** Every icon, keyed by \`AppIconKey\`. */
-export const appIcons: Readonly<Record<AppIconKey, AppIcon>> = {
+export const appIcons: Readonly<Record<AppIconKey, AppIconEntry>> = {
 ${table
   .map(
     (t) => `  ${t.key}: {

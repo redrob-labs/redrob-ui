@@ -1,6 +1,6 @@
 # @redrob-labs/ui - full reference
 
-Version 1.7.0. 145 React components on the Redrob Group Design System 2026, plus 252 icons.
+Version 1.7.0. 146 React components on the Redrob Group Design System 2026, plus 252 icons.
 
 ## Using the package
 
@@ -61,6 +61,28 @@ Import: `import { MarkReveal } from '@redrob-labs/ui';`
 | `ground` | `boolean` | no | Set `false` to drop the ground behind the lockup, e.g. over an existing band. |
 | `height` | `number \| string` | no | Reserves vertical space so the surrounding page does not shift when it plays. |
 | `onDone` | `() => void` | no | Fires once the wipe finishes, so a splash can hand over to the app. |
+| `className` | `string` | no |  |
+
+#### AppIcon
+
+A Redrob app icon, swapped by theme.
+
+Built on `Mark`, so the light and dark files are both in the DOM and the stylesheet shows one - the same theme switch, `data-theme` and `tone` as the lockup, with no new CSS.
+
+Rendered as `<img>`, never inlined: every icon file defines the same internal ids, so two inlined SVGs in one document would draw the second with the first one's mask. As images they cannot see each other, and an app downloads only the icons it shows.
+
+Film, Shape, CAD and Canvas are not yet approved in the design system (`appIcons[key].approved`). They render the same way; keep them off a shared, cross-product surface until they are approved.
+
+Import: `import { AppIcon } from '@redrob-labs/ui';`
+
+| Prop | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `icon` | `AppIconKey` | yes | Which icon: `redrob` for the group icon, otherwise the product, e.g. `chat` or `film`. |
+| `base` | `AppIconBase` | yes | Where the app serves the package's `app-icons/` folder: a URL prefix (`/app-icons`, a CDN origin) or a function from a file's path in the folder to its URL. Required, because only the app knows where its static files live, and a guessed default would fail as a silent 404. |
+| `variant` | `'web' \| 'tile' \| 'symbol'` | no | `web` (default): masked to the superellipse, for a page or product UI. `tile`: the unmasked square, for a surface that applies its own mask. `symbol`: the white symbol alone, for a coloured or photographic ground; it has no dark version. |
+| `size` | `number` | no | Edge length in pixels. The icons are square, so this is both width and height. |
+| `alt` | `string` | no | Accessible name. Defaults to the product's name; pass `''` when text beside it already says it. |
+| `tone` | `'light' \| 'dark'` | no | Forces a ground rather than following `data-theme`, as on `Mark`. |
 | `className` | `string` | no |  |
 
 #### Layer
